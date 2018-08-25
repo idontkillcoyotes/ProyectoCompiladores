@@ -14,13 +14,13 @@ public class Principal {
 		System.out.println("Test de palabras claves:");
 		System.out.println("***************************");
 		
-		palabra="private";		
+		palabra="hola";		
 		System.out.println("\t Es "+palabra+" una palabra clave?: "+Utilidades.esPalabraClave(palabra));
-		palabra="dynamic";
+		palabra="int";
 		System.out.println("\t Es "+palabra+" una palabra clave?: "+Utilidades.esPalabraClave(palabra));
-		palabra="tuvieja";
+		palabra="extends";
 		System.out.println("\t Es "+palabra+" una palabra clave?: "+Utilidades.esPalabraClave(palabra));
-		palabra="String";
+		palabra="retUrn";
 		System.out.println("\t Es "+palabra+" una palabra clave?: "+Utilidades.esPalabraClave(palabra));
 		
 		

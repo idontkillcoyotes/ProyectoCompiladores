@@ -29,7 +29,8 @@ public final class Utilidades {
 	public static final int TT_OPMULT=24;
 	public static final int TT_OPDIV=25;
 	public static final int TT_OPANDDOBLE=26;
-	public static final int TT_OPORDOBLE=27;	
+	public static final int TT_OPORDOBLE=27;
+	public static final int TT_FINARCHIVO=30;
 	//Estos son necesarios?
 	//public static final int TT_COMMULTIL_A=30;
 	//public static final int TT_COMMULTIL_C=31;
