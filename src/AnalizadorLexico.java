@@ -21,6 +21,10 @@ public class AnalizadorLexico {
 		this.caracterActual=this.entradaSalida.nextChar();
 	}
 	
+	public boolean finArchivo(){
+		return this.entradaSalida.finArchivo();
+	}
+	
 	public Token nextToken(){
 		Token tkn;
 		int linea;
@@ -37,15 +41,17 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual=='+'){
 						//token es suma
-						this.lexemaActual="";
+						consumir();						
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_OPSUMA,"+",linea);
+						tkn = new Token(Utilidades.TT_OPSUMA,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}					
 					if (caracterActual=='*'){
 						//token es multiplicacion
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -55,6 +61,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual=='('){
 						//token es parentesis abierto
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -64,6 +71,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual==')'){
 						//token es parentesis cerrado
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -73,6 +81,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual=='{'){
 						//token es llave abierta
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -82,6 +91,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual=='}'){
 						//token es llave cerrada
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -91,6 +101,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual=='['){
 						//token es corchete abierto
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -100,6 +111,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual==']'){
 						//token es corchete cerrado
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -109,6 +121,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual==';'){
 						//token es punto coma
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -118,6 +131,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual=='.'){
 						//token es punto
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -127,6 +141,7 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual==','){
 						//token es coma
+						consumir();	
 						this.lexemaActual="";
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
@@ -134,6 +149,18 @@ public class AnalizadorLexico {
 						tkn.setNroColumna(col);
 						return tkn;
 					}
+					if (caracterActual=='!'){
+						//token es negacion o desigual
+						consumir();
+						estado=10;
+						break;
+						linea=this.entradaSalida.getNroLinea();
+						col=this.entradaSalida.getNroColumna();						
+						tkn = new Token(Utilidades.TT_OPNEGBOOL,lexemaActual,linea);
+						tkn.setNroColumna(col);
+						this.lexemaActual="";
+						return tkn;
+					}					
 					if (Character.isUpperCase(caracterActual)){
 						//posible token idClase
 						consumir();
@@ -248,11 +275,11 @@ public class AnalizadorLexico {
 					//Estado que reconoce division o posibles comentarios				
 					if (caracterActual=='/'){
 						//posible "token" comentario simple
-						consumir();
+						noConsumir();
 						estado=41;
 					}else if (caracterActual=='*'){
 						//posible "token" comentario multilinea
-						consumir();
+						noConsumir();
 						estado=42;
 					}else{
 						//token es division
@@ -329,7 +356,8 @@ public class AnalizadorLexico {
 					tkn.setNroColumna(col);
 					this.lexemaActual="";
 					return tkn;
-				}else{
+				}
+				else{
 					//token es menor
 					linea=this.entradaSalida.getNroLinea();
 					col=this.entradaSalida.getNroColumna();
@@ -339,7 +367,6 @@ public class AnalizadorLexico {
 					return tkn;
 				}
 				//Error lexico si es un caracter extraño?
-				break;//break del case 5
 			}
 			case 6:{
 				//Estado que reconoce mayor o mayor igual
@@ -362,7 +389,6 @@ public class AnalizadorLexico {
 					return tkn;
 				}
 				//Error lexico si es un caracter extraño?
-				break;//break del case 6
 			}
 			case 7:{
 				//Estado que reconoce el token AND
@@ -418,5 +444,7 @@ public class AnalizadorLexico {
 			
 			}//end_switch	
 		}//end_while
+		tkn=new Token(Utilidades.TT_FINARCHIVO,"",-1,-1);
+		return tkn;
 	}	
 }

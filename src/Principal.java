@@ -3,30 +3,15 @@ public class Principal {
 
 	public static void main(String[] args) {
 		
-		EntradaSalida io= new EntradaSalida("C:/Testing/Etapa1/Correctos/Test1.txt");
-		char c;
-		String palabra;
-
-		System.out.println("***************************");
-		System.out.println("Test de palabras claves:");
-		System.out.println("***************************");
+		EntradaSalida io= new EntradaSalida("C:/Testing/Etapa1/Correctos/mitest1.txt");
 		
-		palabra="hola";		
-		System.out.println("\t Es "+palabra+" una palabra clave?: "+Utilidades.esPalabraClave(palabra));
-		palabra="int";
-		System.out.println("\t Es "+palabra+" una palabra clave?: "+Utilidades.esPalabraClave(palabra));
-		palabra="extends";
-		System.out.println("\t Es "+palabra+" una palabra clave?: "+Utilidades.esPalabraClave(palabra));
-		palabra="retUrn";
-		System.out.println("\t Es "+palabra+" una palabra clave?: "+Utilidades.esPalabraClave(palabra));
+		AnalizadorLexico alex=new AnalizadorLexico(io);
 		
-		
-		System.out.println("***************************");
-		int max=100;		
-		System.out.println("Primeros "+max+" caracteres:");	
-		for(int i=1;i<=max;i++){		
-			c=io.nextChar();
-			System.out.println("Linea: "+io.getNroLinea()+" Col:"+io.getNroColumna()+"\t"+c);
+		Token t;
+		System.out.println("TIPO\tLEXEMA\tLINEA\tCOL");
+		while (!alex.finArchivo()){
+			t=alex.nextToken();
+			System.out.println(t.toString());
 		}
 	}
 

@@ -13,6 +13,13 @@ public class Token {
 		this.nroColumna=0;	
 	}
 	
+	public Token (int t, String lex, int lin,int col){
+		this.tipo=t;
+		this.lexema=lex;
+		this.nroLinea=lin;
+		this.nroColumna=col;	
+	}
+	
 	public void setNroLinea(int l){
 		this.nroLinea=l;
 	}
@@ -47,6 +54,10 @@ public class Token {
 			}
 		}
 		return toReturn;
+	}
+	
+	public String toString(){
+		return this.lexema+"\t\t\t\t"+this.tipo+"\t\t"+this.nroLinea+"\t\t"+this.nroColumna;				
 	}
 
 }
