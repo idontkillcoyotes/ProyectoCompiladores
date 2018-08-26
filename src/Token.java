@@ -4,13 +4,22 @@ public class Token {
 	private int tipo;
 	private String lexema;
 	private int nroLinea;
-	private int nroColumna;
+	private int nroColumna;	
 	
-	public Token (int t, String lex, int lin, int col){
+	public Token (int t, String lex, int lin){
 		this.tipo=t;
 		this.lexema=lex;
 		this.nroLinea=lin;
-		this.nroColumna=col;		
+		this.nroColumna=0;	
+	}
+	
+	public void setNroLinea(int l){
+		this.nroLinea=l;
+	}
+	
+	public void setNroColumna(int c){
+		int k=this.lexema.length();
+		this.nroColumna=c-k;
 	}
 	
 	public int getTipo() {

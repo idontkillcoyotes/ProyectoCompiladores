@@ -55,15 +55,23 @@ public final class Utilidades {
 	public static final int TPC_NEW=127;
 	public static final int TPC_TRUE=128;
 	public static final int TPC_FALSE=129;
-
-	public static boolean esPalabraClave(String lexema){
-		boolean toReturn=false;
-		for(String pc: Utilidades.PALABRASCLAVE){
-			if (pc.equals(lexema)){
-				toReturn=true;
+	
+	public static int getIDMetVarOPalabraClave(String lexema){
+		int id=0;
+		int largo=Utilidades.PALABRASCLAVE.length;
+		int i=0;
+		//IDMETVAR = 0, IDPALABRACLAVE = 100 + indice en arreglo
+		boolean espc=false;
+		while ((!espc) && (i<largo)){			
+			if (Utilidades.PALABRASCLAVE[i].equals(lexema)){
+				//es palabra clave
+				espc=true;
+				id=100+i;
 			}
+			i++;
 		}
-		return toReturn;
+		//si no es palabra clave id=0=IDMETVAR
+		return id;
 	}
 	
 }

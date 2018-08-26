@@ -9,18 +9,24 @@ public class EntradaSalida {
     private FileReader fileReader;
     private BufferedReader bufferedReader;
     private boolean finArchivo;
-    private int ultimoChar;
+    private int caracterActual;
+    private int nroLinea;
+    private int nroColumna;
+    
     
     public EntradaSalida(String archivo){
     	nombreArchivo=archivo;
+    	nroLinea=0;
+    	nroColumna=0;
     	finArchivo=true;
-    	ultimoChar=-1;
+    	caracterActual=-1;
     	try {
     		// FileReader reads text files in the default encoding.
     		fileReader = new FileReader(nombreArchivo);
     		// Always wrap FileReader in BufferedReader.
     		bufferedReader = new BufferedReader(fileReader);
     		finArchivo=false;
+    		nroLinea=1;
     	}
     	catch(FileNotFoundException ex) {
     		System.out.println("No se ha podido abrir el archivo '"+nombreArchivo+"'");                
@@ -37,17 +43,35 @@ public class EntradaSalida {
     	finArchivo=true;
     }
     
+    public boolean finArchivo(){
+    	return this.finArchivo;
+    }
+    
     public int ultimoChar(){
-    	return this.ultimoChar;
-    }    
+    	return this.caracterActual;
+    }
+    
+    public int getNroLinea(){
+    	return this.nroLinea;
+    }
 
+    public int getNroColumna(){
+    	return this.nroColumna;
+    }
+        
     public char nextChar(){
     	int caracter;
     	char toReturn = 0;
     	if (!finArchivo){
     		try {
     			caracter = bufferedReader.read();
-    			ultimoChar=caracter;
+    			caracterActual=caracter;
+    			nroColumna++;
+    			if(caracter==10){
+    				//caracter=10 es salto de linea
+    				nroLinea++;
+    				nroColumna=0;
+    			}
     			if (caracter==-1){
     				cerrarArchivo();		
     			}
