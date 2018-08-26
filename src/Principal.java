@@ -3,7 +3,7 @@ public class Principal {
 	
 	public static void main(String[] args) {
 		
-		EntradaSalida io= new EntradaSalida("C:/Testing/Etapa1/Correctos/Test4.txt");
+		EntradaSalida io= new EntradaSalida("C:/Testing/Etapa1/Correctos/Test9.txt");
 		
 		AnalizadorLexico alex=new AnalizadorLexico(io);
 		
@@ -14,7 +14,7 @@ public class Principal {
 				t=alex.nextToken();
 				System.out.println(t.toString());			
 			}
-		} catch (CaracterDesconocidoException e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}			
 	}

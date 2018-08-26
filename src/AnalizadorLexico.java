@@ -9,7 +9,9 @@ public class AnalizadorLexico {
 	
 	public AnalizadorLexico(EntradaSalida io){
 		this.entradaSalida=io;
-		this.caracterActual=io.nextChar();
+		if (!io.finArchivo()){
+			this.caracterActual=io.nextChar();
+		}
 		this.lexemaActual="";
 	}
 	
@@ -25,7 +27,7 @@ public class AnalizadorLexico {
 		return this.entradaSalida.finArchivo();
 	}
 	
-	public Token nextToken() throws CaracterDesconocidoException{
+	public Token nextToken() throws LexicoException{
 		Token tkn;
 		int linea;
 		int col;
@@ -61,102 +63,102 @@ public class AnalizadorLexico {
 					}
 					if (caracterActual=='*'){
 						//token es multiplicacion
-						consumir();	
-						this.lexemaActual="";
+						consumir();						
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_OPMULT,"*",linea);
+						tkn = new Token(Utilidades.TT_OPMULT,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual=='('){
 						//token es parentesis abierto
-						consumir();	
-						this.lexemaActual="";
+						consumir();							
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNPARENT_A,"(",linea);
+						tkn = new Token(Utilidades.TT_PUNPARENT_A,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual==')'){
 						//token es parentesis cerrado
-						consumir();	
-						this.lexemaActual="";
+						consumir();						
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNPARENT_C,")",linea);
+						tkn = new Token(Utilidades.TT_PUNPARENT_C,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual=='{'){
 						//token es llave abierta
-						consumir();	
-						this.lexemaActual="";
+						consumir();						
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNLLAVE_A,"{",linea);
+						tkn = new Token(Utilidades.TT_PUNLLAVE_A,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual=='}'){
 						//token es llave cerrada
-						consumir();	
-						this.lexemaActual="";
+						consumir();						
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNLLAVE_C,"}",linea);
+						tkn = new Token(Utilidades.TT_PUNLLAVE_C,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual=='['){
 						//token es corchete abierto
-						consumir();	
-						this.lexemaActual="";
+						consumir();						
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNCORCH_A,"[",linea);
+						tkn = new Token(Utilidades.TT_PUNCORCH_A,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual==']'){
 						//token es corchete cerrado
-						consumir();	
-						this.lexemaActual="";
+						consumir();						
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNCORCH_C,"]",linea);
+						tkn = new Token(Utilidades.TT_PUNCORCH_C,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual==';'){
 						//token es punto coma
-						consumir();	
-						this.lexemaActual="";
+						consumir();
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNPUNTOCOMA,";",linea);
+						tkn = new Token(Utilidades.TT_PUNPUNTOCOMA,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual=='.'){
 						//token es punto
-						consumir();	
-						this.lexemaActual="";
+						consumir();
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNPUNTO,".",linea);
+						tkn = new Token(Utilidades.TT_PUNPUNTO,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}
 					if (caracterActual==','){
 						//token es coma
-						consumir();	
-						this.lexemaActual="";
+						consumir();
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNCOMA,",",linea);
+						tkn = new Token(Utilidades.TT_PUNCOMA,lexemaActual,linea);
 						tkn.setNroColumna(col);
+						this.lexemaActual="";
 						return tkn;
 					}										
 					if (Character.isUpperCase(caracterActual)){
@@ -234,7 +236,7 @@ public class AnalizadorLexico {
 					//No estoy seguro si poner el throw new es correcto aunque los ifs anteriores tienen break
 						linea=this.entradaSalida.getNroLinea();
 						col=this.entradaSalida.getNroColumna();
-						throw new CaracterDesconocidoException("ERROR: Linea: "+linea+". Columna: "+col+". Se encontro un caracter inesperado: "+caracterActual);
+						throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Se encontro un caracter inesperado: "+caracterActual);
 					}
 					//break;//break del case 0
 			}
@@ -347,7 +349,9 @@ public class AnalizadorLexico {
 					lexemaActual="";
 					estado=0;
 				}else{
-					noConsumir();
+					linea=this.entradaSalida.getNroLinea();
+					col=this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error en cierre de comentario multilinea. Se esperaba '/' pero se encontro: "+caracterActual);
 				}
 				break;
 			}				
@@ -512,7 +516,7 @@ public class AnalizadorLexico {
 			
 			}//end_switch	
 		}//end_while
-		tkn=new Token(Utilidades.TT_FINARCHIVO,"",-1,-1);
+		tkn=new Token(Utilidades.TT_FINARCHIVO,"¶",-1,-1);
 		return tkn;
 	}	
 }

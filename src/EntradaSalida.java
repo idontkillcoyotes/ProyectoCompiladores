@@ -65,12 +65,16 @@ public class EntradaSalida {
     	if (!finArchivo){
     		try {
     			caracter = bufferedReader.read();
-    			caracterActual=caracter;
-    			nroColumna++;
-    			if(caracter==10){
-    				//caracter=10 es salto de linea
+    			caracterActual=caracter;    			
+    			if(caracter=='\n'){
+    				//salto de linea
     				nroLinea++;
+    				//System.out.print("<"+caracter+">");
     				nroColumna=0;
+    			}else if (caracter=='\t'){
+    				nroColumna+=4;
+    			}else{
+    				nroColumna++;
     			}
     			if (caracter==-1){
     				cerrarArchivo();		
