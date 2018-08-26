@@ -25,7 +25,7 @@ public class AnalizadorLexico {
 		return this.entradaSalida.finArchivo();
 	}
 	
-	public Token nextToken(){
+	public Token nextToken() throws CaracterDesconocidoException{
 		Token tkn;
 		int linea;
 		int col;
@@ -230,10 +230,13 @@ public class AnalizadorLexico {
 						consumir();
 						estado=12;
 						break;
+					}else{
+					//No estoy seguro si poner el throw new es correcto aunque los ifs anteriores tienen break
+						linea=this.entradaSalida.getNroLinea();
+						col=this.entradaSalida.getNroColumna();
+						throw new CaracterDesconocidoException("ERROR: Linea: "+linea+". Columna: "+col+". Se encontro un caracter inesperado: "+caracterActual);
 					}
-					//El caracter actual es desconocido
-					//Error lexico
-					break;//break del case 0
+					//break;//break del case 0
 			}
 			case 1:{
 					//Estado reconocedor de tokens idClase
