@@ -48,7 +48,17 @@ public class AnalizadorLexico {
 						tkn.setNroColumna(col);
 						this.lexemaActual="";
 						return tkn;
-					}					
+					}
+					if (caracterActual=='-'){
+						//token es resta
+						consumir();						
+						linea=this.entradaSalida.getNroLinea();
+						col=this.entradaSalida.getNroColumna();						
+						tkn = new Token(Utilidades.TT_OPRESTA,lexemaActual,linea);
+						tkn.setNroColumna(col);
+						this.lexemaActual="";
+						return tkn;
+					}
 					if (caracterActual=='*'){
 						//token es multiplicacion
 						consumir();	
@@ -148,19 +158,7 @@ public class AnalizadorLexico {
 						tkn = new Token(Utilidades.TT_PUNCOMA,",",linea);
 						tkn.setNroColumna(col);
 						return tkn;
-					}
-					if (caracterActual=='!'){
-						//token es negacion o desigual
-						consumir();
-						estado=10;
-						break;
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_OPNEGBOOL,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}					
+					}										
 					if (Character.isUpperCase(caracterActual)){
 						//posible token idClase
 						consumir();
@@ -177,6 +175,12 @@ public class AnalizadorLexico {
 						//posible token Entero
 						consumir();
 						estado=3;
+						break;
+					}
+					if (caracterActual=='='){
+						//posible token igual o doble igual
+						consumir();
+						estado=11;
 						break;
 					}
 					if (caracterActual=='/'){
@@ -213,6 +217,18 @@ public class AnalizadorLexico {
 						//posible token String
 						consumir();
 						estado=9;
+						break;
+					}
+					if (caracterActual=='!'){
+						//token es negacion o desigual
+						consumir();
+						estado=10;
+						break;
+					}
+					if (caracterActual=='\''){
+						//posible token char
+						consumir();
+						estado=12;
 						break;
 					}
 					//El caracter actual es desconocido
@@ -272,6 +288,7 @@ public class AnalizadorLexico {
 					break;//break del case 3					
 			}
 			case 4:{
+					//caracter previo fue '/'
 					//Estado que reconoce division o posibles comentarios				
 					if (caracterActual=='/'){
 						//posible "token" comentario simple
@@ -294,57 +311,43 @@ public class AnalizadorLexico {
 					break;//break del case 4	
 			}
 			case 41:{
+					//caracter previo fue '/'
 					//Estado que reconoce(ignora) comentarios simples
-					if (caracterActual!='\n'){
-						//Si no es <enter> ignorar
-						noConsumir();
-					}else {
-						//Es <enter> entonces "acepto" token
-						//Como es un comentario y no retorno nada solo debo cambiar de estado
+					if (caracterActual=='\n'){
+						//Si es <enter> elimino (reconozco comentario simple)						
+						lexemaActual="";
 						estado=0;
+					}else {
+						noConsumir();
 					}
 					//Error lexico si es un caracter extraño?
 					break;//break del case 41	
 			}
 			case 42:{
-					//Estado que reconoce(ignora) comentarios simples
-					if (caracterActual!='\n'){
-						//Si no es <enter> ignorar
+					//caracter previo fue '*'
+					//Estado que "reconoce"(ignora) posibles comentarios multilinea
+					if (caracterActual=='*'){
+						//voy a estado reconocedor de comentarios multilinea
 						noConsumir();
-					}else {
-						//Es <enter> entonces "acepto" token
-						//Como es un comentario y no retorno nada solo debo cambiar de estado
 						estado=421;
+					}else {
+						noConsumir();						
 					}
 					//Error lexico si es un caracter extraño?
 					break;//break del case 42	
 			}
 			case 421:{
-				//Estado que reconoce(ignora) comentarios multilinea
-				if (caracterActual!='*'){
-					//Si no es * ignorar
-					noConsumir();
-				}else {
-					//Es * entonces voy al estado "aceptador" de token
-					//Como es un comentario y no retorno nada solo debo cambiar de estado
-					estado=4211;
-				}
-				//Error lexico si es un caracter extraño?
-				break;//break del case 421	
-			}
-			case 4211:{
-				//Estado que reconoce(ignora) comentarios multilinea
+				//Estado que "reconoce"(ignora) comentarios multilinea
 				if (caracterActual=='/'){
-					//El comentario multilinea esta cerrado correctamente
+					//Si es '/' el comentario fue cerrado correctamente, elimino
 					noConsumir();
+					lexemaActual="";
 					estado=0;
 				}else{
-					//Deberia lanzar error?
 					noConsumir();
-				}				
-				//Error lexico si es un caracter extraño?
-				break;//break del case 4211
-			}
+				}
+				break;
+			}				
 			case 5:{
 				//Estado que reconoce menor o menor igual
 				if(caracterActual=='='){
@@ -436,10 +439,72 @@ public class AnalizadorLexico {
 					this.lexemaActual="";
 					return tkn;
 				}else{
-					noConsumir();
+					consumir();
 				}
 				//Error lexico si es un caracter extraño?
 				break;//break del case 9
+			}
+			case 10:{
+				//Estado que reconoce negacion o desigual
+				if(caracterActual=='='){
+					consumir();
+					//token es desigual
+					linea=this.entradaSalida.getNroLinea();
+					col=this.entradaSalida.getNroColumna();
+					tkn = new Token(Utilidades.TT_OPDESIGUAL,lexemaActual,linea);
+					tkn.setNroColumna(col);
+					this.lexemaActual="";
+					return tkn;
+				}else{
+					//token es negacion
+					linea=this.entradaSalida.getNroLinea();
+					col=this.entradaSalida.getNroColumna();
+					tkn = new Token(Utilidades.TT_OPNEGBOOL,lexemaActual,linea);
+					tkn.setNroColumna(col);
+					this.lexemaActual="";
+					return tkn;
+				}
+				//Error lexico si es un caracter extraño?
+			}
+			case 11:{
+				//Estado que reconoce igual o igual doble
+				if(caracterActual=='='){
+					consumir();
+					//token es doble igual
+					linea=this.entradaSalida.getNroLinea();
+					col=this.entradaSalida.getNroColumna();
+					tkn = new Token(Utilidades.TT_OPDOBLEIGUAL,lexemaActual,linea);
+					tkn.setNroColumna(col);
+					this.lexemaActual="";
+					return tkn;
+				}else{
+					//token es solo igual
+					linea=this.entradaSalida.getNroLinea();
+					col=this.entradaSalida.getNroColumna();
+					tkn = new Token(Utilidades.TT_ASIGIGUAL,lexemaActual,linea);
+					tkn.setNroColumna(col);
+					this.lexemaActual="";
+					return tkn;
+				}
+				//Error lexico si es un caracter extraño?
+			}
+			case 12:{
+				//el caracter anterior fue '
+				//Estado que reconoce token String
+				if(caracterActual=='\''){
+					consumir();
+					//token es char
+					linea=this.entradaSalida.getNroLinea();
+					col=this.entradaSalida.getNroColumna();
+					tkn = new Token(Utilidades.TT_LITCARACTER,lexemaActual,linea);
+					tkn.setNroColumna(col);
+					this.lexemaActual="";
+					return tkn;
+				}else{
+					consumir();
+				}
+				//Error lexico si es un caracter extraño?
+				break;//break del case 12
 			}
 			
 			}//end_switch	

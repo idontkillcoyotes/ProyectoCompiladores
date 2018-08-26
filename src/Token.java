@@ -57,7 +57,7 @@ public class Token {
 	}
 	
 	public String toString(){
-		return this.lexema+"\t\t\t\t"+this.tipo+"\t\t"+this.nroLinea+"\t\t"+this.nroColumna;				
+		return this.nroLinea+"\t"+this.nroColumna+"\t"+this.tipo+"\t"+this.lexema+"\t\t\t\t";				
 	}
 
 }

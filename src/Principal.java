@@ -8,7 +8,7 @@ public class Principal {
 		AnalizadorLexico alex=new AnalizadorLexico(io);
 		
 		Token t;
-		System.out.println("TIPO\tLEXEMA\tLINEA\tCOL");
+		System.out.println("LIN\tCOL\tTIPO\tLEXEMA");
 		while (!alex.finArchivo()){
 			t=alex.nextToken();
 			System.out.println(t.toString());
