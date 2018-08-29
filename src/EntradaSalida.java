@@ -60,7 +60,7 @@ public class EntradaSalida {
     }
         
     public char nextChar(){
-    	int caracter;
+    	int caracter=-1;
     	char toReturn = 0;
     	if (!finArchivo){
     		try {
@@ -69,9 +69,9 @@ public class EntradaSalida {
     			if(caracter=='\n'){
     				//salto de linea
     				nroLinea++;
-    				//System.out.print("<"+caracter+">");
     				nroColumna=0;
     			}else if (caracter=='\t'){
+    				//tab
     				nroColumna+=4;
     			}else{
     				nroColumna++;

@@ -1,522 +1,483 @@
-
 public class AnalizadorLexico {
 	
 	private EntradaSalida entradaSalida;	
 	private char caracterActual;
 	private String lexemaActual;
-	
-	
+	private int k;
 	
 	public AnalizadorLexico(EntradaSalida io){
 		this.entradaSalida=io;
 		if (!io.finArchivo()){
-			this.caracterActual=io.nextChar();
+			nextChar();
 		}
 		this.lexemaActual="";
-	}
-	
+	}	
 	private void consumir(){
 		this.lexemaActual+=this.caracterActual;
-		this.caracterActual=this.entradaSalida.nextChar();
 	}
-	private void noConsumir(){
+	private void nextChar(){
 		this.caracterActual=this.entradaSalida.nextChar();
-	}
-	
+		this.k=(int)caracterActual;
+	}	
 	public boolean finArchivo(){
 		return this.entradaSalida.finArchivo();
-	}
+	}	
+	private Token createToken(int tipo){
+		int linea=this.entradaSalida.getNroLinea();
+		int col=this.entradaSalida.getNroColumna();						
+		Token tkn = new Token(tipo,lexemaActual,linea);
+		tkn.setNroColumna(col);
+		this.lexemaActual="";
+		return tkn;	
+	}	
 	
 	public Token nextToken() throws LexicoException{
-		Token tkn;
-		int linea;
-		int col;
 		int estado=0;
+		Token tkn= new Token(Utilidades.TT_FINARCHIVO,"¶",-1,-1);
 		while (!entradaSalida.finArchivo()){
-			switch (estado){		
+			switch (estado){
 			case 0:{
-					//Estado inicial y reconocedor de tokens de un solo simbolo
-					if (Character.isWhitespace(caracterActual)){
-						//espacio en blanco
-						noConsumir();
-						break;
-					}
-					if (caracterActual=='+'){
-						//token es suma
-						consumir();						
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_OPSUMA,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual=='-'){
-						//token es resta
-						consumir();						
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_OPRESTA,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual=='*'){
-						//token es multiplicacion
-						consumir();						
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_OPMULT,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual=='('){
-						//token es parentesis abierto
-						consumir();							
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNPARENT_A,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual==')'){
-						//token es parentesis cerrado
-						consumir();						
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNPARENT_C,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual=='{'){
-						//token es llave abierta
-						consumir();						
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNLLAVE_A,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual=='}'){
-						//token es llave cerrada
-						consumir();						
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNLLAVE_C,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual=='['){
-						//token es corchete abierto
-						consumir();						
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNCORCH_A,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual==']'){
-						//token es corchete cerrado
-						consumir();						
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNCORCH_C,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual==';'){
-						//token es punto coma
-						consumir();
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNPUNTOCOMA,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual=='.'){
-						//token es punto
-						consumir();
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNPUNTO,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					if (caracterActual==','){
-						//token es coma
-						consumir();
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_PUNCOMA,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}										
-					if (Character.isUpperCase(caracterActual)){
-						//posible token idClase
-						consumir();
-						estado=1;
-						break;
-					}
-					if (Character.isLowerCase(caracterActual)){
-						//posible token idMetvar o palabras reservadas
-						consumir();
-						estado=2;
-						break;
-					}
-					if (Character.isDigit(caracterActual)){
-						//posible token Entero
-						consumir();
-						estado=3;
-						break;
-					}
-					if (caracterActual=='='){
-						//posible token igual o doble igual
-						consumir();
-						estado=11;
-						break;
-					}
-					if (caracterActual=='/'){
-						//posibles token division o comentarios
-						consumir();
-						estado=4;
-						break;
-					}
-					if (caracterActual=='<'){
-						//posibles token menor migual
-						consumir();
-						estado=5;
-						break;
-					}
-					if (caracterActual=='>'){
-						//posibles token mayor migual
-						consumir();
-						estado=6;
-						break;
-					}
-					if (caracterActual=='&'){
-						//posible token AND
-						consumir();
-						estado=7;
-						break;
-					}
-					if (caracterActual=='|'){
-						//posible token OR
-						consumir();
-						estado=8;
-						break;
-					}
-					if (caracterActual=='"'){
-						//posible token String
-						consumir();
-						estado=9;
-						break;
-					}
-					if (caracterActual=='!'){
-						//token es negacion o desigual
-						consumir();
-						estado=10;
-						break;
-					}
-					if (caracterActual=='\''){
-						//posible token char
-						consumir();
-						estado=12;
-						break;
-					}else{
-					//No estoy seguro si poner el throw new es correcto aunque los ifs anteriores tienen break
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();
-						throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Se encontro un caracter inesperado: "+caracterActual);
-					}
-					//break;//break del case 0
+				//Estado inicial y reconocedor de tokens de un solo caracter
+				if (caracterActual==0){
+					//fin de archivo
+					this.lexemaActual="";
+					return new Token(Utilidades.TT_FINARCHIVO,"¶",-1,-1);
+				}
+				else if (Character.isWhitespace(caracterActual)){
+					//espacio en blanco, ignoro
+					nextChar();
+					break;
+				}
+				else if (Character.isLowerCase(caracterActual)){
+					//posible token idMetvar o palabras reservadas
+					consumir();
+					estado=1;
+					break;
+				}
+				else if (Character.isUpperCase(caracterActual)){
+					//posible token idClase
+					consumir();
+					estado=2;
+					break;
+				}
+				else if (Character.isDigit(caracterActual)){
+					//posible token Entero
+					consumir();
+					estado=3;
+					break;
+				}
+				else if (caracterActual==';'){
+					//token es punto coma
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNPUNTOCOMA);
+				}
+				else if (caracterActual=='{'){
+					//token es llave abierta
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNLLAVE_A);
+				}
+				else if (caracterActual=='}'){
+					//token es llave cerrada
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNLLAVE_C);
+				}
+				else if (caracterActual=='('){
+					//token es parentesis abierto
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNPARENT_A);
+				}
+				else if (caracterActual==')'){
+					//token es parentesis cerrado
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNPARENT_C);
+				}
+				else if (caracterActual=='+'){
+					//token es suma
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_OPSUMA);											
+				}
+				else if (caracterActual=='-'){
+					//token es resta
+					consumir();	
+					nextChar();
+					return createToken(Utilidades.TT_OPRESTA);
+				}
+				else if (caracterActual=='*'){
+					//token es multiplicacion
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_OPMULT);
+				}
+				else if (caracterActual=='['){
+					//token es corchete abierto
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNCORCH_A);
+				}
+				else if (caracterActual==']'){
+					//token es corchete cerrado
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNCORCH_C);
+				}
+				else if (caracterActual=='.'){
+					//token es punto
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNPUNTO);
+				}
+				else if (caracterActual==','){
+					//token es coma
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_PUNCOMA);
+				}				
+				else if (caracterActual=='"'){
+					//posible token String
+					consumir();
+					estado=4;
+					break;
+				}
+				else if (caracterActual=='\''){
+					//posible token char
+					consumir();
+					estado=5;
+					break;
+				}
+				else if (caracterActual=='/'){
+					//posibles token division o comentarios
+					consumir();
+					estado=6;
+					break;
+				}
+				else if (caracterActual=='='){
+					//posible token igual o doble igual
+					consumir();
+					estado=7;
+					break;
+				}				
+				else if (caracterActual=='<'){
+					//posibles token menor migual
+					consumir();
+					estado=8;
+					break;
+				}
+				else if (caracterActual=='>'){
+					//posibles token mayor migual
+					consumir();
+					estado=9;
+					break;
+				}
+				else if (caracterActual=='&'){
+					//posible token AND
+					consumir();
+					estado=10;
+					break;
+				}
+				else if (caracterActual=='|'){
+					//posible token OR
+					consumir();
+					estado=11;
+					break;
+				}
+				else if (caracterActual=='!'){
+					//token es negacion o desigual
+					consumir();
+					estado=12;
+					break;
+				}
+				else{
+					// caracter desconocido
+					int linea=this.entradaSalida.getNroLinea();
+					int col=this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Se encontro un caracter inesperado: '"+caracterActual+"'");
+				}
+				
 			}
 			case 1:{
-					//Estado reconocedor de tokens idClase
-					if ((caracterActual=='_')||(Character.isLetterOrDigit(caracterActual))){
-						consumir();
-					}
-					else {
-						//token es idClase
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();						
-						tkn = new Token(Utilidades.TT_IDCLASE,lexemaActual,linea);						
-						tkn.setNroColumna(col);
-						lexemaActual="";
-						return tkn;
-					}
-					//Error lexico si es un caracter extraño?
-					break;//break del case 1			
-			}
-			case 2:{
-					//Estado reconocedor de tokens idMetVar y palabras clave
-					if ((caracterActual=='_')||(Character.isLetterOrDigit(caracterActual))){
-						consumir();
-					}
-					else {
-						//token es idMetVar
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();
-						int id=Utilidades.getIDMetVarOPalabraClave(lexemaActual);
-						tkn = new Token(id,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					//Error lexico si es un caracter extraño?
-					break;//break del case 2			
-			}
-			case 3:{
-					//Estado que reconoce tokens de tipo enteros
-					if (Character.isDigit(caracterActual)){
-						consumir();
-					}
-					else{
-						//token es Entero
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();
-						tkn = new Token(Utilidades.TT_LITENTERO,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;
-					}
-					//Error lexico si es un caracter extraño?
-					break;//break del case 3					
-			}
-			case 4:{
-					//caracter previo fue '/'
-					//Estado que reconoce division o posibles comentarios				
-					if (caracterActual=='/'){
-						//posible "token" comentario simple
-						noConsumir();
-						estado=41;
-					}else if (caracterActual=='*'){
-						//posible "token" comentario multilinea
-						noConsumir();
-						estado=42;
-					}else{
-						//token es division
-						linea=this.entradaSalida.getNroLinea();
-						col=this.entradaSalida.getNroColumna();
-						tkn = new Token(Utilidades.TT_OPDIV,lexemaActual,linea);
-						tkn.setNroColumna(col);
-						this.lexemaActual="";
-						return tkn;						
-					}
-					//Error lexico si es un caracter extraño?
-					break;//break del case 4	
-			}
-			case 41:{
-					//caracter previo fue '/'
-					//Estado que reconoce(ignora) comentarios simples
-					if (caracterActual=='\n'){
-						//Si es <enter> elimino (reconozco comentario simple)						
-						lexemaActual="";
-						estado=0;
-					}else {
-						noConsumir();
-					}
-					//Error lexico si es un caracter extraño?
-					break;//break del case 41	
-			}
-			case 42:{
-					//caracter previo fue '*'
-					//Estado que "reconoce"(ignora) posibles comentarios multilinea
-					if (caracterActual=='*'){
-						//voy a estado reconocedor de comentarios multilinea
-						noConsumir();
-						estado=421;
-					}else {
-						noConsumir();						
-					}
-					//Error lexico si es un caracter extraño?
-					break;//break del case 42	
-			}
-			case 421:{
-				//Estado que "reconoce"(ignora) comentarios multilinea
-				if (caracterActual=='/'){
-					//Si es '/' el comentario fue cerrado correctamente, elimino
-					noConsumir();
-					lexemaActual="";
-					estado=0;
-				}else{
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error en cierre de comentario multilinea. Se esperaba '/' pero se encontro: "+caracterActual);
+				//Estado que reconoce los token tipo idMETVAR o palabra clave
+				nextChar();
+				if ((caracterActual=='_')||(Character.isLetterOrDigit(caracterActual))){
+					consumir();					
+				}
+				else {
+					//token es idMetVar
+					int id=Utilidades.getIDMetVarOPalabraClave(lexemaActual);
+					return createToken(id);
 				}
 				break;
-			}				
-			case 5:{
-				//Estado que reconoce menor o menor igual
-				if(caracterActual=='='){
+			}
+			case 2:{
+				//Estado que reconoce tokes de tipo idClase o palabra clave String
+				nextChar();
+				if ((caracterActual=='_')||(Character.isLetterOrDigit(caracterActual))){
+					consumir();					
+				}
+				else {
+					estado=0;
+					if (lexemaActual.equals("String")){
+						//token es String
+						return createToken(Utilidades.TPC_STRING);
+					}
+					else{
+						//token es idClase
+						return createToken(Utilidades.TT_IDCLASE);
+					}
+				}
+				break;				
+			}
+			case 3:{
+				//Estado que reconoce tokens de tipo enteros
+				nextChar();
+				if (Character.isDigit(caracterActual)){
+					consumir();			
+				}
+				else{
+					//token es Entero
+					return createToken(Utilidades.TT_LITENTERO);
+				}
+				break;
+			}
+			case 4:{
+				//Estado que reconoce tokens de tipo String
+				nextChar();
+				if((caracterActual!='"')&&(caracterActual!=0)){
+					consumir();					
+				}else if (caracterActual=='\\'){
+					//caracter es la barra de salida
+					estado=41;
+					break;
+				}
+				else if (caracterActual=='"'){
+					//fin de string
 					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_LITSTRING);
+				}
+				else if (caracterActual==0){
+					//error, se encontro fin de archivo y se esperaba "
+					int linea = this.entradaSalida.getNroLinea();
+					int col = this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal String. Se esperaba \" pero se encontro: '"+caracterActual);
+				}
+				break;
+			}
+			case 41:{
+				//Estado que reconoce el caracter luego de la barra \ en strings
+				nextChar();
+				if (caracterActual=='n'){
+					//nueva linea
+					//no funciona
+					lexemaActual=lexemaActual+System.lineSeparator();
+				}
+				else if (caracterActual=='t'){
+					//tab
+					//no funciona
+					lexemaActual+='\t';				
+				}
+				else{
+					consumir();
+				}
+				estado=4;
+				break;
+			}
+			case 5:{
+				//Estado que reconoce tokens de tipo char
+				nextChar();
+				if (caracterActual=='\\'){
+					estado=51;
+					break;
+				}
+				else if (caracterActual!='\''){
+					//token es char no vacio
+					consumir();
+					estado=52;
+					break;										
+				}
+				else if (caracterActual=='\''){
+					//token es char vacio
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_LITCARACTER);
+				}
+			}		
+			case 51:{
+				//Estado que reconoce el caracter luego de la barra \ en chars
+				nextChar();
+				if (caracterActual=='n'){
+					//nueva linea
+					lexemaActual+='\n';
+				}
+				else if (caracterActual=='t'){
+					//tab
+					lexemaActual+='\t';					
+				}
+				else{
+					consumir();
+				}
+				estado=5;
+				break;
+			}
+			case 52:{
+				nextChar();
+				//Estado final que reconoce tokes de tipo caracters no vacios
+				if (caracterActual=='\''){
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_LITCARACTER);
+				}
+				else{
+					//error, el caracter tiene no esta entre comillas
+					int linea = this.entradaSalida.getNroLinea();
+					int col = this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Se esperaba ' pero se encontro: '"+caracterActual+"' >"+(int)caracterActual);
+				}
+			}
+			case 6:{
+				//Estado que reconoce un token division o posibles comentarios
+				nextChar();
+				if (caracterActual=='/'){
+					//comentario simple
+					estado=61;
+					break;
+				}
+				else if (caracterActual=='*'){
+					//comentario multilinea
+					estado=62;
+					break;
+				}
+				else{
+					//token division
+					estado=0;
+					return createToken(Utilidades.TT_OPDIV);
+				}
+			}
+			case 61:{
+				//Estado que ignora comentarios simples
+				nextChar();
+				if (caracterActual=='\n'){
+					//Si es <enter> elimino (reconozco comentario simple)						
+					lexemaActual="";
+					estado=0;
+				}
+				break;
+			}
+			case 62:{
+				//Estado que ignora posibles comentarios multilinea
+				nextChar();
+				if (caracterActual=='*'){
+					//Voy a estado "reconocedor" de comentarios multilinea
+					estado=621;
+				}
+				break;				
+			}
+			case 621:{
+				//Estado final que ignora comentarios multilinea
+				nextChar();
+				if (caracterActual=='/'){
+					//Si es '/' el comentario fue cerrado correctamente
+					lexemaActual="";
+					nextChar();
+					estado=0;
+				}
+				else{
+					int linea = this.entradaSalida.getNroLinea();
+					int col = this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error en cierre de comentario multilinea. Se esperaba '/' pero se encontro: '"+caracterActual+"'");
+				}
+				break;
+			}
+			case 7:{
+				//Estado que reconoce tokes de tipo igual o doble igual
+				nextChar();
+				if(caracterActual=='='){
+					//token es doble igual
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_OPDOBLEIGUAL);
+				}else{
+					//token es solo igual
+					return createToken(Utilidades.TT_ASIGIGUAL);
+				}
+			}
+			case 8:{
+				//Estado que reconoce tokens de tipo menor o menor igual
+				nextChar();
+				if(caracterActual=='='){
 					//token es menor igual
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPMENORIG,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
+					consumir();
+					nextChar();
+					return createToken(Utilidades.TT_OPMENORIG);
 				}
 				else{
 					//token es menor
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPMENOR,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
+					return createToken(Utilidades.TT_OPMENOR);
 				}
-				//Error lexico si es un caracter extraño?
-			}
-			case 6:{
-				//Estado que reconoce mayor o mayor igual
-				if(caracterActual=='='){
-					consumir();
-					//token es mayor igual
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPMAYORIG,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
-				}else{
-					//token es menor
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPMAYOR,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
-				}
-				//Error lexico si es un caracter extraño?
-			}
-			case 7:{
-				//Estado que reconoce el token AND
-				if(caracterActual=='&'){
-					consumir();
-					//token es AND
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPANDDOBLE,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
-				}else{
-					estado=0;					
-				}
-				//Error lexico si es un caracter extraño?
-				break;//break del case 7
-			}
-			case 8:{
-				//Estado que reconoce el token OR
-				if(caracterActual=='|'){
-					consumir();
-					//token es OR
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPORDOBLE,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
-				}else{
-					estado=0;					
-				}
-				//Error lexico si es un caracter extraño?
-				break;//break del case 8
 			}
 			case 9:{
-				//Estado que reconoce token String
-				if(caracterActual=='"'){
+				//Estado que reconoce tokens de tipo mayor o mayor igual
+				nextChar();
+				if(caracterActual=='='){
+					//token es mayor igual
 					consumir();
-					//token es string
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_LITSTRING,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
+					nextChar();
+					return createToken(Utilidades.TT_OPMAYORIG);
 				}else{
-					consumir();
+					//token es mayor
+					return createToken(Utilidades.TT_OPMAYOR);
 				}
-				//Error lexico si es un caracter extraño?
-				break;//break del case 9
 			}
 			case 10:{
-				//Estado que reconoce negacion o desigual
-				if(caracterActual=='='){
+				//Estado que reconoce el token doble AND
+				nextChar();
+				if(caracterActual=='&'){
 					consumir();
-					//token es desigual
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPDESIGUAL,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
+					nextChar();
+					return createToken(Utilidades.TT_OPANDDOBLE);
 				}else{
-					//token es negacion
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPNEGBOOL,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
-				}
-				//Error lexico si es un caracter extraño?
+					//error caracter inesperado
+					int linea=this.entradaSalida.getNroLinea();
+					int col=this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Se esperaba '&' pero se encontro: '"+caracterActual+"'");
+				}				
 			}
 			case 11:{
-				//Estado que reconoce igual o igual doble
-				if(caracterActual=='='){
+				//Estado que reconoce el token doble OR
+				nextChar();
+				if(caracterActual=='|'){
 					consumir();
-					//token es doble igual
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_OPDOBLEIGUAL,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
+					nextChar();
+					return createToken(Utilidades.TT_OPORDOBLE);
 				}else{
-					//token es solo igual
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_ASIGIGUAL,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
+					//error caracter inesperado
+					int linea=this.entradaSalida.getNroLinea();
+					int col=this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Se esperaba '|' pero se encontro: '"+caracterActual+"'");					
 				}
-				//Error lexico si es un caracter extraño?
 			}
 			case 12:{
-				//el caracter anterior fue '
-				//Estado que reconoce token String
-				if(caracterActual=='\''){
+				//Estado que reconoce tokens de tipo negacion o desigual
+				nextChar();
+				if(caracterActual=='='){
+					//token es desigual
 					consumir();
-					//token es char
-					linea=this.entradaSalida.getNroLinea();
-					col=this.entradaSalida.getNroColumna();
-					tkn = new Token(Utilidades.TT_LITCARACTER,lexemaActual,linea);
-					tkn.setNroColumna(col);
-					this.lexemaActual="";
-					return tkn;
+					nextChar();
+					return createToken(Utilidades.TT_OPDESIGUAL);
 				}else{
-					consumir();
-				}
-				//Error lexico si es un caracter extraño?
-				break;//break del case 12
+					//token es negacion					
+					return createToken(Utilidades.TT_OPNEGBOOL);
+				}				
 			}
-			
-			}//end_switch	
-		}//end_while
-		tkn=new Token(Utilidades.TT_FINARCHIVO,"¶",-1,-1);
+			}
+		}
 		return tkn;
-	}	
-}
+	}//finnextToken
+	
+	
+}//finclase
