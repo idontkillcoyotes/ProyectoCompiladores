@@ -3,7 +3,6 @@ public class AnalizadorLexico {
 	private EntradaSalida entradaSalida;	
 	private char caracterActual;
 	private String lexemaActual;
-	private int k;
 	
 	public AnalizadorLexico(EntradaSalida io){
 		this.entradaSalida=io;
@@ -17,7 +16,6 @@ public class AnalizadorLexico {
 	}
 	private void nextChar(){
 		this.caracterActual=this.entradaSalida.nextChar();
-		this.k=(int)caracterActual;
 	}	
 	public boolean finArchivo(){
 		return this.entradaSalida.finArchivo();
@@ -32,16 +30,19 @@ public class AnalizadorLexico {
 	}	
 	
 	public Token nextToken() throws LexicoException{
-		int estado=0;
+		int estado=0;	
+		//Uso el sig contador para calcular correctamente el numero de columna de una string o caracter
+		//que tiene barras \ dentro (ya que las omito del lexema)
+		int cantBarras=0; 
 		Token tkn= new Token(Utilidades.TT_FINARCHIVO,"¶",-1,-1);
 		while (!entradaSalida.finArchivo()){
 			switch (estado){
 			case 0:{
 				//Estado inicial y reconocedor de tokens de un solo caracter
-				if (caracterActual==0){
+				if ((caracterActual==0)||(caracterActual==-1)){
 					//fin de archivo
 					this.lexemaActual="";
-					return new Token(Utilidades.TT_FINARCHIVO,"¶",-1,-1);
+					return new Token(Utilidades.TT_FINARCHIVO,"dentro case 0",-1,-1);
 				}
 				else if (Character.isWhitespace(caracterActual)){
 					//espacio en blanco, ignoro
@@ -140,13 +141,13 @@ public class AnalizadorLexico {
 				}				
 				else if (caracterActual=='"'){
 					//posible token String
-					consumir();
+					//consumir();
 					estado=4;
 					break;
 				}
 				else if (caracterActual=='\''){
 					//posible token char
-					consumir();
+					//consumir();
 					estado=5;
 					break;
 				}
@@ -247,24 +248,28 @@ public class AnalizadorLexico {
 			case 4:{
 				//Estado que reconoce tokens de tipo String
 				nextChar();
-				if((caracterActual!='"')&&(caracterActual!=0)){
-					consumir();					
-				}else if (caracterActual=='\\'){
+				if (caracterActual=='\\'){
 					//caracter es la barra de salida
+					cantBarras++;
 					estado=41;
 					break;
 				}
+				else if((caracterActual!='"')&&(caracterActual!=0)){
+					consumir();					
+				}
 				else if (caracterActual=='"'){
 					//fin de string
-					consumir();
 					nextChar();
-					return createToken(Utilidades.TT_LITSTRING);
+					tkn=createToken(Utilidades.TT_LITSTRING);
+					tkn.ajustarNroColumna(cantBarras+2);
+					cantBarras=0;
+					return tkn;
 				}
 				else if (caracterActual==0){
 					//error, se encontro fin de archivo y se esperaba "
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal String. Se esperaba \" pero se encontro: '"+caracterActual);
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal String. Se esperaba \" pero se encontro: '"+caracterActual+"'");
 				}
 				break;
 			}
@@ -274,12 +279,12 @@ public class AnalizadorLexico {
 				if (caracterActual=='n'){
 					//nueva linea
 					//no funciona
-					lexemaActual=lexemaActual+System.lineSeparator();
+					lexemaActual+="\n";
 				}
 				else if (caracterActual=='t'){
 					//tab
 					//no funciona
-					lexemaActual+='\t';				
+					lexemaActual+="\t";				
 				}
 				else{
 					consumir();
@@ -292,19 +297,26 @@ public class AnalizadorLexico {
 				nextChar();
 				if (caracterActual=='\\'){
 					estado=51;
+					cantBarras++;
 					break;
+				}
+				else if (caracterActual=='\''){
+					//error el token char no puede ser vacio
+					int linea = this.entradaSalida.getNroLinea();
+					int col = this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Literal caracter vacio");
+				}
+				else if (caracterActual==0){
+					//fin archivo luego de primer '
+					int linea = this.entradaSalida.getNroLinea();
+					int col = this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Se esperaba un caracter valido pero se encontro: '"+caracterActual+"'");					
 				}
 				else if (caracterActual!='\''){
 					//token es char no vacio
 					consumir();
 					estado=52;
 					break;										
-				}
-				else if (caracterActual=='\''){
-					//token es char vacio
-					consumir();
-					nextChar();
-					return createToken(Utilidades.TT_LITCARACTER);
 				}
 			}		
 			case 51:{
@@ -316,27 +328,37 @@ public class AnalizadorLexico {
 				}
 				else if (caracterActual=='t'){
 					//tab
-					lexemaActual+='\t';					
+					lexemaActual+='\t';				
+				}
+				else if (caracterActual==0){
+					//fin de archivo luego de la \
+					//error, el caracter tiene no esta entre comillas
+					int linea = this.entradaSalida.getNroLinea();
+					int col = this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Se esperaba ' pero se encontro: '"+caracterActual+"'");
 				}
 				else{
 					consumir();
 				}
-				estado=5;
+				estado=52;
 				break;
 			}
 			case 52:{
 				nextChar();
-				//Estado final que reconoce tokes de tipo caracters no vacios
+				//Estado final que reconoce tokens de tipo caracter
 				if (caracterActual=='\''){
-					consumir();
+					//comilla terminadora
 					nextChar();
-					return createToken(Utilidades.TT_LITCARACTER);
+					tkn= createToken(Utilidades.TT_LITCARACTER);
+					tkn.ajustarNroColumna(cantBarras+2);
+					cantBarras=0;
+					return tkn;
 				}
 				else{
 					//error, el caracter tiene no esta entre comillas
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Se esperaba ' pero se encontro: '"+caracterActual+"' >"+(int)caracterActual);
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Se esperaba ' pero se encontro: '"+caracterActual+"'");
 				}
 			}
 			case 6:{
@@ -375,6 +397,12 @@ public class AnalizadorLexico {
 					//Voy a estado "reconocedor" de comentarios multilinea
 					estado=621;
 				}
+				else if(caracterActual==0){
+					//fin archivo antes del cierre del comentario
+					int linea = this.entradaSalida.getNroLinea();
+					int col = this.entradaSalida.getNroColumna();
+					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error en cierre de comentario multilinea.");
+				}
 				break;				
 			}
 			case 621:{
@@ -386,10 +414,15 @@ public class AnalizadorLexico {
 					nextChar();
 					estado=0;
 				}
-				else{
+				else if (caracterActual==0){
+					//fin de archivo antes del cierre del comentario
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
 					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error en cierre de comentario multilinea. Se esperaba '/' pero se encontro: '"+caracterActual+"'");
+				}
+				else{
+					estado=62;
+					break;
 				}
 				break;
 			}

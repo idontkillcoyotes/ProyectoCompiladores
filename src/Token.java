@@ -32,6 +32,10 @@ public class Token {
 		this.nroColumna=c-k;
 	}
 	
+	public void ajustarNroColumna(int k){
+		this.nroColumna=this.nroColumna-k;
+	}
+	
 	public int getTipo() {
 		return tipo;
 	}
@@ -60,7 +64,15 @@ public class Token {
 	}
 	
 	public String toString(){
-		return this.nroLinea+"\t"+this.nroColumna+"\t"+Utilidades.getTipoID(this.tipo)+"\t\t"+this.lexema+"\t\t\t\t";				
+		String s=this.nroLinea+"\t"+this.nroColumna+"\t";		
+		if(Utilidades.getTipoID(this.tipo).length()<=7){
+			s+=Utilidades.getTipoID(this.tipo)+"\t\t\t";
+		}
+		else{
+			s+=Utilidades.getTipoID(this.tipo)+"\t\t";
+		}
+		s+=this.lexema;
+		return s;
 	}
 
 }
