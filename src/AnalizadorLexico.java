@@ -42,7 +42,7 @@ public class AnalizadorLexico {
 				if ((caracterActual==0)||(caracterActual==-1)){
 					//fin de archivo
 					this.lexemaActual="";
-					return new Token(Utilidades.TT_FINARCHIVO,"dentro case 0",-1,-1);
+					return new Token(Utilidades.TT_FINARCHIVO,"¶",-1,-1);
 				}
 				else if (Character.isWhitespace(caracterActual)){
 					//espacio en blanco, ignoro
