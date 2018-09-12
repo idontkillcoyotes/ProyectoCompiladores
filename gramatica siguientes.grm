@@ -1,0 +1,66 @@
+Inicio= { $ }
+Clases= { $ }
+Clase= { ε, class }
+Herencia= { { }
+Miembros= { } }
+Miembro= { ε, public, private, static, dynamic, idClase }
+Atributo= { ε, public, private, static, dynamic, idClase }
+Metodo= { ε, public, private, static, dynamic, idClase }
+Ctor= { ε, public, private, static, dynamic, idClase }
+ArgsFormales= { { }
+ListaArg= { ) }
+ArgFormales= { ) }
+Arg= { , }
+FormaMetodo= { void, boolean, char, int, idClase, String }
+Visibilidad= { boolean, char, int, idClase, String }
+TipoMetodo= { idMetVar }
+Tipo= { idMetVar }
+TipoPrimitivo= { [, idMetVar }
+TipoReferencia= { idMetVar }
+ListaDecVars= { ; }
+ListaDV= { ; }
+Bloque= { ε, else, ;, if, while, return, idMetVar, this, boolean, char, int, idClase, String, (, {, public, private, static, dynamic }
+Sentencias= { } }
+Sentencia= { ε, else, ;, if, while, return, idMetVar, this, boolean, char, int, idClase, String, (, { }
+SentenciaElse= { ε, else, ;, if, while, return, idMetVar, this, boolean, char, int, idClase, String, (, { }
+Expresiones= { ; }
+Asignacion= { ; }
+SentenciaLlamada= { ; }
+Expresion= { ], ,, ε, ), +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new, ; }
+ExpOr= { ], ,, ε, ), +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new, ; }
+ExpOrR= { ], ,, ε, ), +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new, ; }
+ExpAnd= { ε, +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new, ], ,, ), ; }
+ExpAndR= { ε, +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new, ], ,, ), ; }
+ExpIg= { &&, ε }
+ExpIgR= { &&, ε }
+ExpComp= { ε, ==, != }
+ExpCompR= { ε, ==, != }
+ExpAd= { ε, <, >, <=, >=, ==, != }
+ExpAdR= { ε, <, >, <=, >=, ==, != }
+ExpMul= { ε, +, - }
+ExpMulR= { ε, +, - }
+ExpUn= { ε, *, / }
+OpIgual= { +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new }
+OpComp= { +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new }
+OpAd= { +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new }
+OpUn= { +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new }
+OpMul= { +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new }
+Operando= { ε, *, / }
+Literal= { ε, *, / }
+Primario= { ), ε, *, / }
+MetodoVariable= { ), ε, *, / }
+ExpresionParentizada= { ), ε, *, / }
+Encadenado= { ε, ., [, =, ), *, / }
+Acceso= { ε, ., [, =, ), *, / }
+AccesoThis= { =, ), ε, *, / }
+AccesoVar= { = }
+LlamadaMetodo= { ε, ., [ }
+LlamadaMetodoEstatico= { ), ε, *, / }
+LlamadaCtor= { ), ε, *, / }
+LlamadaCtorR= { ), ε, *, / }
+ArgsActuales= { ε, ., [ }
+ListaExpresiones= { ) }
+ListaExp= { ) }
+LlamadaMetodoEncadenado= { ε, ., [, =, ), *, / }
+AccesoVarEncadenado= { ε, ., [, =, ), *, / }
+AccesoArregloEncadenado= { ε, ., [, =, ), *, /
