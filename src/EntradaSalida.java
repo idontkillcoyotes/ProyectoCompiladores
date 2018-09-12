@@ -18,7 +18,7 @@ public class EntradaSalida {
     private int nroLinea;
     private int nroColumna;
     
-    
+    //TODO: eliminar escritura?
     public EntradaSalida(String archivo){
     	archivoEntrada=archivo;
     	nroLinea=0;

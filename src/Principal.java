@@ -1,6 +1,7 @@
 
 public class Principal {	
 	
+	//TODO: eliminar salida por archivo
 	public static void main(String[] args) {	
 		if (args.length==1){
 			EntradaSalida io= new EntradaSalida(args[0]);
