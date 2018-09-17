@@ -1,5 +1,5 @@
 
-public final class Utils {
+public final class Utl {
 	
 	private static final String[] PALABRASCLAVE = {"class","extends","static","dynamic","String","boolean","char","int",
 			"public","private","void","null","if","else","while","return","this","new","true","false"};
@@ -32,10 +32,6 @@ public final class Utils {
 	public static final int TT_OPANDDOBLE=26;
 	public static final int TT_OPORDOBLE=27;
 	public static final int TT_FINARCHIVO=-1;
-	//Estos son necesarios?
-	//public static final int TT_COMMULTIL_A=30;
-	//public static final int TT_COMMULTIL_C=31;
-	//public static final int TT_COMSIMPLE=32;	
 	public static final int TPC_CLASS=100;
 	public static final int TPC_EXTENDS=101;
 	public static final int TPC_STATIC=102;
@@ -67,7 +63,7 @@ public final class Utils {
 		if ((id>=0)&&(id<100)){
 			return tokenn[id];					
 		}else if (id==-1){
-			return "FINARCHIVO";
+			return "FIN_ARCHIVO";
 		}else{
 			return tokenpc[id-100];
 		}

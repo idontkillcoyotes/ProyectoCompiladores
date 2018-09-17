@@ -19,7 +19,8 @@ ArgFormales -> ε
 Arg -> Tipo idMetVar
 FormaMetodo -> static
 FormaMetodo -> dynamic
-Visibilidad -> public | private
+Visibilidad -> public 
+Visibilidad -> private
 TipoMetodo -> Tipo
 TipoMetodo -> void
 Tipo -> boolean PosibleArreglo
@@ -42,13 +43,13 @@ Bloque -> { Sentencias }
 Sentencias -> Sentencia Sentencias
 Sentencias -> ε
 Sentencia -> ;
+Sentencia -> if ( Expresion ) Sentencia SentenciaElse
+Sentencia -> while ( Expresion ) Sentencia
+Sentencia -> return Expresiones ;
 Sentencia -> Asignacion ;
 Sentencia -> SentenciaLlamada ;
 Sentencia -> Tipo ListaDecVars ;
-Sentencia -> if ( Expresion ) Sentencia SentenciaElse
-Sentencia -> while ( Expresion ) Sentencia
 Sentencia -> Bloque
-Sentencia -> return Expresiones ;
 SentenciaElse -> else Sentencia
 SentenciaElse -> ε
 Expresiones -> Expresion
@@ -98,17 +99,17 @@ Literal -> false
 Literal -> intLiteral
 Literal -> charLiteral
 Literal -> stringLiteral
+Primario -> idMetVar MetodoVariable
 Primario -> ExpresionParentizada
 Primario -> AccesoThis
-Primario -> idMetVar MetodoVariable
 Primario -> LlamadaMetodoEstatico
 Primario -> LlamadaCtor
-MetodoVariable -> Encadenado
 MetodoVariable -> ArgsActuales Encadenado
+MetodoVariable -> Encadenado
 ExpresionParentizada -> ( Expresion ) Encadenado
-Encadenado -> ε
 Encadenado -> . idMetVar Acceso
 Encadenado -> AccesoArregloEncadenado
+Encadenado -> ε
 Acceso -> LlamadaMetodoEncadenado
 Acceso -> AccesoVarEncadenado
 AccesoThis -> this Encadenado
@@ -117,7 +118,7 @@ LlamadaMetodo -> idMetVar ArgsActuales Encadenado
 LlamadaMetodoEstatico -> idClase . LlamadaMetodo
 LlamadaCtor -> new LlamadaCtorR
 LlamadaCtorR -> idClase ArgsActuales Encadenado
-| TipoPrimitivo [ Expresion ] Encadenado
+LlamadaCtorR -> TipoPrimitivo [ Expresion ] Encadenado
 ArgsActuales -> ( ListaExpresiones )
 ListaExpresiones -> Expresion ListaExp
 ListaExpresiones -> ε

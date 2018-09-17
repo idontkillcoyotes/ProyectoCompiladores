@@ -34,7 +34,7 @@ public class AnalizadorLexico {
 		//Uso el sig contador para calcular correctamente el numero de columna de una string o caracter
 		//que tiene barras \ dentro (ya que las omito del lexema)
 		int cantBarras=0; 
-		Token tkn= new Token(Utils.TT_FINARCHIVO,"$",-1,-1);
+		Token tkn= new Token(Utl.TT_FINARCHIVO,"$",-1,-1);
 		while (!entradaSalida.finArchivo()){
 			switch (estado){
 			case 0:{
@@ -42,7 +42,7 @@ public class AnalizadorLexico {
 				if ((caracterActual==0)||(caracterActual==-1)){
 					//fin de archivo
 					this.lexemaActual="";
-					return new Token(Utils.TT_FINARCHIVO,"$",-1,-1);
+					return new Token(Utl.TT_FINARCHIVO,"$",-1,-1);
 				}
 				else if (Character.isWhitespace(caracterActual)){
 					//espacio en blanco, ignoro
@@ -71,73 +71,73 @@ public class AnalizadorLexico {
 					//token es punto coma
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNPUNTOCOMA);
+					return createToken(Utl.TT_PUNPUNTOCOMA);
 				}
 				else if (caracterActual=='{'){
 					//token es llave abierta
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNLLAVE_A);
+					return createToken(Utl.TT_PUNLLAVE_A);
 				}
 				else if (caracterActual=='}'){
 					//token es llave cerrada
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNLLAVE_C);
+					return createToken(Utl.TT_PUNLLAVE_C);
 				}
 				else if (caracterActual=='('){
 					//token es parentesis abierto
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNPARENT_A);
+					return createToken(Utl.TT_PUNPARENT_A);
 				}
 				else if (caracterActual==')'){
 					//token es parentesis cerrado
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNPARENT_C);
+					return createToken(Utl.TT_PUNPARENT_C);
 				}
 				else if (caracterActual=='+'){
 					//token es suma
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_OPSUMA);											
+					return createToken(Utl.TT_OPSUMA);											
 				}
 				else if (caracterActual=='-'){
 					//token es resta
 					consumir();	
 					nextChar();
-					return createToken(Utils.TT_OPRESTA);
+					return createToken(Utl.TT_OPRESTA);
 				}
 				else if (caracterActual=='*'){
 					//token es multiplicacion
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_OPMULT);
+					return createToken(Utl.TT_OPMULT);
 				}
 				else if (caracterActual=='['){
 					//token es corchete abierto
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNCORCH_A);
+					return createToken(Utl.TT_PUNCORCH_A);
 				}
 				else if (caracterActual==']'){
 					//token es corchete cerrado
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNCORCH_C);
+					return createToken(Utl.TT_PUNCORCH_C);
 				}
 				else if (caracterActual=='.'){
 					//token es punto
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNPUNTO);
+					return createToken(Utl.TT_PUNPUNTO);
 				}
 				else if (caracterActual==','){
 					//token es coma
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_PUNCOMA);
+					return createToken(Utl.TT_PUNCOMA);
 				}				
 				else if (caracterActual=='"'){
 					//posible token String
@@ -209,7 +209,7 @@ public class AnalizadorLexico {
 				}
 				else {
 					//token es idMetVar
-					int id=Utils.getIDMetVarOPalabraClave(lexemaActual);
+					int id=Utl.getIDMetVarOPalabraClave(lexemaActual);
 					return createToken(id);
 				}
 				break;
@@ -224,11 +224,11 @@ public class AnalizadorLexico {
 					estado=0;
 					if (lexemaActual.equals("String")){
 						//token es String
-						return createToken(Utils.TPC_STRING);
+						return createToken(Utl.TPC_STRING);
 					}
 					else{
 						//token es idClase
-						return createToken(Utils.TT_IDCLASE);
+						return createToken(Utl.TT_IDCLASE);
 					}
 				}
 				break;				
@@ -241,7 +241,7 @@ public class AnalizadorLexico {
 				}
 				else{
 					//token es Entero
-					return createToken(Utils.TT_LITENTERO);
+					return createToken(Utl.TT_LITENTERO);
 				}
 				break;
 			}
@@ -260,7 +260,7 @@ public class AnalizadorLexico {
 				else if (caracterActual=='"'){
 					//fin de string
 					nextChar();
-					tkn=createToken(Utils.TT_LITSTRING);
+					tkn=createToken(Utl.TT_LITSTRING);
 					tkn.ajustarNroColumna(cantBarras+2);
 					cantBarras=0;
 					return tkn;
@@ -355,7 +355,7 @@ public class AnalizadorLexico {
 				if (caracterActual=='\''){
 					//comilla terminadora
 					nextChar();
-					tkn= createToken(Utils.TT_LITCARACTER);
+					tkn= createToken(Utl.TT_LITCARACTER);
 					tkn.ajustarNroColumna(cantBarras+2);
 					cantBarras=0;
 					return tkn;
@@ -383,7 +383,7 @@ public class AnalizadorLexico {
 				else{
 					//token division
 					estado=0;
-					return createToken(Utils.TT_OPDIV);
+					return createToken(Utl.TT_OPDIV);
 				}
 			}
 			case 61:{
@@ -439,10 +439,10 @@ public class AnalizadorLexico {
 					//token es doble igual
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_OPDOBLEIGUAL);
+					return createToken(Utl.TT_OPDOBLEIGUAL);
 				}else{
 					//token es solo igual
-					return createToken(Utils.TT_ASIGIGUAL);
+					return createToken(Utl.TT_ASIGIGUAL);
 				}
 			}
 			case 8:{
@@ -452,11 +452,11 @@ public class AnalizadorLexico {
 					//token es menor igual
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_OPMENORIG);
+					return createToken(Utl.TT_OPMENORIG);
 				}
 				else{
 					//token es menor
-					return createToken(Utils.TT_OPMENOR);
+					return createToken(Utl.TT_OPMENOR);
 				}
 			}
 			case 9:{
@@ -466,10 +466,10 @@ public class AnalizadorLexico {
 					//token es mayor igual
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_OPMAYORIG);
+					return createToken(Utl.TT_OPMAYORIG);
 				}else{
 					//token es mayor
-					return createToken(Utils.TT_OPMAYOR);
+					return createToken(Utl.TT_OPMAYOR);
 				}
 			}
 			case 10:{
@@ -478,7 +478,7 @@ public class AnalizadorLexico {
 				if(caracterActual=='&'){
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_OPANDDOBLE);
+					return createToken(Utl.TT_OPANDDOBLE);
 				}else{
 					//error caracter inesperado
 					int linea=this.entradaSalida.getNroLinea();
@@ -492,7 +492,7 @@ public class AnalizadorLexico {
 				if(caracterActual=='|'){
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_OPORDOBLE);
+					return createToken(Utl.TT_OPORDOBLE);
 				}else{
 					//error caracter inesperado
 					int linea=this.entradaSalida.getNroLinea();
@@ -507,10 +507,10 @@ public class AnalizadorLexico {
 					//token es desigual
 					consumir();
 					nextChar();
-					return createToken(Utils.TT_OPDESIGUAL);
+					return createToken(Utl.TT_OPDESIGUAL);
 				}else{
 					//token es negacion					
-					return createToken(Utils.TT_OPNEGBOOL);
+					return createToken(Utl.TT_OPNEGBOOL);
 				}				
 			}
 			}

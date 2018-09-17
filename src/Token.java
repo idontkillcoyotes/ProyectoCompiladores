@@ -65,11 +65,11 @@ public class Token {
 	
 	public String toString(){
 		String s=this.nroLinea+"\t"+this.nroColumna+"\t";		
-		if(Utils.getTipoID(this.tipo).length()<=7){
-			s+=Utils.getTipoID(this.tipo)+"\t\t\t";
+		if(Utl.getTipoID(this.tipo).length()<=7){
+			s+=Utl.getTipoID(this.tipo)+"\t\t\t";
 		}
 		else{
-			s+=Utils.getTipoID(this.tipo)+"\t\t";
+			s+=Utl.getTipoID(this.tipo)+"\t\t";
 		}
 		s+=this.lexema;
 		return s;
