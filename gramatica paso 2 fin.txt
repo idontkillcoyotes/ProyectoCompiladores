@@ -109,7 +109,7 @@ MetodoVariable -> Encadenado
 ExpresionParentizada -> ( Expresion ) Encadenado
 Encadenado -> . idMetVar Acceso
 Encadenado -> AccesoArregloEncadenado
-Encadenado -> ε
+Encadenado -> EPSILON
 Acceso -> LlamadaMetodoEncadenado
 Acceso -> AccesoVarEncadenado
 AccesoThis -> this Encadenado
@@ -121,9 +121,9 @@ LlamadaCtorR -> idClase ArgsActuales Encadenado
 LlamadaCtorR -> TipoPrimitivo [ Expresion ] Encadenado
 ArgsActuales -> ( ListaExpresiones )
 ListaExpresiones -> Expresion ListaExp
-ListaExpresiones -> ε
+ListaExpresiones -> EPSILON
 ListaExp -> , Expresion ListaExp
-ListaExp -> ε
+ListaExp -> EPSILON
 LlamadaMetodoEncadenado -> ArgsActuales Encadenado
 AccesoVarEncadenado -> Encadenado
 AccesoArregloEncadenado -> [ Expresion ] Encadenado

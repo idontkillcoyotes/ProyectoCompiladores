@@ -3,6 +3,7 @@ public final class Utl {
 	
 	private static final String[] PALABRASCLAVE = {"class","extends","static","dynamic","String","boolean","char","int",
 			"public","private","void","null","if","else","while","return","this","new","true","false"};
+	
 	public static final int TT_IDMETVAR=0;
 	public static final int TT_IDCLASE=1;	
 	public static final int TT_PUNPUNTOCOMA=2;
@@ -31,7 +32,9 @@ public final class Utl {
 	public static final int TT_OPDIV=25;
 	public static final int TT_OPANDDOBLE=26;
 	public static final int TT_OPORDOBLE=27;
+	
 	public static final int TT_FINARCHIVO=-1;
+	
 	public static final int TPC_CLASS=100;
 	public static final int TPC_EXTENDS=101;
 	public static final int TPC_STATIC=102;
@@ -53,22 +56,24 @@ public final class Utl {
 	public static final int TPC_TRUE=118;
 	public static final int TPC_FALSE=119;
 	
-	private static String[] tokenn={"IDMETVAR","IDCLASE","PUNPUNTOCOMA","PUNPUNTO","PUNCOMA","PUNPARENT_A","PUNPARENT_C","PUNCORCH_A","PUNCORCH_C","PUNLLAVE_A","PUNLLAVE_C",
-			"ASIGIGUAL","LITENTERO","LITCARACTER","LITSTRING","OPMAYOR","OPMENOR","OPNEGBOOL","OPDOBLEIGUAL","OPMAYORIG","OPMENORIG","OPDESIGUAL","OPSUMA","OPRESTA",
-			"OPMULT","OPDIV","OPANDDOBLE","OPORDOBLE"};
-	private static String[] tokenpc={"PC_CLASS","PC_EXTENDS","PC_STATIC","PC_DYNAMIC","PC_STRING","PC_BOOLEAN","PC_CHAR","PC_INT","PC_PUBLIC","PC_PRIVATE","PC_VOID","PC_NULL","PC_IF","PC_ELSE",
-			"PC_WHILE","PC_RETURN","PC_THIS","PC_NEW","PC_TRUE","PC_FALSE"};
-	
+	private static String[] tokenn={"idMetVar","idClase",";",".",",","(",")","[","]","{","}",
+			"=","litEntero","litCaracter","litString",">","<","!","==",">=","<=","!=","+","-",
+			"*","/","&&","||"};
+	/*
+	private static String[] tokenpc={"PC_CLASS","PC_EXTENDS","PC_STATIC","PC_DYNAMIC","PC_STRING","PC_BOOLEAN","PC_CHAR","PC_INT",
+			"PC_PUBLIC","PC_PRIVATE","PC_VOID","PC_NULL","PC_IF","PC_ELSE","PC_WHILE","PC_RETURN","PC_THIS","PC_NEW","PC_TRUE","PC_FALSE"};
+	*/
 	public static String getTipoID(int id){
 		if ((id>=0)&&(id<100)){
 			return tokenn[id];					
 		}else if (id==-1){
 			return "FIN_ARCHIVO";
 		}else{
-			return tokenpc[id-100];
+			return PALABRASCLAVE[id-100];
 		}
 	}
-	
+	//Este metodo lo utiliza el analizador lexico para obtener el
+	//tipo de un token que puede ser idMetVar o una palabra clave
 	public static int getIDMetVarOPalabraClave(String lexema){
 		int id=0;
 		int largo=PALABRASCLAVE.length;

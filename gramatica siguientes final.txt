@@ -51,7 +51,7 @@ Literal = {ε, *, /}
 Primario = {), ε, *, /}
 MetodoVariable = {), ε, *, /}
 ExpresionParentizada = {), ε, *, /}
-Encadenado = {=, ), ε, *, /}
+Encadenado = {=, ), *, /, +, -, <, <=, >, >=, ==, !=, &&, ||, ], ;, ,,}
 Acceso = {=, ), ε, *, /}
 AccesoThis = {=, ), ε, *, /}
 AccesoVar = {=}
