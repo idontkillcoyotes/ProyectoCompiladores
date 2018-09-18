@@ -12,7 +12,12 @@ public class AnalizadorSintactico {
 			System.out.println(e.getMessage());
 		}		
 	}
-	
+	private void print(String s){
+		System.out.println(s);
+	}	
+	private void printToken(){
+		System.out.println(Utl.getTipoID(tokenAct.getTipo()));
+	}
 	private void match(int tipoToken) throws SintacticException{
 		if(tokenAct.esTipo(tipoToken)){
 			try {
@@ -50,7 +55,7 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
-			//TODO: error
+			//TODO: error clases
 		}		
 	}
 	
@@ -71,7 +76,7 @@ public class AnalizadorSintactico {
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_A)){
 			//vacio
 		}else{
-			//TODO: error
+			//TODO: error herencia
 		}			
 	}
 	private void miembros() throws SintacticException{
@@ -82,7 +87,7 @@ public class AnalizadorSintactico {
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_C)){
 			//vacio
 		}else{
-			//TODO: error
+			//TODO: error miembros
 		}			
 	}
 	private void miembro() throws SintacticException{
@@ -96,14 +101,14 @@ public class AnalizadorSintactico {
 			metodo();
 		}
 		else{
-			//TODO: error
+			//TODO: error miembro
 		}
 	}
 	private void atributo() throws SintacticException{
 		visibilidad();
 		tipo();
 		listaDecVars();
-		//TODO logro
+		//TODO logro inicializacion
 		match(Utl.TT_PUNPUNTOCOMA);
 	}
 	private void metodo() throws SintacticException{
@@ -132,7 +137,7 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
-			//TODO error
+			//TODO error lista arg
 		}
 	}
 	private void argFormales()  throws SintacticException{
@@ -145,7 +150,7 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
-			//TODO error
+			//TODO error arg formales
 		}
 	}
 	private void arg() throws SintacticException {
@@ -157,10 +162,10 @@ public class AnalizadorSintactico {
 			match(Utl.TPC_STATIC);
 		}
 		else if (tokenAct.esTipo(Utl.TPC_DYNAMIC)){
-			match(Utl.TPC_STATIC);
+			match(Utl.TPC_DYNAMIC);
 		}
 		else{
-			//TODO error
+			//TODO error arg
 		}
 	}
 	private void visibilidad()  throws SintacticException{
@@ -171,18 +176,18 @@ public class AnalizadorSintactico {
 			match(Utl.TPC_PRIVATE);
 		}
 		else{
-			//TODO error
+			//TODO error visibilidad
 		}
 	}
 	private void tipoMetodo()  throws SintacticException{
-		if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
-			tipo();
-		}
-		else if (tokenAct.esTipo(Utl.TPC_VOID)){
+		if (tokenAct.esTipo(Utl.TPC_VOID)){
 			match(Utl.TPC_VOID);
 		}
+		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
+			tipo();
+		}
 		else{
-			//TODO error
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Se esperaba el tipo del metodo pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void tipo() throws SintacticException {
@@ -207,7 +212,7 @@ public class AnalizadorSintactico {
 			//para logro posibleArreglo();
 		}
 		else{
-			//TODO error
+			//TODO error tipo
 		}
 	}
 	private void posibleArreglo() throws SintacticException {
@@ -219,7 +224,7 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
-			//TODO error
+			//TODO error posible arreglo
 		}
 	}
 	private void tipoPrimitivo() throws SintacticException {
@@ -233,7 +238,7 @@ public class AnalizadorSintactico {
 			match(Utl.TPC_INT);
 		}
 		else{
-			//TODO error
+			//TODO error tipo primitivo
 		}
 	}
 	/*
@@ -255,7 +260,7 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
-			//TODO error
+			//TODO error lista dec vars
 		}		
 	}	
 	private void bloque() throws SintacticException {
@@ -272,7 +277,7 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
-			//TODO error
+			//TODO error bloque 
 		}	
 	}
 	private void sentencia() throws SintacticException {
@@ -321,7 +326,7 @@ public class AnalizadorSintactico {
 			bloque();
 		}
 		else{
-			//TODO error
+			//TODO error sentencia
 		}
 	}
 	private void sentenciaElse()  throws SintacticException{
@@ -334,7 +339,7 @@ public class AnalizadorSintactico {
 			//TODO checkear si los siguientes son correctos
 		}
 		else{
-			//TODO error
+			//TODO error sentencia else
 		}
 	}
 	private void expresiones()  throws SintacticException{
@@ -366,9 +371,13 @@ public class AnalizadorSintactico {
 		}
 	} 
 	private void sentenciaLlamada() throws SintacticException {
+		//print("entro a sentenciallamada");
 		match(Utl.TT_PUNPARENT_A);
+		//print("sentenciallamada: luego de (");
 		primario();
 		match(Utl.TT_PUNPARENT_C);
+		//print("sentenciallamada: luego de )");
+		//print("salgo sentenciallamada");
 	}
 	private void expresion()  throws SintacticException{
 		expOr();
@@ -557,15 +566,19 @@ public class AnalizadorSintactico {
 		}
 	} 
 	private void operando() throws SintacticException {
+		//print("entro a operando");
 		if (tokenAct.esTipo(new int[]{Utl.TPC_NULL,Utl.TPC_TRUE,Utl.TPC_FALSE,Utl.TT_LITENTERO,Utl.TT_LITCARACTER,Utl.TT_LITSTRING})){
+			//print("operando: es literal");
 			literal();
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TT_IDMETVAR,Utl.TT_IDCLASE,Utl.TT_PUNPARENT_A,Utl.TPC_THIS,Utl.TPC_NEW})){
+			//print("operando: es primario");
 			primario();
 		}
 		else{
 			//TODO error operando
 		}
+		//print("salgo operando");
 	}
 	private void literal()  throws SintacticException{
 		if (tokenAct.esTipo(Utl.TPC_NULL)){
@@ -592,7 +605,7 @@ public class AnalizadorSintactico {
 	} 
 	private void primario() throws SintacticException {
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
-			match(Utl.TPC_NULL);
+			match(Utl.TT_IDMETVAR);
 			metodoVariable();
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){

@@ -42,16 +42,16 @@ public final class Utl {
 	public static final int TPC_INT=107;
 	public static final int TPC_PUBLIC=108;
 	public static final int TPC_PRIVATE=109;
-	public static final int TPC_VOID=120;
-	public static final int TPC_NULL=121;
-	public static final int TPC_IF=122;
-	public static final int TPC_ELSE=123;
-	public static final int TPC_WHILE=124;
-	public static final int TPC_RETURN=125;
-	public static final int TPC_THIS=126;
-	public static final int TPC_NEW=127;
-	public static final int TPC_TRUE=128;
-	public static final int TPC_FALSE=129;
+	public static final int TPC_VOID=110;
+	public static final int TPC_NULL=111;
+	public static final int TPC_IF=112;
+	public static final int TPC_ELSE=113;
+	public static final int TPC_WHILE=114;
+	public static final int TPC_RETURN=115;
+	public static final int TPC_THIS=116;
+	public static final int TPC_NEW=117;
+	public static final int TPC_TRUE=118;
+	public static final int TPC_FALSE=119;
 	
 	private static String[] tokenn={"IDMETVAR","IDCLASE","PUNPUNTOCOMA","PUNPUNTO","PUNCOMA","PUNPARENT_A","PUNPARENT_C","PUNCORCH_A","PUNCORCH_C","PUNLLAVE_A","PUNLLAVE_C",
 			"ASIGIGUAL","LITENTERO","LITCARACTER","LITSTRING","OPMAYOR","OPMENOR","OPNEGBOOL","OPDOBLEIGUAL","OPMAYORIG","OPMENORIG","OPDESIGUAL","OPSUMA","OPRESTA",

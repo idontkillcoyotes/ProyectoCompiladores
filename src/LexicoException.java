@@ -1,7 +1,7 @@
 
 public class LexicoException extends Exception {
 
-	public LexicoException(String msg){
-		super(msg);
+	public LexicoException(int lin, int col, String msg){		
+		super("ERROR LEXICO: Linea:"+lin+" Columna:"+col+".\n"+msg);
 	}
 }

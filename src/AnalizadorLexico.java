@@ -33,8 +33,8 @@ public class AnalizadorLexico {
 		int estado=0;	
 		//Uso el sig contador para calcular correctamente el numero de columna de una string o caracter
 		//que tiene barras \ dentro (ya que las omito del lexema)
-		int cantBarras=0; 
-		Token tkn= new Token(Utl.TT_FINARCHIVO,"$",-1,-1);
+		int cantBarras=0;
+		Token tkn= new Token(Utl.TT_FINARCHIVO,"$",entradaSalida.getNroLinea(),entradaSalida.getNroColumna());
 		while (!entradaSalida.finArchivo()){
 			switch (estado){
 			case 0:{
@@ -42,7 +42,7 @@ public class AnalizadorLexico {
 				if ((caracterActual==0)||(caracterActual==-1)){
 					//fin de archivo
 					this.lexemaActual="";
-					return new Token(Utl.TT_FINARCHIVO,"$",-1,-1);
+					return new Token(Utl.TT_FINARCHIVO,"$",entradaSalida.getNroLinea(),entradaSalida.getNroColumna());
 				}
 				else if (Character.isWhitespace(caracterActual)){
 					//espacio en blanco, ignoro
@@ -197,7 +197,7 @@ public class AnalizadorLexico {
 					// caracter desconocido
 					int linea=this.entradaSalida.getNroLinea();
 					int col=this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Se encontro un caracter inesperado: '"+caracterActual+"'");
+					throw new LexicoException(linea,col,"Se encontro un caracter inesperado: '"+caracterActual+"'");
 				}
 				
 			}
@@ -269,13 +269,13 @@ public class AnalizadorLexico {
 					//error, se encontro fin de archivo y se esperaba "
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal String. Se esperaba \" pero se encontro: '"+caracterActual+"'");
+					throw new LexicoException(linea,col,"Error de literal String. Se esperaba \" pero se encontro: '"+caracterActual+"'");
 				}
 				else if (caracterActual=='\n'){
 					//error, se encontro salto de linea y se esperaba "
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal String. Se esperaba \" pero se encontro un salto de linea");
+					throw new LexicoException(linea,col,"Error de literal String. Se esperaba \" pero se encontro un salto de linea");
 				}
 				break;
 			}
@@ -310,13 +310,13 @@ public class AnalizadorLexico {
 					//error el token char no puede ser vacio
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Literal caracter vacio");
+					throw new LexicoException(linea,col,"Error de literal caracter. Literal caracter vacio");
 				}
 				else if (caracterActual==0){
 					//fin archivo luego de primer '
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Se esperaba un caracter valido pero se encontro: '"+caracterActual+"'");					
+					throw new LexicoException(linea,col,"Error de literal caracter. Se esperaba un caracter valido pero se encontro: '"+caracterActual+"'");					
 				}
 				else if (caracterActual!='\''){
 					//token es char no vacio
@@ -341,7 +341,7 @@ public class AnalizadorLexico {
 					//error, el caracter tiene no esta entre comillas
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Se esperaba ' pero se encontro: '"+caracterActual+"'");
+					throw new LexicoException(linea,col,"Error de literal caracter. Se esperaba ' pero se encontro: '"+caracterActual+"'");
 				}
 				else{
 					consumir();
@@ -364,7 +364,7 @@ public class AnalizadorLexico {
 					//error, el caracter tiene no esta entre comillas
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error de literal caracter. Se esperaba ' pero se encontro: '"+caracterActual+"'");
+					throw new LexicoException(linea,col,"Error de literal caracter. Se esperaba ' pero se encontro: '"+caracterActual+"'");
 				}
 			}
 			case 6:{
@@ -407,7 +407,7 @@ public class AnalizadorLexico {
 					//fin archivo antes del cierre del comentario
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error en cierre de comentario multilinea.");
+					throw new LexicoException(linea,col,"Error en cierre de comentario multilinea.");
 				}
 				break;				
 			}
@@ -424,7 +424,7 @@ public class AnalizadorLexico {
 					//fin de archivo antes del cierre del comentario
 					int linea = this.entradaSalida.getNroLinea();
 					int col = this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Error en cierre de comentario multilinea. Se esperaba '/' pero se encontro: '"+caracterActual+"'");
+					throw new LexicoException(linea,col,"Error en cierre de comentario multilinea. Se esperaba '/' pero se encontro: '"+caracterActual+"'");
 				}
 				else{
 					estado=62;
@@ -483,7 +483,7 @@ public class AnalizadorLexico {
 					//error caracter inesperado
 					int linea=this.entradaSalida.getNroLinea();
 					int col=this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Se esperaba '&' pero se encontro: '"+caracterActual+"'");
+					throw new LexicoException(linea,col,"Se esperaba '&' pero se encontro: '"+caracterActual+"'");
 				}				
 			}
 			case 11:{
@@ -497,7 +497,7 @@ public class AnalizadorLexico {
 					//error caracter inesperado
 					int linea=this.entradaSalida.getNroLinea();
 					int col=this.entradaSalida.getNroColumna();
-					throw new LexicoException("ERROR: Linea: "+linea+". Columna: "+col+". Se esperaba '|' pero se encontro: '"+caracterActual+"'");					
+					throw new LexicoException(linea,col,"Se esperaba '|' pero se encontro: '"+caracterActual+"'");					
 				}
 			}
 			case 12:{
