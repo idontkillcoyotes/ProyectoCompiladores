@@ -2,7 +2,8 @@ Inicio -> Clase Clases $
 Clases -> Clase Clases 
 Clases -> ε
 Clase -> class idClase Herencia { Miembros }
-Herencia -> extends idClase | ε
+Herencia -> extends idClase 
+Herencia -> ε
 Miembros -> Miembro Miembros 
 Miembros -> ε
 Miembro -> Atributo 
@@ -109,7 +110,7 @@ MetodoVariable -> Encadenado
 ExpresionParentizada -> ( Expresion ) Encadenado
 Encadenado -> . idMetVar Acceso
 Encadenado -> AccesoArregloEncadenado
-Encadenado -> EPSILON
+Encadenado -> ε
 Acceso -> LlamadaMetodoEncadenado
 Acceso -> AccesoVarEncadenado
 AccesoThis -> this Encadenado
@@ -121,9 +122,9 @@ LlamadaCtorR -> idClase ArgsActuales Encadenado
 LlamadaCtorR -> TipoPrimitivo [ Expresion ] Encadenado
 ArgsActuales -> ( ListaExpresiones )
 ListaExpresiones -> Expresion ListaExp
-ListaExpresiones -> EPSILON
+ListaExpresiones -> ε
 ListaExp -> , Expresion ListaExp
-ListaExp -> EPSILON
+ListaExp -> ε
 LlamadaMetodoEncadenado -> ArgsActuales Encadenado
 AccesoVarEncadenado -> Encadenado
 AccesoArregloEncadenado -> [ Expresion ] Encadenado

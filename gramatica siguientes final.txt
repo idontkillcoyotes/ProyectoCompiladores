@@ -1,16 +1,16 @@
 Inicio = {$}
 Clases = {$}
-Clase = {ε, class}
+Clase = {$, class}
 Herencia = { { }
 Miembros = { } }
-Miembro = {ε, public, private, static, dynamic, idClase}
-Atributo = {ε, public, private, static, dynamic, idClase}
-Metodo = {ε, public, private, static, dynamic, idClase}
-Ctor = {ε, public, private, static, dynamic, idClase}
+Miembro = { }, public, private, static, dynamic, idClase}
+Atributo = { }, public, private, static, dynamic, idClase}
+Metodo = { }, public, private, static, dynamic, idClase}	   
+Ctor = { }, public, private, static, dynamic, idClase}
 ArgsFormales = { { }
 ListaArg = { ) }
 ArgFormales = { ) }
-Arg = { , , ε}
+Arg = { ), ,}
 FormaMetodo = {void, boolean, char, int, idClase, String}
 Visibilidad = {boolean, char, int, idClase, String}
 TipoMetodo = {idMetVar}
@@ -20,48 +20,48 @@ TipoPrimitivo = {[}
 TipoReferencia = {}
 ListaDecVars = {;}
 ListaDV = {;}
-Bloque = {else, ε, ;, if, while, return, idMetVar, this, boolean, char, int, idClase, String, (, {, public, private, static, dynamic}
+Bloque = { }, idClase, public, private, static, dynamic, ;, if, while, return, boolean, char, int, String, {, (, idMetVar, this, else}	     
 Sentencias = {}}
-Sentencia = {else, ε, ;, if, while, return, idMetVar, this, boolean, char, int, idClase, String, (, {}
-SentenciaElse = {else, ε, ;, if, while, return, idMetVar, this, boolean, char, int, idClase, String, (, {}
+Sentencia = { else, }, ;, if, while, return, boolean, char, int, idClase, String, {, (, idMetVar, this}
+SentenciaElse = { else, }, ;, if, while, return, boolean, char, int, idClase, String, {, (, idMetVar, this}
 Expresiones = {;}
 Asignacion = {;}
 SentenciaLlamada = {;}
-Expresion = {], ,, ε, ), ;}
-ExpOr = {], ,, ε, ), ;}
-ExpOrR = { ], ,, ε, ), ;}
-ExpAnd = {ε, +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new, ], ,, ), ;}
-ExpAndR = {ε, +, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new, ], ,, ), ;}
-ExpIg = {&&, ε}
-ExpIgR = {&&, ε}
-ExpComp = {ε, ==, !=}
-ExpCompR = {ε, ==, !=}
-ExpAd = {ε, <, >, <=, >=, ==, !=}
-ExpAdR = {ε, <, >, <=, >=, ==, !=}
-ExpMul = {ε, +, -}
-ExpMulR = {ε, +, -}
-ExpUn = {ε, *, /}
+Expresion = { ), ], ;, ,}
+ExpOr = { ), ], ;, ,}
+ExpOrR = { ), ], ;, ,}
+ExpAnd = { ||, ), ], ;, ,}
+ExpAndR = { ||, ), ], ;, ,}
+ExpIg = { &&, ||, ), ], ;, ,}
+ExpIgR = { &&, ||, ), ], ;, ,}
+ExpComp = { ==, !=, &&, ||, ), ], ;, ,}
+ExpCompR = { ==, !=, &&, ||, ), ], ;, ,}
+ExpAd = { <, >, <=, >=, ==, !=, &&, ||, ), ], ;, ,}
+ExpAdR = { <, >, <=, >=, ==, !=, &&, ||, ), ], ;, ,}
+ExpMul = {+, -, <, <=, >, >=, ==, !=, &&, ||, ), ], ;, ,}
+ExpMulR = {+, -, <, <=, >, >=, ==, !=, &&, ||, ), ], ;, ,}
+ExpUn = {&&,||,),;,==,!=,<,>,<=,>=,+,-,*,/,],,}
 OpIgual = {+, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new}
 OpComp = {+, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new}
 OpAd = {+, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new}
 OpUn = {+, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new}
 OpMul = {+, -, !, null, true, false, intLiteral, charLiteral, stringLiteral, idMetVar, (, idClase, this, new}
-Operando = {ε, *, /}
-Literal = {ε, *, /}
-Primario = {), ε, *, /}
-MetodoVariable = {), ε, *, /}
-ExpresionParentizada = {), ε, *, /}
-Encadenado = {=, ), *, /, +, -, <, <=, >, >=, ==, !=, &&, ||, ], ;, ,,}
-Acceso = {=, ), ε, *, /}
-AccesoThis = {=, ), ε, *, /}
+Operando = { *, /, +, -, <, <=, >, >=, ==, !=, &&, ||, ), ], ;, ,}	       
+Literal = { *, /, +, -, <, <=, >, >=, ==, !=, &&, ||, ), ], ;, ,}
+Primario = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, ], ,}
+MetodoVariable = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, ], ,}
+ExpresionParentizada = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, ], ,}
+Encadenado = { =, ), *, /, +, -, <, >, <=, >=, ==, !=, &&, ||, ;, ], ,}
+Acceso = { =, ), *, /, +, -, <, >, <=, >=, ==, !=, &&, ||, ;, ], ,}
+AccesoThis = { =, ), *, /, +, -, <, >, <=, >=, ==, !=, &&, ||, ;, ], ,}
 AccesoVar = {=}
-LlamadaMetodo = {), ε, *, /}
-LlamadaMetodoEstatico = {), ε, *, /}
-LlamadaCtor = {), ε, *, /}
-LlamadaCtorR = {), ε, *, /}
-ArgsActuales = {ε, ., [}
+LlamadaMetodo = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, ], ,}
+LlamadaMetodoEstatico = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, ], ,}
+LlamadaCtor = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, ], ,}
+LlamadaCtorR = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, ], ,}
+ArgsActuales = { ., ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, [, ], =, ,}
 ListaExpresiones = {)}
 ListaExp = {)}
-LlamadaMetodoEncadenado = {=, ), ε, *, /}
-AccesoVarEncadenado = {=, ), ε, *, /}
-AccesoArregloEncadenado = {=, ), ε, *, /
+LlamadaMetodoEncadenado = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, =, ], ,}
+AccesoVarEncadenado = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, =, ], ,}
+AccesoArregloEncadenado = { ), &&, ||, ;, ==, !=, <, >, <=, >=, +, -, *, /, =, ], ,}
