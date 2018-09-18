@@ -56,7 +56,7 @@ public class AnalizadorSintactico {
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion de clase mal formada.\n"
-					+"Se esperaba un token de tipo: class, o el fin del archivo.\n"
+					+"Se esperaba un token de tipo: class o FIN_ARCHIVO.\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}		
 	}
