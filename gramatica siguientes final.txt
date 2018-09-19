@@ -1,6 +1,6 @@
-Inicio = {$}
-Clases = {$}
-Clase = {$, class}
+Inicio = { $ }
+Clases = { $ }
+Clase = { $ , class}
 Herencia = { { }
 Miembros = { } }
 Miembro = { }, public, private, static, dynamic, idClase}

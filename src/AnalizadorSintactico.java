@@ -32,6 +32,7 @@ public class AnalizadorSintactico {
 			int c=tokenAct.getNroColumna();
 			String esperado=Utl.getTipoID(tipoToken);
 			String encontrado=Utl.getTipoID(tokenAct.getTipo());
+			//TODO error simple
 			throw new SintacticException(l,c,"Se esperaba un token de tipo: "+esperado+"\nPero se encontro un token de tipo: "+encontrado);
 		}
 	}
@@ -41,12 +42,14 @@ public class AnalizadorSintactico {
 	}
 	
 	private void inicio() throws SintacticException{
+		//Inicio -> Clase Clases $
 		clase();
 		clases();
 		match(Utl.TT_FINARCHIVO);		
 	}
 	
 	private void clases() throws SintacticException{
+		//Clases -> Clase Clases | epsilon
 		if (tokenAct.esTipo(Utl.TPC_CLASS)){
 			clase();
 			clases();
@@ -55,6 +58,7 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion de clase mal formada.\n"
 					+"Se esperaba un token de tipo: class o FIN_ARCHIVO.\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
@@ -62,15 +66,26 @@ public class AnalizadorSintactico {
 	}
 	
 	private void clase() throws SintacticException{
-		match(Utl.TPC_CLASS);
-		match(Utl.TT_IDCLASE);
-		herencia();
-		match(Utl.TT_PUNLLAVE_A);
-		miembros();
-		match(Utl.TT_PUNLLAVE_C);		
+		//Clase -> class idClase Herencia { Miembros }
+		//If para reportar mejor el error:
+		if (tokenAct.esTipo(Utl.TPC_CLASS)){
+			match(Utl.TPC_CLASS);
+			match(Utl.TT_IDCLASE);
+			herencia();
+			match(Utl.TT_PUNLLAVE_A);
+			miembros();
+			match(Utl.TT_PUNLLAVE_C);
+		}
+		else{
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion de clase mal formada.\n"
+					+"Se esperaba un token de tipo: class.\n"
+					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
+		}
 	}
 	
 	private void herencia() throws SintacticException{
+		//Herencia -> extends idClase | epsilon 
 		if (tokenAct.esTipo(Utl.TPC_EXTENDS)){
 			match(Utl.TPC_EXTENDS);
 			match(Utl.TT_IDCLASE);
@@ -78,12 +93,14 @@ public class AnalizadorSintactico {
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_A)){
 			//vacio
 		}else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: extends (\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}			
 	}
 	private void miembros() throws SintacticException{
+		//Miembros -> Miembro Miembros | epsilon
 		if ( tokenAct.esTipo(new int[]{Utl.TPC_PUBLIC,Utl.TPC_PRIVATE,Utl.TPC_STATIC,Utl.TPC_DYNAMIC,Utl.TT_IDCLASE}) ){
 			miembro();
 			miembros();
@@ -91,12 +108,14 @@ public class AnalizadorSintactico {
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_C)){
 			//vacio
 		}else{
-			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Miembro mal formado o inexistente.\n"
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Miembro mal formado.\n"
 					+ "Se esperaba un token dentro del grupo: public private static dynamic idClase\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}			
 	}
 	private void miembro() throws SintacticException{
+		//Miembro -> Atributo | Ctor | Metodo
 		if ( tokenAct.esTipo(new int[]{Utl.TPC_PUBLIC,Utl.TPC_PRIVATE}) ){
 			atributo();
 		}
@@ -107,12 +126,14 @@ public class AnalizadorSintactico {
 			metodo();
 		}
 		else{
-			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Miembro mal formado o inexistente.\n"
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Miembro mal formado.\n"
 					+"Se esperaba un token dentro del grupo: public private static dynamic idClase\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void atributo() throws SintacticException{
+		//Atributo -> Visibilidad Tipo ListaDecVars ; 
 		visibilidad();
 		tipo();
 		listaDecVars();
@@ -120,6 +141,7 @@ public class AnalizadorSintactico {
 		match(Utl.TT_PUNPUNTOCOMA);
 	}
 	private void metodo() throws SintacticException{
+		//Metodo -> FormaMetodo TipoMetodo idMetVar ArgsFormales Bloque
 		formaMetodo();
 		tipoMetodo();
 		match(Utl.TT_IDMETVAR);
@@ -127,16 +149,28 @@ public class AnalizadorSintactico {
 		bloque();
 	}
 	private void ctor() throws SintacticException{
+		//Ctor -> idClase ArgsFormales Bloque
 		match(Utl.TT_IDCLASE);
 		argsFormales();
 		bloque();
 	}
 	private void argsFormales() throws SintacticException {
-		match(Utl.TT_PUNPARENT_A);
-		listaArg();
-		match(Utl.TT_PUNPARENT_C);
+		//ArgsFormales -> ( ListaArg )
+		//If para retornar un mejor error
+		if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
+			match(Utl.TT_PUNPARENT_A);
+			listaArg();
+			match(Utl.TT_PUNPARENT_C);
+		}
+		else{
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Metodo mal formado. Argumentos inexistentes.\n"
+					+"Se esperaba un token: (\n"
+					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
+		}
 	}
 	private void listaArg()  throws SintacticException{
+		//ListaArg -> Arg ArgFormales | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
 			arg();
 			argFormales();
@@ -145,12 +179,14 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Lista de argumentos mal formada.\n"
 					+"Se esperaba un token dentro del grupo: boolean char int String idClase )\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void argFormales()  throws SintacticException{
+		//ArgFormales -> , Arg ArgFormales | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCOMA)){
 			match(Utl.TT_PUNCOMA);
 			arg();
@@ -160,17 +196,21 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Lista de argumentos mal formada.\n"
 					+"Se esperaba un token dentro del grupo: , )\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void arg() throws SintacticException {
+		//Arg -> Tipo idMetVar
 		tipo();
 		//TODO: aca podria usar un if para dar un mensaje de error mejor
 		match(Utl.TT_IDMETVAR);
 	}
 	private void formaMetodo() throws SintacticException {
+		//FormaMetodo -> static
+		//FormaMetodo -> dynamic
 		if (tokenAct.esTipo(Utl.TPC_STATIC)){
 			match(Utl.TPC_STATIC);
 		}
@@ -178,12 +218,15 @@ public class AnalizadorSintactico {
 			match(Utl.TPC_DYNAMIC);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: static dynamic\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void visibilidad()  throws SintacticException{
+		//Visibilidad -> public 
+		//Visibilidad -> private
 		if (tokenAct.esTipo(Utl.TPC_PUBLIC)){
 			match(Utl.TPC_PUBLIC);
 		}
@@ -191,12 +234,15 @@ public class AnalizadorSintactico {
 			match(Utl.TPC_PRIVATE);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: public private\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void tipoMetodo()  throws SintacticException{
+		//TipoMetodo -> Tipo
+		//TipoMetodo -> void
 		if (tokenAct.esTipo(Utl.TPC_VOID)){
 			match(Utl.TPC_VOID);
 		}
@@ -204,12 +250,14 @@ public class AnalizadorSintactico {
 			tipo();
 		}
 		else{
-			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Tipo de metodo inexistente.\n"
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Metodo mal formado. Tipo de metodo inexistente.\n"
 					+"Se esperaba un token dentro del grupo: void boolean char int String idClase\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void tipo() throws SintacticException {
+		//Tipo -> boolean PosibleArreglo | char PosibleArreglo | int PosibleArreglo | idClase | String
 		if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
 			match(Utl.TPC_BOOLEAN);
 			posibleArreglo();
@@ -231,26 +279,39 @@ public class AnalizadorSintactico {
 			//para logro posibleArreglo();
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Tipo invalido.\n"
 					+"Se esperaba un token dentro del grupo: boolean char int String idClase\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void posibleArreglo() throws SintacticException {
+		//PosibleArreglo -> [ ] | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCORCH_A)){
 			match(Utl.TT_PUNCORCH_A);
-			match(Utl.TT_PUNCORCH_C);
+			//TODO: DONE agregar if para reportar mejor el error?
+			if (tokenAct.esTipo(Utl.TT_PUNCORCH_C)){
+				match(Utl.TT_PUNCORCH_C);
+			}
+			else{
+				//TODO error especifico
+				throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion mal formada.\n"
+						+"Se esperaba un token: ]\n"
+						+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
+			}
 		}
 		else if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
 			//vacio
 		}
 		else{
-			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Atributo mal formado.\n"
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion mal formada.\n"
 					+"Se esperaba un token dentro del grupo: [ idMetVar\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void tipoPrimitivo() throws SintacticException {
+		//TipoPrimitivo -> boolean | char | int
 		if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
 			match(Utl.TPC_BOOLEAN);
 		}
@@ -261,6 +322,7 @@ public class AnalizadorSintactico {
 			match(Utl.TPC_INT);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: boolean char int\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
@@ -271,30 +333,52 @@ public class AnalizadorSintactico {
 		}
 	*/
 	private void listaDecVars()  throws SintacticException{
-		match(Utl.TT_IDMETVAR);
-		listaDV();
+		//ListaDecVars -> idMetVar ListaDV
+		//If para reportar mejor el error
+		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
+			match(Utl.TT_IDMETVAR);		
+			listaDV();
+		}
+		else{
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion mal formada.\n"
+					+"Se esperaba un token: idMetVar\n"
+					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
+		}
 	}
 	private void listaDV() throws SintacticException {
+		//ListaDV -> , idMetVar ListaDV | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCOMA)){
 			match(Utl.TT_PUNCOMA);
-			match(Utl.TT_IDMETVAR);
-			listaDV();
+			if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
+				match(Utl.TT_IDMETVAR);		
+				listaDV();
+			}
+			else{
+				//TODO error especifico
+				throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion mal formada.\n"
+						+"Se esperaba un token: idMetVar\n"
+						+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
+			}
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
 			//vacio
 		}
 		else{
-			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion incorrecta.\n"
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Declaracion mal formada.\n"
 					+"Se esperaba un token dentro del grupo: , ;\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}		
 	}	
 	private void bloque() throws SintacticException {
+		//Bloque -> { Sentencias }
 		match(Utl.TT_PUNLLAVE_A);
 		sentencias();
 		match(Utl.TT_PUNLLAVE_C);
 	}
 	private void sentencias() throws SintacticException {
+		//Sentencias -> Sentencia Sentencias | epsilon
 		if(tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TPC_IF,Utl.TPC_WHILE,Utl.TPC_RETURN,Utl.TT_IDMETVAR,Utl.TPC_THIS,Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING,Utl.TT_PUNPARENT_A,Utl.TT_PUNLLAVE_A})){
 			sentencia();
 			sentencias();
@@ -303,12 +387,15 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Sentencia mal formada.\n"
 					+"Se esperaba un token dentro del grupo: ; if while return this idMetVar idClase boolean char int String ( {\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}	
 	}
 	private void sentencia() throws SintacticException {
+		//Sentencia -> ; | if ( Expresion ) Sentencia SentenciaElse | while ( Expresion ) Sentencia | return Expresiones ;
+		//Sentencia -> Asignacion ; | SentenciaLlamada ; | Tipo ListaDecVars ; | Bloque
 		if (tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
 			match(Utl.TT_PUNPUNTOCOMA);
 		}
@@ -354,12 +441,14 @@ public class AnalizadorSintactico {
 			bloque();
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Sentencia mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: { ( ; if while return this boolean char int idClase idMetVar String\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void sentenciaElse()  throws SintacticException{
+		//SentenciaElse -> else Sentencia | epsilon
 		if (tokenAct.esTipo(Utl.TPC_ELSE)){
 			match(Utl.TPC_ELSE);
 			sentencia();
@@ -371,27 +460,29 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
-			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Sentencia else mal formada."
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Sentencia mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: else ; if while return this boolean char int String idMetVar idClase ( {\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void expresiones()  throws SintacticException{
-		//primeros de expresion
+		//Expresiones -> Expresion | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPNEGBOOL,Utl.TPC_NULL,Utl.TPC_TRUE,Utl.TPC_FALSE,Utl.TT_LITENTERO,Utl.TT_LITCARACTER,Utl.TT_LITSTRING,Utl.TT_IDMETVAR,Utl.TT_PUNPARENT_A,Utl.TT_IDCLASE,Utl.TPC_THIS,Utl.TPC_NEW})){
 			expresion();
 		}
-		//siguientes expresiones
 		else if(tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: + - ! null true false litEntero litCaracter litString idMetVar idClase this new (\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
 	private void asignacion()  throws SintacticException{
+		//Asignacion -> AccesoVar = Expresion | AccesoThis = Expresion
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
 			accesoVar();
 			match(Utl.TT_ASIGIGUAL);
@@ -403,24 +494,29 @@ public class AnalizadorSintactico {
 			expresion();
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: this idMetVar\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
 	private void sentenciaLlamada() throws SintacticException {
+		//SentenciaLlamada -> ( Primario )
 		match(Utl.TT_PUNPARENT_A);
 		primario();
 		match(Utl.TT_PUNPARENT_C);
 	}
-	private void expresion()  throws SintacticException{
-		expOr();
-	}
 	private void expOr()  throws SintacticException{
+		//ExpOr -> ExpAnd ExpOrR
 		expAnd();
 		expOrR();
 	}
+	private void expresion()  throws SintacticException{
+		//Expresion -> ExpOr
+		expOr();
+	}
 	private void expOrR()  throws SintacticException{
+		//ExpOrR -> || ExpAnd ExpOrR | epsilon
 		if (tokenAct.esTipo(Utl.TT_OPORDOBLE)){
 			match(Utl.TT_OPORDOBLE);
 			expAnd();
@@ -431,16 +527,19 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: || ; , ) ]\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void expAnd() throws SintacticException{
+		//ExpAnd -> ExpIg ExpAndR
 		expIg();
 		expAndR();
 	}
 	private void expAndR()  throws SintacticException{
+		//ExpAndR -> && ExpIg ExpAndR | epsilon
 		if (tokenAct.esTipo(Utl.TT_OPANDDOBLE)){
 			match(Utl.TT_OPANDDOBLE);
 			expIg();
@@ -452,16 +551,19 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: && || ; , ) ]\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void expIg()  throws SintacticException{
+		//ExpIg -> ExpComp ExpIgR
 		expComp();
 		expIgR();
 	} 
 	private void expIgR() throws SintacticException {
+		//ExpIgR -> OpIgual ExpComp ExpIgR | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPDOBLEIGUAL,Utl.TT_OPDESIGUAL})){
 			opIgual();
 			expComp();
@@ -473,16 +575,19 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: == != ; , && || ) ]\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void expComp()  throws SintacticException{
+		//ExpComp -> ExpAd ExpCompR
 		expAd();
 		expCompR();
 	}
 	private void expCompR() throws SintacticException {
+		//ExpCompR -> OpComp ExpAd
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPMENOR,Utl.TT_OPMENORIG,Utl.TT_OPMAYOR,Utl.TT_OPMAYORIG})){
 			opComp();
 			expAd();
@@ -493,16 +598,19 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: < <= > >= ; , == != && || ) ]\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void expAd()  throws SintacticException{
+		//ExpAd -> ExpMul ExpAdR
 		expMul();
 		expAdR();
 	} 
 	private void expAdR()  throws SintacticException{
+		//ExpAdR -> OpAd ExpMul ExpAdR | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPSUMA,Utl.TT_OPRESTA})){
 			opAd();
 			expMul();
@@ -515,16 +623,19 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: + - ; , < <= > >= == != && || ) ]\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void expMul()  throws SintacticException{
+		//ExpMul -> ExpUn ExpMulR
 		expUn();
 		expMulR();
 	}
 	private void expMulR() throws SintacticException {
+		//ExpMulR -> OpMul ExpUn ExpMulR | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPMULT,Utl.TT_OPDIV})){
 			opMul();
 			expUn();
@@ -538,12 +649,14 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: * /  ; , + - < <= > >= == != && || )\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void expUn() throws SintacticException {
+		//ExpUn -> OpUn ExpUn
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPNEGBOOL})){
 			opUn();
 			expUn();
@@ -552,12 +665,14 @@ public class AnalizadorSintactico {
 			operando();
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
 					+ "Se esperaba un token dentro del grupo: + - ! ( null true false litEntero litCaracter litString idMetVar idClase this new\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
 	private void opIgual() throws SintacticException {
+		//OpIgual -> == | !=
 		if (tokenAct.esTipo(Utl.TT_OPDOBLEIGUAL)){
 			match(Utl.TT_OPDOBLEIGUAL);
 		}
@@ -565,12 +680,14 @@ public class AnalizadorSintactico {
 			match(Utl.TT_OPDESIGUAL);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: == !=\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void opComp() throws SintacticException {
+		//OpComp -> < | > | <= | >=
 		if (tokenAct.esTipo(Utl.TT_OPMENOR)){
 			match(Utl.TT_OPMENOR);
 		}
@@ -584,12 +701,14 @@ public class AnalizadorSintactico {
 			match(Utl.TT_OPMAYORIG);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: < <= > >=\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void opAd() throws SintacticException {
+		//OpAd -> + | -
 		if (tokenAct.esTipo(Utl.TT_OPSUMA)){
 			match(Utl.TT_OPSUMA);
 		}
@@ -597,12 +716,14 @@ public class AnalizadorSintactico {
 			match(Utl.TT_OPRESTA);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: + -\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
 	private void opUn()  throws SintacticException{
+		//OpUn -> + | - | !
 		if (tokenAct.esTipo(Utl.TT_OPSUMA)){
 			match(Utl.TT_OPSUMA);
 		}
@@ -613,12 +734,14 @@ public class AnalizadorSintactico {
 			match(Utl.TT_OPNEGBOOL);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: + - !\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
 	private void opMul()  throws SintacticException{
+		//OpMul -> * | /
 		if (tokenAct.esTipo(Utl.TT_OPMULT)){
 			match(Utl.TT_OPMULT);
 		}
@@ -626,12 +749,14 @@ public class AnalizadorSintactico {
 			match(Utl.TT_OPDIV);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: * / \n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
 	private void operando() throws SintacticException {
+		//Operando -> Literal | Primario
 		if (tokenAct.esTipo(new int[]{Utl.TPC_NULL,Utl.TPC_TRUE,Utl.TPC_FALSE,
 				Utl.TT_LITENTERO,Utl.TT_LITCARACTER,Utl.TT_LITSTRING})){
 			literal();
@@ -641,6 +766,7 @@ public class AnalizadorSintactico {
 			primario();
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: null true false litEntero litCaracter litString"
 					+ "idMetVar idClase this new (\n"
@@ -648,6 +774,7 @@ public class AnalizadorSintactico {
 		}
 	}
 	private void literal()  throws SintacticException{
+		//Literal -> null | true | false | intLiteral | charLiteral | stringLiteral
 		if (tokenAct.esTipo(Utl.TPC_NULL)){
 			match(Utl.TPC_NULL);
 		}
@@ -667,12 +794,14 @@ public class AnalizadorSintactico {
 			match(Utl.TT_LITSTRING);
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: null true false litEntero litCaracter litString\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
 	private void primario() throws SintacticException {
+		//Primario -> idMetVar MetodoVariable | ExpresionParentizada | AccesoThis | LlamadaMetodoEstatico | LlamadaCtor
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
 			match(Utl.TT_IDMETVAR);
 			metodoVariable();
@@ -690,12 +819,14 @@ public class AnalizadorSintactico {
 			llamadaCtor();
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: idMetVar idClase this new (\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void metodoVariable() throws SintacticException {
+		//MetodoVariable -> ArgsActuales Encadenado | Encadenado
 		if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
 			argsActuales();
 			encadenado();
@@ -711,20 +842,24 @@ public class AnalizadorSintactico {
 		}
 		else{
 			//este error seria siempre de expresiones mal formadas?
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
 					+"Se esperaba un token dentro del grupo: ( ) [ ] ; , . = + - * / < <= > >= == != && ||\n"
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void expresionParentizada()  throws SintacticException{
+		//ExpresionParentizada -> ( Expresion ) Encadenado
 		match(Utl.TT_PUNPARENT_A);
 		expresion();
 		match(Utl.TT_PUNPARENT_C);
 		encadenado();
 	}
 	private void encadenado() throws SintacticException {
+		//Encadenado -> . idMetVar Acceso | AccesoArregloEncadenado | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNPUNTO)){
 			match(Utl.TT_PUNPUNTO);
+			//TODO agregar un if para reportar mejor el error?
 			match(Utl.TT_IDMETVAR);
 			acceso();
 		}
@@ -735,9 +870,11 @@ public class AnalizadorSintactico {
 				{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_ASIGIGUAL,Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPMULT,
 				Utl.TT_OPDIV,Utl.TT_OPMENOR,Utl.TT_OPMENORIG,Utl.TT_OPMAYOR,Utl.TT_OPMAYORIG,Utl.TT_OPDOBLEIGUAL,
 				Utl.TT_OPDESIGUAL,Utl.TT_OPANDDOBLE,Utl.TT_OPORDOBLE,Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C})){
+			//siguientes: ; , = + - * / < <= > >= == != && || ) ] 
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: . [ ; , = + - * / < <="
 					+ " > >= == != && || ) ]\n"
@@ -745,6 +882,7 @@ public class AnalizadorSintactico {
 		}
 	}
 	private void acceso() throws SintacticException {
+		//Acceso -> LlamadaMetodoEncadenado | AccesoVarEncadenado
 		if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
 			llamadaMetodoEncadenado();
 		}
@@ -759,41 +897,48 @@ public class AnalizadorSintactico {
 			accesoVarEncadenado();
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: ( ) [ ] . ; , = + - * / < > <= >= == != && ||\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
 		}
 	}
 	private void accesoThis() throws SintacticException {
+		//AccesoThis -> this Encadenado
 		match(Utl.TPC_THIS);
 		encadenado();
 	}
 	private void accesoVar()  throws SintacticException{
+		//AccesoVar -> idMetVar Encadenado
 		match(Utl.TT_IDMETVAR);
 		encadenado();
 	}
 	private void llamadaMetodo()  throws SintacticException{
+		//LlamadaMetodo -> idMetVar ArgsActuales Encadenado
 		match(Utl.TT_IDMETVAR);
 		argsActuales();
 		encadenado();
 	}
 	private void llamadaMetodoEstatico()  throws SintacticException{
+		//LlamadaMetodoEstatico -> idClase . LlamadaMetodo
 		match(Utl.TT_IDCLASE);
 		match(Utl.TT_PUNPUNTO);
 		llamadaMetodo();
 	}
 	private void llamadaCtor()  throws SintacticException{
+		//LlamadaCtor -> new LlamadaCtorR
 		match(Utl.TPC_NEW);
 		llamadaCtorR();
 	}
 	private void llamadaCtorR()  throws SintacticException{
+		//LlamadaCtorR -> idClase ArgsActuales Encadenado | TipoPrimitivo [ Expresion ] Encadenado
 		if (tokenAct.esTipo(Utl.TT_IDCLASE)){
 			match(Utl.TT_IDCLASE);
 			argsActuales();
 			encadenado();
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT})){
-			//aca va logro de arreglo de todo
+			//TODO logro de arreglo de todo
 			tipoPrimitivo();
 			match(Utl.TT_PUNCORCH_A);
 			expresion();
@@ -801,17 +946,20 @@ public class AnalizadorSintactico {
 			encadenado();
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: idClase boolean char int\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
 		}
 	}
 	private void argsActuales() throws SintacticException {
+		//ArgsActuales -> ( ListaExpresiones )
 		match(Utl.TT_PUNPARENT_A);
 		listaExpresiones();
 		match(Utl.TT_PUNPARENT_C);
 	}
 	private void listaExpresiones() throws SintacticException {
+		//ListaExpresiones -> Expresion ListaExp | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPNEGBOOL,Utl.TPC_NULL,
 				Utl.TPC_TRUE,Utl.TPC_FALSE,Utl.TT_LITENTERO,Utl.TT_LITCARACTER,Utl.TT_LITSTRING,
 				Utl.TT_IDMETVAR,Utl.TT_PUNPARENT_A,Utl.TT_IDCLASE,Utl.TPC_THIS,Utl.TPC_NEW})){
@@ -822,6 +970,7 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: + - ! null true false litEntero litCaracter litString "
 					+ "idMetVar idClase this new ( )\n"
@@ -829,6 +978,7 @@ public class AnalizadorSintactico {
 		}
 	}
 	private void listaExp() throws SintacticException {
+		//ListaExp -> , Expresion ListaExp | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCOMA)){
 			match(Utl.TT_PUNCOMA);
 			expresion();
@@ -838,19 +988,23 @@ public class AnalizadorSintactico {
 			//vacio
 		}
 		else{
+			//TODO error especifico
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: , )\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
 	private void llamadaMetodoEncadenado() throws SintacticException {
+		//LlamadaMetodoEncadenado -> ArgsActuales Encadenado
 		argsActuales();
 		encadenado();
 	}
 	private void accesoVarEncadenado() throws SintacticException{
+		//AccesoVarEncadenado -> Encadenado
 		encadenado();
 	}
 	private void accesoArregloEncadenado() throws SintacticException {
+		//AccesoArregloEncadenado -> [ Expresion ] Encadenado
 		match(Utl.TT_PUNCORCH_A);
 		expresion();
 		match(Utl.TT_PUNCORCH_C);

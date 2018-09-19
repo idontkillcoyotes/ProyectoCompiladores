@@ -1,75 +1,75 @@
-Inicio1 -> Clase Inicio2
-Inicio2 -> Inicio1 | ε
-Clase -> class idClase Herencia { Miembros }
-Herencia -> extends idClase | ε
-Miembros -> Miembro Miembros | ε
-Miembro -> Atributo | Ctor | Metodo
-Atributo -> Visibilidad Tipo ListaDecVars ;
-Metodo -> FormaMetodo TipoMetodo idMetVar ArgsFormales Bloque
-Ctor -> idClase ArgsFormales Bloque
-ArgsFormales -> ( ListaArg )
-ListaArg -> ε | Arg , ArgFormales
-ArgFormales -> ε | Arg , ArgFormales
-Arg -> Tipo idMetVar
-FormaMetodo -> static | dynamic
-Visibilidad -> public | private
-TipoMetodo -> Tipo | void
-Tipo -> TipoPrimitivo | TipoReferencia
-TipoPrimitivo -> boolean | char | int
-TipoReferencia -> idClase | String | TipoPrimitivo [ ]
-ListaDecVars -> idMetVar
-ListaDecVars -> idMetVar , ListaDecVars
-Bloque -> { Sentencias }
-Sentencias -> Sentencia Sentencias | ε
-Sentencia -> ;
-Sentencia -> Asignacion ;
-Sentencia -> SentenciaLlamada ;
-Sentencia -> Tipo ListaDecVars ;
-Sentencia -> if ( Expresion ) Sentencia
-Sentencia -> if ( Expresion ) Sentencia else Sentencia
-Sentencia -> while ( Expresion ) Sentencia
-Sentencia -> Bloque
-Sentencia -> return Expresiones ;
-Asignacion -> AccesoVar = Expresion
-Asignacion -> AccesoThis = Expresion
-SentenciaLlamada -> ( Primario )
-Expresiones -> Expresion Expresiones | ε
-Expresion -> ExpOr
-ExpOr -> ExpOr || ExpAnd | ExpAnd
-ExpAnd -> ExpAnd && ExpIg | ExpIg
-ExpIg -> ExpIg OpIg ExpComp | ExpComp
-ExpComp -> ExpAd OpComp ExpAd | ExpAd
-ExpAd -> ExpAd OpAd ExpMul | ExpMul
-ExpMul -> ExpMul OpMul ExpUn | ExpUn
-ExpUn -> OpUn ExpUn | Operando
-OpIg -> == | !=
-OpComp -> < | > | <= | >=
-OpAd -> + | -
-OpUn -> + | - | !
-OpMul -> * | /
-Operando -> Literal
-Operando -> Primario
-Literal -> null | true | false | intLiteral | charLiteral | stringLiteral
-Primario -> ExpresionParentizada
-Primario -> AccesoThis
-Primario -> AccesoVar
-Primario -> LlamadaMetodo
-Primario -> LlamadaMetodoEstatico
-Primario -> LlamadaCtor
-ExpresionParentizada -> ( Expresion ) Encadenado
-AccesoThis -> this Encadenado
-AccesoVar -> idMetVar Encadenado
-LlamadaMetodo -> idMetVar ArgsActuales Encadenado
-LlamadaMetodoEstatico -> idClase . LlamadaMetodo Encadenado
-LlamdaCtor -> new idClase ArgsActuales Encadenado
-LlamdaCtor -> new TipoPrimitivo [ Expresion ] Encadenado
-ArgsActuales -> ( ListaExpresiones )
-ListaExpresiones -> Expresion ListaExp | ε
-ListaExp -> , Expresion ListaExp | ε
-ListaExps -> Expresion
-ListaExps -> Expresion , ListaExps
-Encadenado -> ε | . Acceso | AccesoArregloEncadenado
-Acceso -> LlamadaMetodoEncadenado | AccesoVarEncadenado
-LlamadaMetodoEncadenado -> idMetVar ArgsActuales Encadenado
-AccesoVarEncadenado -> idMetVar Encadenado
-AccesoArregloEncadenado -> [ Expresion ] Encadenado
+Inicio1 → Clase Inicio2
+Inicio2 → Inicio1 | ε
+Clase → class idClase Herencia { Miembros }
+Herencia → extends idClase | ε
+Miembros → Miembro Miembros | ε
+Miembro → Atributo | Ctor | Metodo
+Atributo → Visibilidad Tipo ListaDecVars ;
+Metodo → FormaMetodo TipoMetodo idMetVar ArgsFormales Bloque
+Ctor → idClase ArgsFormales Bloque
+ArgsFormales → ( ListaArg )
+ListaArg → ε | Arg , ArgFormales
+ArgFormales → ε | Arg , ArgFormales
+Arg → Tipo idMetVar
+FormaMetodo → static | dynamic
+Visibilidad → public | private
+TipoMetodo → Tipo | void
+Tipo → TipoPrimitivo | TipoReferencia
+TipoPrimitivo → boolean | char | int
+TipoReferencia → idClase | String | TipoPrimitivo [ ]
+ListaDecVars → idMetVar
+ListaDecVars → idMetVar , ListaDecVars
+Bloque → { Sentencias }
+Sentencias → Sentencia Sentencias | ε
+Sentencia → ;
+Sentencia → Asignacion ;
+Sentencia → SentenciaLlamada ;
+Sentencia → Tipo ListaDecVars ;
+Sentencia → if ( Expresion ) Sentencia
+Sentencia → if ( Expresion ) Sentencia else Sentencia
+Sentencia → while ( Expresion ) Sentencia
+Sentencia → Bloque
+Sentencia → return Expresiones ;
+Asignacion → AccesoVar = Expresion
+Asignacion → AccesoThis = Expresion
+SentenciaLlamada → ( Primario )
+Expresiones → Expresion Expresiones | ε
+Expresion → ExpOr
+ExpOr → ExpOr || ExpAnd | ExpAnd
+ExpAnd → ExpAnd && ExpIg | ExpIg
+ExpIg → ExpIg OpIg ExpComp | ExpComp
+ExpComp → ExpAd OpComp ExpAd | ExpAd
+ExpAd → ExpAd OpAd ExpMul | ExpMul
+ExpMul → ExpMul OpMul ExpUn | ExpUn
+ExpUn → OpUn ExpUn | Operando
+OpIg → == | !=
+OpComp → < | > | <= | >=
+OpAd → + | -
+OpUn → + | - | !
+OpMul → * | /
+Operando → Literal
+Operando → Primario
+Literal → null | true | false | intLiteral | charLiteral | stringLiteral
+Primario → ExpresionParentizada
+Primario → AccesoThis
+Primario → AccesoVar
+Primario → LlamadaMetodo
+Primario → LlamadaMetodoEstatico
+Primario → LlamadaCtor
+ExpresionParentizada → ( Expresion ) Encadenado
+AccesoThis → this Encadenado
+AccesoVar → idMetVar Encadenado
+LlamadaMetodo → idMetVar ArgsActuales Encadenado
+LlamadaMetodoEstatico → idClase . LlamadaMetodo Encadenado
+LlamdaCtor → new idClase ArgsActuales Encadenado
+LlamdaCtor → new TipoPrimitivo [ Expresion ] Encadenado
+ArgsActuales → ( ListaExpresiones )
+ListaExpresiones → Expresion ListaExp | ε
+ListaExp → , Expresion ListaExp | ε
+ListaExps → Expresion
+ListaExps → Expresion , ListaExps
+Encadenado → ε | . Acceso | AccesoArregloEncadenado
+Acceso → LlamadaMetodoEncadenado | AccesoVarEncadenado
+LlamadaMetodoEncadenado → idMetVar ArgsActuales Encadenado
+AccesoVarEncadenado → idMetVar Encadenado
+AccesoArregloEncadenado → [ Expresion ] Encadenado
