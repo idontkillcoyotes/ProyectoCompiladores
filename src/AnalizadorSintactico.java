@@ -12,12 +12,6 @@ public class AnalizadorSintactico {
 			System.out.println(e.getMessage());
 		}		
 	}
-	private void print(String s){
-		System.out.println(s);
-	}	
-	private void printToken(){
-		System.out.println(Utl.getTipoID(tokenAct.getTipo()));
-	}
 	private void match(int tipoToken) throws SintacticException{
 		if(tokenAct.esTipo(tipoToken)){
 			try {
@@ -137,8 +131,27 @@ public class AnalizadorSintactico {
 		visibilidad();
 		tipo();
 		listaDecVars();
-		//TODO logro inicializacion
+		//Comentar la siguiente llamada si es que hay problemas
+		inicializacion();		
 		match(Utl.TT_PUNPUNTOCOMA);
+	}
+	//Aca empieza el logro de inicializacion en declaracion
+	//Comentar este metedo si es que hay problemas
+	private void inicializacion() throws SintacticException {
+		//Inicializacion -> = Expresion | epsilon
+		if (tokenAct.esTipo(Utl.TT_ASIGIGUAL)){
+			match(Utl.TT_ASIGIGUAL);
+			expresion();
+		}
+		else if (tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
+			//vacio
+		}
+		else{
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
+					"Se esperaba un token dentro del grupo: = ;\n"
+					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
+		}
 	}
 	private void metodo() throws SintacticException{
 		//Metodo -> FormaMetodo TipoMetodo idMetVar ArgsFormales Bloque
@@ -273,10 +286,14 @@ public class AnalizadorSintactico {
 		else if (tokenAct.esTipo(Utl.TT_IDCLASE)){
 			match(Utl.TT_IDCLASE);
 			//para logro posibleArreglo();
+			//Comentar si es que hay problemas
+			posibleArreglo();
 		}
 		else if (tokenAct.esTipo(Utl.TPC_STRING)){
 			match(Utl.TPC_STRING);
 			//para logro posibleArreglo();
+			//Comentar si es que hay problemas
+			posibleArreglo();
 		}
 		else{
 			//TODO error especifico
@@ -292,6 +309,9 @@ public class AnalizadorSintactico {
 			//TODO: DONE agregar if para reportar mejor el error?
 			if (tokenAct.esTipo(Utl.TT_PUNCORCH_C)){
 				match(Utl.TT_PUNCORCH_C);
+				//TODO Consultar si el lenguaje perite matrices
+				//La siguiente llamada permite definir matrices
+				posibleArreglo();
 			}
 			else{
 				//TODO error especifico
@@ -310,6 +330,9 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
+	//Este metodo no es usado si hago el logro de arreglos de todo tipo
+	//Descomentar si es que hay problemas
+	/*
 	private void tipoPrimitivo() throws SintacticException {
 		//TipoPrimitivo -> boolean | char | int
 		if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
@@ -328,9 +351,6 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	/*
-	 * 	private void tipoReferencia() {
-		}
 	*/
 	private void listaDecVars()  throws SintacticException{
 		//ListaDecVars -> idMetVar ListaDV
@@ -361,7 +381,14 @@ public class AnalizadorSintactico {
 						+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 			}
 		}
-		else if (tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
+		//TODO Logro de inicializacion en declaracion, los siguientes de ListaDV con el logro cambian
+		//viejos siguientes: ;
+		//nuevos siguientes: ; = } idClase public private static dynamic if while return boolean char
+		// 					 int String { ( idMetVar this else
+		//Tengo dudas si los nuevos siguientes son esos, o son solo: = ;
+		else if (tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TT_ASIGIGUAL,Utl.TT_PUNLLAVE_C,Utl.TT_IDCLASE,Utl.TPC_PUBLIC,Utl.TPC_PRIVATE,
+			Utl.TPC_STATIC,Utl.TPC_DYNAMIC,Utl.TPC_IF,Utl.TPC_WHILE,Utl.TPC_RETURN,Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TPC_STRING,
+			Utl.TT_PUNLLAVE_A,Utl.TT_PUNPARENT_A,Utl.TT_IDMETVAR,Utl.TPC_THIS,Utl.TPC_ELSE})){
 			//vacio
 		}
 		else{
@@ -431,9 +458,12 @@ public class AnalizadorSintactico {
 			match(Utl.TT_PUNPUNTOCOMA);
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
-			//tipo listadecvars ;
+			//tipo listadecvars inicializacion ;
 			tipo();
 			listaDecVars();
+			//Logro de inicializacion en declaracion
+			//Comentar siguiente llamada si es que hay problemas
+			inicializacion();
 			match(Utl.TT_PUNPUNTOCOMA);
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_A)){
@@ -931,15 +961,19 @@ public class AnalizadorSintactico {
 		llamadaCtorR();
 	}
 	private void llamadaCtorR()  throws SintacticException{
-		//LlamadaCtorR -> idClase ArgsActuales Encadenado | TipoPrimitivo [ Expresion ] Encadenado
+		//LlamadaCtorR -> idClase LlamadaCtorRIDClase | TipoArreglo [ Expresion ] Encadenado
 		if (tokenAct.esTipo(Utl.TT_IDCLASE)){
 			match(Utl.TT_IDCLASE);
-			argsActuales();
-			encadenado();
+			//Logro de arreglo de todo, necesito un nuevo metodo
+			//Comentar la siguietne y descomentar las ultimas llamadas si es que hay problemas
+			llamadaCtorRIDClase();
+			//argsActuales();
+			//encadenado();
 		}
-		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT})){
-			//TODO logro de arreglo de todo
-			tipoPrimitivo();
+		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TPC_STRING})){
+			//Logro de arreglo de todo, comentar la siguiente y descomentar llamada a tipoprimitivo si es que hay problemas
+			tipoArreglo();
+			//tipoPrimitivo();
 			match(Utl.TT_PUNCORCH_A);
 			expresion();
 			match(Utl.TT_PUNCORCH_C);
@@ -951,6 +985,48 @@ public class AnalizadorSintactico {
 					"Se esperaba un token dentro del grupo: idClase boolean char int\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
 		}
+	}
+	//Metodo para logro de arreglo de todo, comentar si es que hay problemas
+	private void llamadaCtorRIDClase() throws SintacticException  {
+		//LlamadaCtorRIDClase -> ArgsActuales Encadenado | [ Expresion ] Encadenado
+		if (tokenAct.esTipo(Utl.TT_PUNCORCH_A)){
+			match(Utl.TT_PUNCORCH_A);
+			expresion();
+			match(Utl.TT_PUNCORCH_C);
+			encadenado();
+		}
+		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
+			argsActuales();
+			encadenado();
+		}
+		else{
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
+					"Se esperaba un token dentro del grupo: [ (\n"
+					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
+		}
+	}
+	//Metodo para logro de arreglo de todo, comentar si es que hay problemas
+	private void tipoArreglo() throws SintacticException {
+		//TipoArreglo -> char | int | boolean | String
+		if (tokenAct.esTipo(Utl.TPC_CHAR)){
+			match(Utl.TPC_CHAR);
+		}
+		else if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
+			match(Utl.TPC_BOOLEAN);
+		}
+		else if (tokenAct.esTipo(Utl.TPC_INT)){
+			match(Utl.TPC_INT);
+		}
+		else if (tokenAct.esTipo(Utl.TPC_STRING)){
+			match(Utl.TPC_STRING);
+		}
+		else{
+			//TODO error especifico
+			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
+					"Se esperaba un token dentro del grupo: boolean char int String\n"
+					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
+		}		
 	}
 	private void argsActuales() throws SintacticException {
 		//ArgsActuales -> ( ListaExpresiones )
