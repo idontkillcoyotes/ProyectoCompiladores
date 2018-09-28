@@ -28,6 +28,11 @@ public class EParametro{
 	public boolean equals(EParametro p){
 		return ((getNombre().equals(p.getNombre())) && (tipo.equals(p.getTipo())));
 	}
-
+	public String toString(){
+		String s="\n";
+		s+="Nombre:\t"+this.getNombre()+"\n";
+		s+="Tipo:\t"+this.tipo+"\n";
+		return s;
+	}
 
 }

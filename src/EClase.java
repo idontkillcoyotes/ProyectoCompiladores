@@ -19,13 +19,7 @@ public class EClase {
 		this.consolidado=false;		
 	}
 	
-	/*
-	 * Redefino equals para que considere dos clases iguales
-	 * cuando tienen el mismo nombre
-	 */
-	public boolean equals(EClase otraClase){
-		return this.getNombre().equals(otraClase.getNombre());
-	}
+	
 	/*
 	 * Retorna:
 	 * True - si se pudo agregar el elemento
@@ -43,10 +37,11 @@ public class EClase {
 	public boolean addAtributo(EAtributo a){
 		return this.atributos.add(a);
 	}
-	public boolean addAtributos(ArrayList<EAtributo> atrs) {
+	public boolean addAtributos(ArrayList<EParametro> lista,Visibilidad vis) {
 		boolean error=false;
 		while(!error){
-			for(EAtributo a: atrs){
+			for(EParametro p: lista){
+				EAtributo a=new EAtributo(p,vis);				
 				error=this.addAtributo(a);
 			}
 		}
@@ -91,6 +86,28 @@ public class EClase {
 	}
 	public Token getToken() {
 		return tokenNombre;
+	}
+	
+	/*
+	 * Redefino equals para que considere dos clases iguales
+	 * cuando tienen el mismo nombre
+	 */
+	public boolean equals(EClase otraClase){
+		return this.getNombre().equals(otraClase.getNombre());
+	}
+	
+	public String toString(){
+		String s="\n";
+		s+="Clase: "+this.getNombre()+"\n";
+		s+="Hereda de: "+this.padre+"\n";
+		s+="Consolidada? "+this.consolidado+"\n";
+		s+="****************************\n";
+		s+="Atributos: \n"+this.atributos.toString()+"\n";
+		s+="****************************\n";
+		s+="Constructores: \n"+this.constructores.toString()+"\n";
+		s+="****************************\n";
+		s+="Metodos: \n"+this.metodos.toString()+"\n";		
+		return s;
 	}
 	
 	

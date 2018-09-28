@@ -9,6 +9,7 @@ public class Principal {
 			try {	
 				asin.start();
 				System.out.println("Analisis sintactico exitoso! :)");
+				Utl.ts.imprimir();
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}

@@ -116,8 +116,8 @@ public class AnalizadorSintactico {
 		String ret="Object";
 		if (tokenAct.esTipo(Utl.TPC_EXTENDS)){
 			match(Utl.TPC_EXTENDS);
-			match(Utl.TT_IDCLASE);
 			ret=tokenAct.getLexema();
+			match(Utl.TT_IDCLASE);			
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_A)){
 			//vacio
@@ -169,19 +169,13 @@ public class AnalizadorSintactico {
 		String t=tipo();
 		
 		//TODO esto es legal? correcto? necesario? ... ?		
-		ArrayList<? extends EParametro> atrs=new ArrayList<EAtributo>();		
-		listaDecVars(t,(ArrayList<EParametro>) atrs);		
-		//En este punto tengo la lista de atributos con tipo y nombres pero sin visibilidad
+		ArrayList<EParametro> l=new ArrayList<EParametro>();		
+		listaDecVars(t,l);		
+		//En este punto tengo la lista de parametros con tipo y nombres y la visibilidad
 		
-		//Uso iterator para setearle la visibilidad a cada parametro
-		Iterator<EAtributo> it=(Iterator<EAtributo>) atrs.iterator();
-		while(it.hasNext()){
-			it.next().setVisibilidad(vis);
-		}		
-		//En este punto tengo la lista de atributos completa
-		
-		//Agrego lista a clase
-		claseAct().addAtributos((ArrayList<EAtributo>) atrs);	
+		//Agrego a la clase los atributos
+		if (claseAct().addAtributos(l, vis));
+		else throw new SemanticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Atributo duplicado");
 		
 		//Comentar la siguiente llamada si es que hay problemas
 		inicializacion();		
@@ -212,10 +206,10 @@ public class AnalizadorSintactico {
 		//Obtengo tipo de retorno de metodo
 		String tipo=tipoMetodo();
 		//Guardo el token del nombre del metodo
-		Token t=tokenAct;
+		Token tn=tokenAct;
 		match(Utl.TT_IDMETVAR);
 		//Creo una entrada de metodo
-		EMetodo met=new EMetodo(t.getLexema(),f,tipo,t);		
+		EMetodo met=new EMetodo(tn,f,tipo);		
 		argsFormales(met,met.getParametros());
 		bloque();
 	}

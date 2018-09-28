@@ -16,4 +16,10 @@ public class EConstructor extends EMiembro {
 	public ArrayList<EParametro> getParametros(){
 		return this.parametros;
 	}
+	public String toString(){
+		String s="\n";
+		s+="Constructor: \n";
+		s+="Parametros: "+this.parametros.toString()+"\n";		
+		return s;
+	}
 }
