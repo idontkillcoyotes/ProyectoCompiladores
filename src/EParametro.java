@@ -1,33 +1,33 @@
 
-public class EParametro {
+public class EParametro{
 	
-	private Token tokenNombre;
-	private String nombre;
-	private String tipo;
+	protected Token tokenNombre;
+	protected String tipo;
 	
-	public EParametro(String nombre,String tipo,Token t){
-		this.nombre=nombre;
+	public EParametro(Token tn,String tipo){
+		this.tokenNombre=tn;
 		this.tipo=tipo;
-		this.tokenNombre=t;
 	}
+
+	public String getTipo(){
+		return this.tipo;
+	}
+	
+	public String getNombre(){
+		return this.tokenNombre.getLexema();
+	}
+	
+	public Token getToken(){
+		return this.tokenNombre;
+	}
+	
 	/*
 	 * Redefino equals para que considere dos parametros iguales a aquellos 
 	 * que tienen mismo nombre y tipo
 	 */
 	public boolean equals(EParametro p){
-		return ((nombre.equals(p.getNombre())) && (tipo.equals(p.getTipo())));
+		return ((getNombre().equals(p.getNombre())) && (tipo.equals(p.getTipo())));
 	}
 
-	public String getNombre() {
-		return nombre;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public Token getToken() {
-		return tokenNombre;
-	}
 
 }

@@ -1,30 +1,22 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class EClase {
 	
-	private Token token;
-	private String nombre;
+	private Token tokenNombre;
 	private String padre;
 	private HashSet<EAtributo> atributos;
 	private HashSet<EMetodo> metodos;
 	private HashSet<EConstructor> constructores;
 	private boolean consolidado;
 	
-	public EClase(){
-		this.nombre=null;
+	public EClase(Token tn){
+		this.tokenNombre=tn;
 		this.padre=null;
 		this.atributos=new HashSet<EAtributo>();
 		this.metodos=new HashSet<EMetodo>();
 		this.constructores=new HashSet<EConstructor>();
-		this.consolidado=false;
-	}
-	public EClase(String nombre){
-		this.nombre=nombre;
-		this.padre=null;
-		this.atributos=new HashSet<EAtributo>();
-		this.metodos=new HashSet<EMetodo>();
-		this.constructores=new HashSet<EConstructor>();
-		this.consolidado=false;
+		this.consolidado=false;		
 	}
 	
 	/*
@@ -32,7 +24,7 @@ public class EClase {
 	 * cuando tienen el mismo nombre
 	 */
 	public boolean equals(EClase otraClase){
-		return this.nombre.equals(otraClase.getNombre());
+		return this.getNombre().equals(otraClase.getNombre());
 	}
 	/*
 	 * Retorna:
@@ -51,6 +43,15 @@ public class EClase {
 	public boolean addAtributo(EAtributo a){
 		return this.atributos.add(a);
 	}
+	public boolean addAtributos(ArrayList<EAtributo> atrs) {
+		boolean error=false;
+		while(!error){
+			for(EAtributo a: atrs){
+				error=this.addAtributo(a);
+			}
+		}
+		return error;
+	}
 	
 	/*
 	 * Retorna:
@@ -62,11 +63,7 @@ public class EClase {
 	}
 	
 	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		return tokenNombre.getLexema();
 	}
 
 	public String getPadre() {
@@ -93,11 +90,9 @@ public class EClase {
 		return consolidado;
 	}
 	public Token getToken() {
-		return token;
+		return tokenNombre;
 	}
-	public void setToken(Token token) {
-		this.token = token;
-	}	
+	
 	
 	
 }

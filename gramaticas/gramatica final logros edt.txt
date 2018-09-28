@@ -1,0 +1,132 @@
+Inicio -> Clase Clases $
+Clases -> Clase Clases 
+Clases -> ε
+Clase -> class idClase /* crea clase con nombre idClase */ Herencia { Miembros }
+Herencia -> extends idClase /* retorna nombre de clase padre */
+Herencia -> ε
+Miembros -> Miembro Miembros 
+Miembros -> ε
+Miembro -> Atributo 
+Miembro -> Ctor
+Miembro -> Metodo 
+Atributo -> Visibilidad Tipo ListaDecVars Inicializacion ;
+Inicializacion -> = Expresion
+Inicializacion -> ε
+Metodo -> FormaMetodo TipoMetodo idMetVar ArgsFormales Bloque
+Ctor -> idClase ArgsFormales Bloque
+ArgsFormales -> ( ListaArg )
+ListaArg -> Arg ArgFormales
+ListaArg -> ε
+ArgFormales -> , Arg ArgFormales
+ArgFormales -> ε
+Arg -> Tipo idMetVar
+FormaMetodo -> static /* retorna forma de metodo */
+FormaMetodo -> dynamic
+Visibilidad -> public /* retorna visibilidad */
+Visibilidad -> private
+TipoMetodo -> Tipo
+TipoMetodo -> void
+Tipo -> boolean PosibleArreglo /* retorna string con tipo */
+Tipo -> char PosibleArreglo
+Tipo -> int PosibleArreglo
+Tipo -> idClase PosibleArreglo
+Tipo -> String PosibleArreglo
+PosibleArreglo -> [ ] PosibleArreglo /* Permitir matrices? */
+PosibleArreglo -> ε
+ListaDecVars -> idMetVar ListaDV /* recibe tipo y visibilidad y crea un atributo */ /* deberia retornar una lista de nombres? */
+ListaDV -> , idMetVar ListaDV /* recibe tipo y visibilidad y crea un atributo */
+ListaDV -> ε
+Bloque -> { Sentencias }
+Sentencias -> Sentencia Sentencias
+Sentencias -> ε
+Sentencia -> ;
+Sentencia -> if ( Expresion ) Sentencia SentenciaElse
+Sentencia -> while ( Expresion ) Sentencia
+Sentencia -> return Expresiones ;
+Sentencia -> Asignacion ;
+Sentencia -> SentenciaLlamada ;
+Sentencia -> Tipo ListaDecVars Inicializacion ;
+Sentencia -> Bloque
+SentenciaElse -> else Sentencia
+SentenciaElse -> ε
+Expresiones -> Expresion
+Expresiones -> ε
+Asignacion -> AccesoVar = Expresion
+Asignacion -> AccesoThis = Expresion
+SentenciaLlamada -> ( Primario )
+Expresion -> ExpOr
+ExpOr -> ExpAnd ExpOrR
+ExpOrR -> || ExpAnd ExpOrR
+ExpOrR -> ε
+ExpAnd -> ExpIg ExpAndR
+ExpAndR -> && ExpIg ExpAndR
+ExpAndR -> ε
+ExpIg -> ExpComp ExpIgR
+ExpIgR -> OpIgual ExpComp ExpIgR
+ExpIgR -> ε
+ExpComp -> ExpAd ExpCompR
+ExpCompR -> OpComp ExpAd
+ExpCompR -> ε
+ExpAd -> ExpMul ExpAdR
+ExpAdR -> OpAd ExpMul ExpAdR
+ExpAdR -> ε
+ExpMul -> ExpUn ExpMulR
+ExpMulR -> OpMul ExpUn ExpMulR
+ExpMulR -> ε
+ExpUn -> OpUn ExpUn
+ExpUn -> Operando
+OpIgual -> ==
+OpIgual -> !=
+OpComp -> <
+OpComp -> >
+OpComp -> <=
+OpComp -> >=
+OpAd -> +
+OpAd -> -
+OpUn -> +
+OpUn -> -
+OpUn -> !
+OpMul -> *
+OpMul -> /
+Operando -> Literal
+Operando -> Primario
+Literal -> null
+Literal -> true
+Literal -> false
+Literal -> intLiteral
+Literal -> charLiteral
+Literal -> stringLiteral
+Primario -> idMetVar MetodoVariable
+Primario -> ExpresionParentizada
+Primario -> AccesoThis
+Primario -> LlamadaMetodoEstatico
+Primario -> LlamadaCtor
+MetodoVariable -> ArgsActuales Encadenado
+MetodoVariable -> Encadenado
+ExpresionParentizada -> ( Expresion ) Encadenado
+Encadenado -> . idMetVar Acceso
+Encadenado -> AccesoArregloEncadenado
+Encadenado -> ε
+Acceso -> LlamadaMetodoEncadenado
+Acceso -> AccesoVarEncadenado
+AccesoThis -> this Encadenado
+AccesoVar -> idMetVar Encadenado
+LlamadaMetodo -> idMetVar ArgsActuales Encadenado
+LlamadaMetodoEstatico -> idClase . LlamadaMetodo
+LlamadaCtor -> new LlamadaCtorR
+LlamadaCtorR -> idClase LlamadaCtorIDClase
+LlamadaCtorR -> TipoArreglo [ Expresion ] Encadenado
+LlamadaCtorIDClase -> ArgsActuales Encadenado
+LlamadaCtorIDClase -> [ Expresion ] Encadenado
+TipoArreglo -> char
+TipoArreglo -> boolean
+TipoArreglo -> int
+TipoArreglo -> String 
+ArgsActuales -> ( ListaExpresiones )
+ListaExpresiones -> Expresion ListaExp
+ListaExpresiones -> ε
+ListaExp -> , Expresion ListaExp
+ListaExp -> ε
+LlamadaMetodoEncadenado -> ArgsActuales Encadenado
+AccesoVarEncadenado -> Encadenado
+AccesoArregloEncadenado -> [ Expresion ] Encadenado
