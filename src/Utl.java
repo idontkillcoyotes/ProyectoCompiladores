@@ -1,9 +1,6 @@
 
 public final class Utl {
 	
-	private static final String[] PALABRASCLAVE = {"class","extends","static","dynamic","String","boolean","char","int",
-			"public","private","void","null","if","else","while","return","this","new","true","false"};
-	
 	public static final int TT_IDMETVAR=0;
 	public static final int TT_IDCLASE=1;	
 	public static final int TT_PUNPUNTOCOMA=2;
@@ -54,18 +51,20 @@ public final class Utl {
 	public static final int TPC_THIS=116;
 	public static final int TPC_NEW=117;
 	public static final int TPC_TRUE=118;
-	public static final int TPC_FALSE=119;
+	public static final int TPC_FALSE=119;	
 	
-	private static String[] tokenn={"idMetVar","idClase",";",".",",","(",")","[","]","{","}",
+	public static TablaSimbolos ts;
+
+	private static final String[] PALABRASCLAVE = {"class","extends","static","dynamic","String","boolean","char","int",
+			"public","private","void","null","if","else","while","return","this","new","true","false"};	
+	private static final String[] TOKEN={"idMetVar","idClase",";",".",",","(",")","[","]","{","}",
 			"=","litEntero","litCaracter","litString",">","<","!","==",">=","<=","!=","+","-",
 			"*","/","&&","||"};
-	/*
-	private static String[] tokenpc={"PC_CLASS","PC_EXTENDS","PC_STATIC","PC_DYNAMIC","PC_STRING","PC_BOOLEAN","PC_CHAR","PC_INT",
-			"PC_PUBLIC","PC_PRIVATE","PC_VOID","PC_NULL","PC_IF","PC_ELSE","PC_WHILE","PC_RETURN","PC_THIS","PC_NEW","PC_TRUE","PC_FALSE"};
-	*/
+	
+	//Este metodo es utilizado para imprimir los tokens
 	public static String getTipoID(int id){
 		if ((id>=0)&&(id<100)){
-			return tokenn[id];					
+			return TOKEN[id];					
 		}else if (id==-1){
 			return "FIN_ARCHIVO";
 		}else{
