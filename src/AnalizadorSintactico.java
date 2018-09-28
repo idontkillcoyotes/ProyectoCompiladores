@@ -82,10 +82,11 @@ public class AnalizadorSintactico {
 		//If para reportar mejor el error:
 		if (tokenAct.esTipo(Utl.TPC_CLASS)){
 			match(Utl.TPC_CLASS);
+			//Guardo el token de nombre de clase
 			Token tn=tokenAct;
 			match(Utl.TT_IDCLASE);
 			
-			//Creo una nueva EntradaClase con nombre: Token.Lexema
+			//Creo una nueva EntradaClase
 			EClase c=new EClase(tn);
 			//Agrego la EntradaClase creada al ts y la seteo como clase actual
 			if (Utl.ts.addClase(c)) 				
