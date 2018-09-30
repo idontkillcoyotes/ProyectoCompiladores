@@ -5,9 +5,9 @@ public abstract class EntradaTS {
 	
 	public abstract String getNombre();
 	
-	public abstract void consolidar();
+	public abstract void consolidar() throws SemanticException;
 
-	public boolean isConsolidado() {
+	public boolean isConsolidado(){
 		return consolidado;
 	}
 }

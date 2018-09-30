@@ -6,7 +6,8 @@ public class EMetodo extends EMiembro{
 	private FormaMetodo forma;
 	private Tipo tipoRetorno;
 	
-	public EMetodo(Token tn,FormaMetodo f,Tipo tiporet){
+	public EMetodo(EClase clase,Token tn,FormaMetodo f,Tipo tiporet){
+		this.clase=clase;
 		this.tokenNombre=tn;
 		this.forma=f;
 		this.tipoRetorno=tiporet;		

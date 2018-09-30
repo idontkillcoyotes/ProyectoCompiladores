@@ -3,14 +3,16 @@ import java.util.HashSet;
 public class EClase extends EntradaTS{
 	
 	private Token tokenNombre;
-	private String padre;
+	private Token tokenPadre;
+	private EClase clasePadre;
 	private HashSet<EAtributo> atributos;
 	private HashSet<EMetodo> metodos;
 	private HashSet<EConstructor> constructores;
 	
-	public EClase(Token tn,String padre){
+	public EClase(Token tn,Token padre){
 		this.tokenNombre=tn;
-		this.padre=padre;
+		this.tokenPadre=padre;
+		this.clasePadre=null;
 		this.atributos=new HashSet<EAtributo>();
 		this.metodos=new HashSet<EMetodo>();
 		this.constructores=new HashSet<EConstructor>();
@@ -44,16 +46,20 @@ public class EClase extends EntradaTS{
 		return this.constructores.add(c);
 	}
 	
+	public void setPadre(EClase padre) {
+		this.clasePadre = padre;
+	}
+	
 	public String getNombre() {
 		return tokenNombre.getLexema();
 	}
 
-	public String getPadre() {
-		return padre;
+	public Token getTokenPadre() {
+		return this.tokenPadre;
 	}
 
-	public void setPadre(String padre) {
-		this.padre = padre;
+	public EClase getPadre(){
+		return this.clasePadre;
 	}
 
 	public HashSet<EAtributo> getAtributos() {
@@ -88,7 +94,7 @@ public class EClase extends EntradaTS{
 	public String toString(){
 		String s="\n";
 		s+="Clase:\t"+this.getNombre()+"\n";
-		s+="Hereda de:\t"+this.padre+"\n";
+		s+="Hereda de:\t"+this.tokenPadre.getLexema()+"\n";
 		s+="Consolidada? "+this.consolidado+"\n";
 		s+="-------------------------------------\n";
 		s+="Atributos:\n"+this.atributos.toString()+"\n";
@@ -98,18 +104,34 @@ public class EClase extends EntradaTS{
 		s+="Metodos:\n"+this.metodos.toString()+"\n";		
 		return s;
 	}
-	public void consolidar() {
-		System.out.println("consolidando clase...");
-		for (EAtributo a: atributos){
-			a.consolidar();
-		}
-		for (EConstructor a: constructores){
-			a.consolidar();
-		}
-		for (EMetodo a: metodos){
-			a.consolidar();
-		}
-		consolidado=true;
+	
+	public void consolidar() throws SemanticException{
+		boolean b;
+		if (!tokenPadre.getLexema().equals("Object")){					
+			//Checkear que la clase padre esta definida
+			EClase cpadre=Utl.ts.getClase(this.tokenPadre.getLexema());
+			if (cpadre!=null){
+				this.clasePadre=cpadre;
+				//Agregar miembros de padre			
+				for (EAtributo atr: cpadre.getAtributos()){
+					b=this.addAtributo(atr);
+					if (!b) throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
+							"Hay conflictos de nombres con atibutos de la clase padre:"+cpadre.getNombre()+".\n"
+							+ "El atributo:"+atr.getNombre()+", esta duplicado.");
+				}
+				for (EMetodo met: cpadre.getMetodos()){
+					b=this.addMetodo(met);
+					if (!b) throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
+							"Hay conflictos con los metodos de la clase padre: "+cpadre.getNombre()+".\n"
+							+ "El metodo: "+met.getNombre()+", esta duplicado.");
+				}
+				
+			}
+			else throw new SemanticException(tokenPadre.getNroLinea(),tokenPadre.getNroColumna(),"La clase "+tokenPadre.getLexema()+" no está definida.");
+		
+		}	
 	}
+
+	
 }
 

@@ -2,9 +2,10 @@ import java.util.ArrayList;
 
 public class EConstructor extends EMiembro {
 	
-	public EConstructor(Token t){
+	public EConstructor(EClase clase,Token t){
+		this.clase=clase;
 		this.parametros=new ArrayList<EParametro>();
-		this.tokenNombre=t;
+		this.tokenNombre=t;		
 		consolidado=false;
 	}	
 

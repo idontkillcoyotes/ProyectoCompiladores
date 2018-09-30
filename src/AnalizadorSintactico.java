@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class AnalizadorSintactico {
 	
@@ -46,7 +45,7 @@ public class AnalizadorSintactico {
 	
 	public void start() throws SintacticException, SemanticException{
 		inicio();
-		//mts.consolidarTS();
+		mts.consolidarTS();
 	}
 	
 	private void inicio() throws SintacticException, SemanticException{
@@ -82,7 +81,7 @@ public class AnalizadorSintactico {
 			Token tn=tokenAct;
 			match(Utl.TT_IDCLASE);										
 			//Guardo el nombre de la clase padre
-			String padre = herencia();
+			Token padre=herencia();
 			
 			mts.crearClase(tn, padre);
 			
@@ -96,13 +95,13 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	//Retorna el nombre de la clase padre u 'Object'
-	private String herencia() throws SintacticException{
+	//Retorna el token de la clase padre, o un token nuevo con 'Object'
+	private Token herencia() throws SintacticException{
 		//Herencia -> extends idClase | epsilon
-		String ret="Object";
+		Token ret=new Token(Utl.TT_IDCLASE,"Object",0,0);
 		if (tokenAct.esTipo(Utl.TPC_EXTENDS)){
 			match(Utl.TPC_EXTENDS);
-			ret=tokenAct.getLexema();
+			ret=tokenAct;
 			match(Utl.TT_IDCLASE);			
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_A)){

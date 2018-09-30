@@ -11,7 +11,7 @@ public class ManejadorTS {
 		this.claseActual=null;
 	}
 	
-	public void crearClase(Token tn,String padre) throws SemanticException{
+	public void crearClase(Token tn,Token padre) throws SemanticException{
 		EClase c=new EClase(tn,padre);
 		boolean b=Utl.ts.addClase(c);
 		if ( (b) && (!c.getNombre().equals("Object")) && (!c.getNombre().equals("System")) ) {
@@ -24,7 +24,7 @@ public class ManejadorTS {
 	
 	public void crearMetodo(Token tn,FormaMetodo f,Tipo tipo) throws SemanticException{
 		if (this.claseActual!=null){
-			EMetodo m=new EMetodo(tn,f,tipo);
+			EMetodo m=new EMetodo(claseActual,tn,f,tipo);
 			this.ambienteActual=m;			
 		}
 	}
@@ -38,7 +38,7 @@ public class ManejadorTS {
 	public void crearConstructor(Token tn) throws SemanticException{		
 		if (this.claseActual!=null){
 			if (tn.getLexema().equals(claseActual.getNombre())){
-				EConstructor c=new EConstructor(tn);
+				EConstructor c=new EConstructor(claseActual,tn);
 				this.ambienteActual=c;
 			}
 			else throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),"El nombre del constructor no es el mismo que el nombre de la clase.");
@@ -51,9 +51,9 @@ public class ManejadorTS {
 		}
 	}
 	
-	public void crearAtributo(Token tn,Tipo tipo,Visibilidad v) throws SemanticException{
+	public void crearAtributo(Token tn,Tipo tipo,Visibilidad vis) throws SemanticException{
 		if (this.claseActual!=null){
-			EAtributo a=new EAtributo(tn,tipo,v);
+			EAtributo a=new EAtributo(claseActual,tn,tipo,vis);
 			boolean b=this.claseActual.addAtributo(a);
 			if (!b){
 				throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),"El nombre del atributo esta duplicado.");
@@ -77,8 +77,11 @@ public class ManejadorTS {
 			
 		}
 	}
-	public void consolidarTS(){
+	public void consolidarTS() throws SemanticException{
 		Utl.ts.consolidar();
+	}
+	public void imprimirTS(){
+		Utl.ts.imprimir();
 	}
 	
 	public EClase claseAct(){

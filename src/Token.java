@@ -13,9 +13,6 @@ public class Token {
 		this.nroColumna=0;	
 	}
 	
-	public Token(){
-	}	
-	
 	public Token (int t, String lex, int lin,int col){
 		this.tipo=t;
 		this.lexema=lex;

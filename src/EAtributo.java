@@ -1,10 +1,16 @@
 public class EAtributo extends EParametro{
 	
 	private Visibilidad visibilidad;
+	private EClase clase;
 
-	public EAtributo(Token tn,Tipo tipo,Visibilidad v){
+	public EAtributo(EClase clase,Token tn,Tipo tipo,Visibilidad v){		
 		super(tn,tipo);
+		this.clase=clase;
 		this.visibilidad=v;
+	}
+	
+	public EClase getClase(){
+		return this.clase;
 	}
 	
 	public Visibilidad getVisibilidad() {

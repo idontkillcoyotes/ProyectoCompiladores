@@ -29,12 +29,22 @@ public class TablaSimbolos {
 		return claseActual;
 	}
 	
-	public void consolidar(){
+	public void consolidar() throws SemanticException{
 		for(EClase c: clases){
 			c.consolidar();
 		}
 		this.consolidado=true;
 	}
+	public EClase getClase(String n){
+		EClase ret=null;
+		for(EClase c: clases){
+			if(c.getNombre().equals(n)){
+				return c;
+			}
+		}
+		return ret;
+	}
+	
 	
 	public void imprimir(){
 		System.out.println("*****************************************");
