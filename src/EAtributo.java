@@ -2,7 +2,7 @@ public class EAtributo extends EParametro{
 	
 	private Visibilidad visibilidad;
 
-	public EAtributo(Token tn,String tipo,Visibilidad v){
+	public EAtributo(Token tn,Tipo tipo,Visibilidad v){
 		super(tn,tipo);
 		this.visibilidad=v;
 	}
@@ -27,7 +27,7 @@ public class EAtributo extends EParametro{
 		String s="\n";
 		s+="Nombre:\t"+this.getNombre()+"\n";
 		s+="Visibilidad:\t"+this.visibilidad+"\n";		
-		s+="Tipo:\t"+this.tipo+"\n";		
+		s+="Tipo:\t"+this.tipo.getTipo()+"\n";		
 		return s;
 	}
 	

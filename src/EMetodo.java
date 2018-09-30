@@ -4,9 +4,9 @@ public class EMetodo extends EMiembro{
 	
 	
 	private FormaMetodo forma;
-	private String tipoRetorno;
+	private Tipo tipoRetorno;
 	
-	public EMetodo(Token tn,FormaMetodo f,String tiporet){
+	public EMetodo(Token tn,FormaMetodo f,Tipo tiporet){
 		this.tokenNombre=tn;
 		this.forma=f;
 		this.tipoRetorno=tiporet;		
@@ -18,7 +18,7 @@ public class EMetodo extends EMiembro{
 		return forma;
 	}
 	
-	public String getTipoRetorno() {
+	public Tipo getTipoRetorno() {
 		return tipoRetorno;
 	}
 	
@@ -50,7 +50,7 @@ public class EMetodo extends EMiembro{
 		String s="\n";
 		s+="Metodo:\t"+this.getNombre()+"\n";
 		s+="Forma:\t"+this.forma+"\n";
-		s+="Tipo retorno:\t"+this.tipoRetorno+"\n";
+		s+="Tipo retorno:\t"+this.tipoRetorno.getTipo()+"\n";
 		s+="Aridad:\t"+this.getAridad()+"\n";
 		s+="Parametros:\n"+this.parametros.toString()+"\n";		
 		return s;

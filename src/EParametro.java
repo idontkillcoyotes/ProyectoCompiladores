@@ -2,15 +2,15 @@
 public class EParametro extends EntradaTS{
 	
 	protected Token tokenNombre;
-	protected String tipo;
+	protected Tipo tipo;
 	
-	public EParametro(Token tn,String tipo){
+	public EParametro(Token tn,Tipo tipo){
 		this.tokenNombre=tn;
 		this.tipo=tipo;
 		consolidado=false;
 	}
 
-	public String getTipo(){
+	public Tipo getTipo(){
 		return this.tipo;
 	}
 	
@@ -40,7 +40,7 @@ public class EParametro extends EntradaTS{
 	public String toString(){
 		String s="\n";
 		s+="Nombre:\t"+this.getNombre()+"\n";
-		s+="Tipo:\t"+this.tipo+"\n";
+		s+="Tipo:\t"+this.tipo.getTipo()+"\n";
 		return s;
 	}
 	

@@ -152,7 +152,7 @@ public class AnalizadorSintactico {
 		Visibilidad vis=visibilidad();
 		
 		//Obtengo tipo
-		String tipo=tipo();
+		Tipo tipo=tipo();
 		
 		//Creo lista de parametros para pasarle a listaDecVars
 		ArrayList<EParametro> lista=new ArrayList<EParametro>();		
@@ -189,7 +189,7 @@ public class AnalizadorSintactico {
 		FormaMetodo f=formaMetodo();
 		
 		//Obtengo tipo de retorno de metodo
-		String tipo=tipoMetodo();
+		Tipo tipo=tipoMetodo();
 		
 		//Guardo el token del nombre del metodo
 		Token tn=tokenAct;
@@ -277,7 +277,7 @@ public class AnalizadorSintactico {
 		//Arg -> Tipo idMetVar
 		
 		//Obtengo el tipo del parametro
-		String tipo=tipo();
+		Tipo tipo=tipo();
 		//if para reconocer mejor un error sintactico
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){			
 			//Guardo el token del nombre del parametro
@@ -326,12 +326,12 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private String tipoMetodo()  throws SintacticException{
+	private Tipo tipoMetodo()  throws SintacticException{
 		//TipoMetodo -> Tipo
 		//TipoMetodo -> void
 		if (tokenAct.esTipo(Utl.TPC_VOID)){
 			match(Utl.TPC_VOID);
-			return "void";
+			return new TipoSimple("void");
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
 			return tipo();
@@ -342,32 +342,32 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private String tipo() throws SintacticException {
+	private Tipo tipo() throws SintacticException {
 		//Tipo -> boolean PosibleArreglo | char PosibleArreglo | int PosibleArreglo | idClase | String
 		if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
 			match(Utl.TPC_BOOLEAN);
-			return posibleArreglo("boolean");
+			return posibleArreglo(new TipoSimple("boolean"));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_CHAR)){
 			match(Utl.TPC_CHAR);
-			return posibleArreglo("char");
+			return posibleArreglo(new TipoSimple("char"));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_INT)){
 			match(Utl.TPC_INT);
-			return posibleArreglo("int");
+			return posibleArreglo(new TipoSimple("int"));
 		}
 		else if (tokenAct.esTipo(Utl.TT_IDCLASE)){
-			String id=tokenAct.getLexema();
+			Token tk=tokenAct;
 			match(Utl.TT_IDCLASE);
 			//para logro posibleArreglo();
 			//Comentar si es que hay problemas
-			return posibleArreglo(id);
+			return posibleArreglo(new TipoClase(tk));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_STRING)){
 			match(Utl.TPC_STRING);
 			//para logro posibleArreglo();
 			//Comentar si es que hay problemas
-			return posibleArreglo("string");
+			return posibleArreglo(new TipoSimple("string"));
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Tipo invalido.\n"
@@ -375,14 +375,17 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private String posibleArreglo(String tipo) throws SintacticException {
+	private Tipo posibleArreglo(Tipo tipo) throws SintacticException {
 		//PosibleArreglo -> [ ] | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCORCH_A)){
 			match(Utl.TT_PUNCORCH_A);
 			
 			if (tokenAct.esTipo(Utl.TT_PUNCORCH_C)){
 				match(Utl.TT_PUNCORCH_C);
-				return "ar_"+tipo;
+				//seteo que es arreglo
+				tipo.setArreglo();
+				//retorno
+				return tipo;
 				//La siguiente llamada permite definir matrices
 				//posibleArreglo();
 			}
@@ -423,7 +426,7 @@ public class AnalizadorSintactico {
 		}
 	}
 	*/
-	private void listaDecVars(String tipo,ArrayList<EParametro> l)  throws SintacticException, SemanticException{
+	private void listaDecVars(Tipo tipo,ArrayList<EParametro> l)  throws SintacticException, SemanticException{
 		//ListaDecVars -> idMetVar ListaDV
 		//If para reportar mejor el error
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
@@ -444,7 +447,7 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void listaDV(String tipo,ArrayList<EParametro> l) throws SintacticException, SemanticException {
+	private void listaDV(Tipo tipo,ArrayList<EParametro> l) throws SintacticException, SemanticException {
 		//ListaDV -> , idMetVar ListaDV | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCOMA)){
 			match(Utl.TT_PUNCOMA);
@@ -542,7 +545,7 @@ public class AnalizadorSintactico {
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
 			//tipo listadecvars inicializacion ;
-			String t = tipo();
+			Tipo t = tipo();
 			ArrayList<EParametro> vars=new ArrayList<EParametro>();
 			listaDecVars(t,vars);
 			//Logro de inicializacion en declaracion

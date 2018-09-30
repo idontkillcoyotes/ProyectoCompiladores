@@ -22,7 +22,7 @@ public class ManejadorTS {
 	}
 	
 	
-	public void crearMetodo(Token tn,FormaMetodo f,String tipo) throws SemanticException{
+	public void crearMetodo(Token tn,FormaMetodo f,Tipo tipo) throws SemanticException{
 		if (this.claseActual!=null){
 			EMetodo m=new EMetodo(tn,f,tipo);
 			this.ambienteActual=m;			
@@ -51,7 +51,7 @@ public class ManejadorTS {
 		}
 	}
 	
-	public void crearAtributo(Token tn,String tipo,Visibilidad v) throws SemanticException{
+	public void crearAtributo(Token tn,Tipo tipo,Visibilidad v) throws SemanticException{
 		if (this.claseActual!=null){
 			EAtributo a=new EAtributo(tn,tipo,v);
 			boolean b=this.claseActual.addAtributo(a);
@@ -67,7 +67,7 @@ public class ManejadorTS {
 		}
 	}
 	
-	public void crearParametro(Token tn, String tipo) throws SemanticException{
+	public void crearParametro(Token tn, Tipo tipo) throws SemanticException{
 		if(this.ambienteActual!=null){
 			EParametro p=new EParametro(tn,tipo);
 			boolean b=this.ambienteActual.addParametro(p);
