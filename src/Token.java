@@ -75,4 +75,8 @@ public class Token {
 		return s;
 	}
 
+	public String imprimir() {
+		return ("L:"+this.nroLinea+".C:"+this.nroColumna+"."+this.lexema);
+	}
+
 }

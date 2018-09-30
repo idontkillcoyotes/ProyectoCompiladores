@@ -30,15 +30,19 @@ public class TablaSimbolos {
 	}
 	
 	public void consolidar(){
-		System.out.println("\n... consolidando ...\n");		
+		for(EClase c: clases){
+			c.consolidar();
+		}
+		this.consolidado=true;
 	}
 	
 	public void imprimir(){
-		System.out.println("Clases:");
-		System.out.println("*********************");
+		System.out.println("*****************************************");
+		System.out.println("\tTABLA DE SIMBOLOS:");
+		System.out.println("*****************************************");
 		for(EClase c: clases){
 			System.out.println(c.toString());
-			System.out.println("*********************");
+			System.out.println("***************************");
 		}
 	}
 	

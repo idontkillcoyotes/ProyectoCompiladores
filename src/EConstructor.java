@@ -5,21 +5,37 @@ public class EConstructor extends EMiembro {
 	public EConstructor(Token t){
 		this.parametros=new ArrayList<EParametro>();
 		this.tokenNombre=t;
+		consolidado=false;
 	}	
-	/*
-	 * Redefino equals para que considere iguales a los constructores
-	 * con los mismos parametros
-	 */
-	public boolean equals(EConstructor c){
-		return this.parametros.equals(c.getParametros());
-	}	
+
+	
+	@Override
+	public boolean equals(Object e){
+		EConstructor cons=(EConstructor) e;
+		return (this.getAridad()==cons.getAridad());
+	}
+	@Override
+	public int hashCode() {
+		int hash=this.getNombre().hashCode();
+		return hash;	
+	}
+	
+	
 	public ArrayList<EParametro> getParametros(){
 		return this.parametros;
 	}
 	public String toString(){
 		String s="\n";
-		s+="Constructor: \n";
-		s+="Parametros: "+this.parametros.toString()+"\n";		
+		s+="Constructor:\n";
+		s+="Aridad:\t"+this.getAridad()+"\n";
+		s+="Parametros:\n"+this.parametros.toString()+"\n";		
 		return s;
+	}
+	public void consolidar(){
+		System.out.println("consolidando constructor...");
+		for(EParametro p: parametros){
+			p.consolidar();
+		}
+		consolidado=true;
 	}
 }

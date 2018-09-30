@@ -1,4 +1,3 @@
-
 enum FormaMetodo {
-	FDynamic,FStatic
+	fDynamic,fStatic
 }

@@ -5,20 +5,17 @@ public class AnalizadorSintactico {
 	
 	private AnalizadorLexico alex;
 	private Token tokenAct;
+	private ManejadorTS mts;
 	
 	public AnalizadorSintactico (AnalizadorLexico al){
 		this.alex=al;
-		//Creo la tabla de simbolos global que esta en Utl
-		Utl.ts=new TablaSimbolos();		
+		this.mts=new ManejadorTS();
 		try {
 			this.tokenAct = alex.nextToken();
 		} catch (LexicoException e) {
 			System.out.println(e.getMessage());
 		}		
 	}
-	private EClase claseAct(){
-		return Utl.ts.getClaseAct();
-	}	
 	
 	private void match(int tipoToken) throws SintacticException{
 		if(tokenAct.esTipo(tipoToken)){
@@ -49,9 +46,7 @@ public class AnalizadorSintactico {
 	
 	public void start() throws SintacticException, SemanticException{
 		inicio();
-		//Luego de inicio se analizo completamente la sintaxis
-		//Luego de inicio consolido la tabla
-		Utl.ts.consolidar();
+		//mts.consolidarTS();
 	}
 	
 	private void inicio() throws SintacticException, SemanticException{
@@ -82,23 +77,14 @@ public class AnalizadorSintactico {
 		//If para reportar mejor el error:
 		if (tokenAct.esTipo(Utl.TPC_CLASS)){
 			match(Utl.TPC_CLASS);
+			
 			//Guardo el token de nombre de clase
 			Token tn=tokenAct;
-			match(Utl.TT_IDCLASE);
+			match(Utl.TT_IDCLASE);										
+			//Guardo el nombre de la clase padre
+			String padre = herencia();
 			
-			//Creo una nueva EntradaClase
-			EClase c=new EClase(tn);
-			//Agrego la EntradaClase creada al ts y la seteo como clase actual
-			if (Utl.ts.addClase(c)) 				
-				Utl.ts.setClaseAct(c);
-			else
-				//Lanzo excepcion si esa EntradaClase ya existia en la tabla
-				//TODO error semantico
-				throw new SemanticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"clase ya existente");
-							
-			
-			String clasePadre = herencia();
-			claseAct().setPadre(clasePadre);
+			mts.crearClase(tn, padre);
 			
 			match(Utl.TT_PUNLLAVE_A);
 			miembros();
@@ -110,7 +96,7 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	//Retorna el nombre de la clase padre o 'Object'
+	//Retorna el nombre de la clase padre u 'Object'
 	private String herencia() throws SintacticException{
 		//Herencia -> extends idClase | epsilon
 		String ret="Object";
@@ -166,16 +152,14 @@ public class AnalizadorSintactico {
 		Visibilidad vis=visibilidad();
 		
 		//Obtengo tipo
-		String t=tipo();
+		String tipo=tipo();
 		
-		//TODO esto es legal? correcto? necesario? ... ?		
-		ArrayList<EParametro> l=new ArrayList<EParametro>();		
-		listaDecVars(t,l);		
-		//En este punto tengo la lista de parametros con tipo y nombres y la visibilidad
+		//Creo lista de parametros para pasarle a listaDecVars
+		ArrayList<EParametro> lista=new ArrayList<EParametro>();		
+		listaDecVars(tipo,lista);		
 		
-		//Agrego a la clase los atributos
-		if (claseAct().addAtributos(l, vis));
-		else throw new SemanticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Atributo duplicado");
+		//Agrego los atributos a la clase
+		mts.crearAtributos(lista, vis);
 		
 		//Comentar la siguiente llamada si es que hay problemas
 		inicializacion();		
@@ -202,28 +186,40 @@ public class AnalizadorSintactico {
 		//Metodo -> FormaMetodo TipoMetodo idMetVar ArgsFormales Bloque
 		
 		//Obtengo forma de metodo
-		FormaMetodo f=formaMetodo();				
+		FormaMetodo f=formaMetodo();
+		
 		//Obtengo tipo de retorno de metodo
 		String tipo=tipoMetodo();
+		
 		//Guardo el token del nombre del metodo
 		Token tn=tokenAct;
 		match(Utl.TT_IDMETVAR);
-		//Creo una entrada de metodo
-		EMetodo met=new EMetodo(tn,f,tipo);		
-		argsFormales(met,met.getParametros());
+		
+		//Creo metodo
+		mts.crearMetodo(tn, f, tipo);
+			
+		argsFormales();
+		
+		//Agrego metodo a clase cuando ya tengo todos sus parametros
+		mts.agregarMetodo();	
+		
 		bloque();
 	}
 	private void ctor() throws SintacticException, SemanticException{
 		//Ctor -> idClase ArgsFormales Bloque		
 		if (tokenAct.esTipo(Utl.TT_IDCLASE)){
 			//Guardo el token de nombre del constructor
-			Token t=tokenAct;
-			consumirToken();		
-			if (!t.getLexema().equals(claseAct().getNombre()))
-				throw new SemanticException(t.getNroLinea(),t.getNroLinea(),"Nombre constructor invalido");
-			//Creo una entrada de constructor
-			EConstructor cons=new EConstructor(t);
-			argsFormales(cons,cons.getParametros());
+			Token tn=tokenAct;
+			consumirToken();
+			
+			//Creo constructor
+			mts.crearConstructor(tn);
+			
+			argsFormales();
+			
+			//Agrego constructor a clase cuando ya tengo todos sus parametros
+			mts.agregarConstructor();
+			
 			bloque();
 		}
 		else {
@@ -232,13 +228,12 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void argsFormales(EMiembro m,ArrayList<EParametro> l) throws SintacticException {
+	private void argsFormales() throws SintacticException, SemanticException {
 		//ArgsFormales -> ( ListaArg )
 		//If para retornar un mejor error
-		//m puede ser o un metodo o un constructor
 		if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
 			match(Utl.TT_PUNPARENT_A);
-			listaArg(m,l);
+			listaArg();
 			match(Utl.TT_PUNPARENT_C);
 		}
 		else{
@@ -247,12 +242,11 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void listaArg(EMiembro m,ArrayList<EParametro> l)  throws SintacticException{
+	private void listaArg()  throws SintacticException, SemanticException{
 		//ListaArg -> Arg ArgFormales | epsilon
-		//m puede ser o un metodo o un constructor
 		if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
-			arg(m,l);
-			argFormales(m,l);
+			arg();
+			argFormales();
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_C)){
 			//vacio
@@ -263,13 +257,12 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void argFormales(EMiembro m,ArrayList<EParametro> l)  throws SintacticException{
+	private void argFormales()  throws SintacticException, SemanticException{
 		//ArgFormales -> , Arg ArgFormales | epsilon
-		//m puede ser o un metodo o un constructor
 		if (tokenAct.esTipo(Utl.TT_PUNCOMA)){
 			match(Utl.TT_PUNCOMA);
-			arg(m,l);
-			argFormales(m,l);
+			arg();
+			argFormales();
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_C)){
 			//vacio
@@ -280,23 +273,18 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void arg(EMiembro m,ArrayList<EParametro> l) throws SintacticException {
+	private void arg() throws SintacticException, SemanticException {
 		//Arg -> Tipo idMetVar
-		//m puede ser o un metodo o un constructor
 		
 		//Obtengo el tipo del parametro
 		String tipo=tipo();
 		//if para reconocer mejor un error sintactico
-		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
+		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){			
 			//Guardo el token del nombre del parametro
-			Token t=tokenAct;
+			Token tn=tokenAct;
 			consumirToken();
-			
-			//En este punto ya tengo el tipo y el nombre de un parametro
-			//Creo entrada de parametro
-			EParametro p=new EParametro(t,tipo);
-			//Agrego parametro a la lista
-			l.add(p);
+			//Agrego parametro al miembro
+			mts.crearParametro(tn, tipo);			
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -309,11 +297,11 @@ public class AnalizadorSintactico {
 		//FormaMetodo -> dynamic
 		if (tokenAct.esTipo(Utl.TPC_STATIC)){
 			match(Utl.TPC_STATIC);
-			return FormaMetodo.FStatic;
+			return FormaMetodo.fStatic;
 		}
 		else if (tokenAct.esTipo(Utl.TPC_DYNAMIC)){
 			match(Utl.TPC_DYNAMIC);
-			return FormaMetodo.FDynamic;
+			return FormaMetodo.fDynamic;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -326,11 +314,11 @@ public class AnalizadorSintactico {
 		//Visibilidad -> private
 		if (tokenAct.esTipo(Utl.TPC_PUBLIC)){
 			match(Utl.TPC_PUBLIC);
-			return Visibilidad.VPublic;
+			return Visibilidad.vPublic;
 		}
 		else if (tokenAct.esTipo(Utl.TPC_PRIVATE)){
 			match(Utl.TPC_PRIVATE);
-			return Visibilidad.VPrivate;
+			return Visibilidad.vPrivate;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),

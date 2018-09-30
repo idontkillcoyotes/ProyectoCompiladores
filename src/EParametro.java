@@ -1,5 +1,5 @@
 
-public class EParametro{
+public class EParametro extends EntradaTS{
 	
 	protected Token tokenNombre;
 	protected String tipo;
@@ -7,6 +7,7 @@ public class EParametro{
 	public EParametro(Token tn,String tipo){
 		this.tokenNombre=tn;
 		this.tipo=tipo;
+		consolidado=false;
 	}
 
 	public String getTipo(){
@@ -25,14 +26,27 @@ public class EParametro{
 	 * Redefino equals para que considere dos parametros iguales a aquellos 
 	 * que tienen mismo nombre y tipo
 	 */
-	public boolean equals(EParametro p){
-		return ((getNombre().equals(p.getNombre())) && (tipo.equals(p.getTipo())));
+	@Override
+	public boolean equals(Object e){
+		EParametro par=(EParametro) e;
+		return this.getNombre().equals(par.getNombre());
 	}
+	@Override
+	public int hashCode() {
+		int hash=this.getNombre().hashCode();
+		return hash;
+	}
+	
 	public String toString(){
 		String s="\n";
 		s+="Nombre:\t"+this.getNombre()+"\n";
 		s+="Tipo:\t"+this.tipo+"\n";
 		return s;
+	}
+	
+	public void consolidar(){
+		System.out.println("consolidando parametro...");
+		consolidado=true;
 	}
 
 }
