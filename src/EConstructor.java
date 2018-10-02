@@ -28,13 +28,15 @@ public class EConstructor extends EMiembro {
 	}
 	public String toString(){
 		String s="\n";
-		s+="Constructor:\n";
-		s+="Aridad:\t"+this.getAridad()+"\n";
-		s+="Parametros:\n"+this.parametros.toString()+"\n";		
+		s+="______________________________________\n";
+		s+="\t| Constructor |\n";
+		s+="Aridad:\t\t\t"+this.getAridad()+"\n";
+		s+="Parametros:\n"+this.parametros.toString()+"\n";
+		s+="Bloque:\n"+this.bloque.getContenido()+"\n";
+		s+="______________________________________\n";
 		return s;
 	}
 	public void consolidar() throws SemanticException{
-		System.out.println("consolidando constructor...");
 		for(EParametro p: parametros){
 			p.consolidar();
 		}

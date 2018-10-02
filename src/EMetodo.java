@@ -47,21 +47,31 @@ public class EMetodo extends EMiembro{
 		int hash=this.getNombre().hashCode();
 		return hash;
 	}
+	public boolean isMain(){
+		if( (this.forma==FormaMetodo.fStatic)&&
+			(this.tipoRetorno.esTipo(Utl.TPC_VOID))&&
+			(this.getNombre().equals("main"))&&
+			(this.getAridad()==0) ){
+			return true;
+		}
+		else return false;
+	}
+	
 	
 	public String toString(){
 		String s="\n";
-		s+="Metodo:\t"+this.getNombre()+"\n";
-		s+="Forma:\t"+this.forma+"\n";
-		s+="Tipo retorno:\t"+this.tipoRetorno.toString()+"\n";
-		s+="Aridad:\t"+this.getAridad()+"\n";
-		s+="Parametros:\n"+this.parametros.toString()+"\n";
 		s+="______________________________________\n";
-		s+="Bloque:\t"+this.bloque.getContenido()+"\n";
+		s+="\t| Metodo "+this.getNombre()+" |\n";
+		s+="Forma:\t\t\t"+this.forma+"\n";
+		s+="Tipo retorno:\t\t"+this.tipoRetorno.toString()+"\n";
+		s+="Aridad:\t\t\t"+this.getAridad()+"\n";
+		s+="Parametros:\n"+this.parametros.toString()+"\n";		
+		s+="Bloque:\n"+this.bloque.getContenido()+"\n";
+		s+="______________________________________\n";
 		return s;
 	}
 
 	public void consolidar() throws SemanticException {
-		System.out.println("consolidando metodo...");
 		for(EParametro p: parametros){
 			p.consolidar();
 		}

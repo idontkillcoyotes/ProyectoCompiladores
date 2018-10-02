@@ -18,33 +18,18 @@ public class EClase extends EntradaTS{
 		this.constructores=new HashSet<EConstructor>();
 		consolidado=false;		
 	}
-	/*
-	 * Retorna:
-	 * True - si se pudo agregar el elemento
-	 * False - si ya existia un elemento igual
-	 */
+
 	public boolean addMetodo(EMetodo m){
 		return this.metodos.add(m);
-	}
-	
-	
-	/*
-	 * Retorna:
-	 * True - si se pudo agregar el elemento, en caso de redefinicion se
-	 * queda con el metodo de la subclase
-	 * False - si ya existia un elemento igual
-	 *
-	private boolean addMetodoHeredado(EMetodo m) {
-		boolean b=this.metodos.add(m);
-		if(!b){
-			//no se pudo agregar el metodo
-			//ver si es una redefinicion
-			
-			//TODO funcionaria con solo el addMetodo?
+	}	
+
+	private boolean addMetodoHeredado(EMetodo m) {		
+		if (!this.metodos.contains(m)){
+			System.out.println("\nMetodo: "+m.getNombreAridad()+" no contenido en metodos.\n");
+			this.metodos.add(m);
 		}
-		return b;
+		return true;
 	}
-	*/	
 	
 	public boolean addAtributo(EAtributo a){
 		return this.atributos.add(a);
@@ -97,19 +82,32 @@ public class EClase extends EntradaTS{
 		int hash=this.getNombre().hashCode();
 		return hash;
 	}
+	public boolean hasMain(){
+		if(this.metodos.isEmpty()){
+			return false;
+		}
+		else{
+			for(EMetodo m: metodos){
+				if(m.isMain()){
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	
 	
 	
 	public String toString(){
 		String s="\n";
-		s+="Clase:\t"+this.getNombre()+"\n";
-		s+="Hereda de:\t"+this.tokenPadre.getLexema()+"\n";
-		s+="Consolidada? "+this.consolidado+"\n";
-		s+="-------------------------------------\n";
+		s+="______________________________________\n";
+		s+="\t| Clase "+this.getNombre()+" |\n";
+		s+="Hereda de:\t\t"+this.tokenPadre.getLexema()+"\n";
+		s+="Consolidada?\t\t"+this.consolidado+"\n";
 		s+="Atributos:\n"+this.atributos.toString()+"\n";
-		s+="-------------------------------------\n";
 		s+="Constructores:\n"+this.constructores.toString()+"\n";
-		s+="-------------------------------------\n";
-		s+="Metodos:\n"+this.metodos.toString()+"\n";		
+		s+="Metodos:\n"+this.metodos.toString()+"\n";
+		s+="______________________________________\n";
 		return s;
 	}
 	
@@ -119,17 +117,19 @@ public class EClase extends EntradaTS{
 	 */
 	public boolean esSubtipo(EClase ancestro){
 		if(consolidado){
-			//Si clase padre es ancestro -> true
-			if(this.clasePadre.equals(ancestro)){
-				return true;
-			}
-			//Si clase padre es nula (object) -> false
-			else if (this.clasePadre==null){
-				return false;
-			}
+			if(this.clasePadre!=null){
+				if(this.clasePadre.equals(ancestro)){
+					//clase padre es ancestro
+					return true;
+				}
+				else{
+					//> clase padre es descendiente de ancestro?
+					return this.clasePadre.esSubtipo(ancestro);
+				}
+			}			
 			else{
-				// -> clase padre es descendiente de ancestro?
-				return this.clasePadre.esSubtipo(ancestro);
+				//clase padre null -> false
+				return false;				
 			}
 		}
 		else{
@@ -137,14 +137,18 @@ public class EClase extends EntradaTS{
 		}
 	}
 	
+
+	
 	public void consolidar() throws SemanticException{
 		boolean b;
 		if (!tokenPadre.getLexema().equals("Object")){					
-			//Checkear que la clase padre esta definida
+			//Chequear que la clase padre esta definida
 			EClase cpadre=Utl.ts.getClase(this.tokenPadre.getLexema());
 			if (cpadre!=null){
 				this.clasePadre=cpadre;
-				//Agregar miembros de padre			
+								
+				
+				//Agrego miembros de padre			
 				for (EAtributo atr: cpadre.getAtributos()){
 					b=this.addAtributo(atr);
 					if (!b) throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
@@ -152,7 +156,7 @@ public class EClase extends EntradaTS{
 							+ "El atributo:"+atr.getNombre()+", esta duplicado.");					
 				}
 				for (EMetodo met: cpadre.getMetodos()){
-					b=this.addMetodo(met);
+					b=this.addMetodoHeredado(met);
 					if (!b) throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
 							"Hay conflictos con los metodos de la clase padre: "+cpadre.getNombre()+".\n"
 							+ "El metodo: "+met.getNombre()+", esta duplicado.");
@@ -172,7 +176,20 @@ public class EClase extends EntradaTS{
 			}
 			else throw new SemanticException(tokenPadre.getNroLinea(),tokenPadre.getNroColumna(),"La clase "+tokenPadre.getLexema()+" no está definida.");		
 		}
+		if(this.constructores.isEmpty()){
+			//Si no hay constructor definido, genero uno sin parametros
+			Token tn=new Token(Utl.TT_IDCLASE,this.tokenNombre.getLexema(),0);
+			EConstructor c=new EConstructor(this,tn,new Bloque("constructor generado automaticamente"));
+			this.constructores.add(c);
+		}	
+		
 		this.consolidado=true;
+		
+		//Chequeo herencia circular:
+		if (this.esSubtipo(this)){					
+			throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
+					"Esta clase hereda de si misma. No puede existir herencia circular.");
+		}
 	}	
 }
 

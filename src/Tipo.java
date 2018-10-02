@@ -22,6 +22,10 @@ public abstract class Tipo {
 		return this.arreglo;
 	}
 	
+	public boolean esTipo(int t) {
+		return (this.tokenNombre.getTipo()==t);
+	}
+	
 	public abstract boolean estaDefinido();
 
 }

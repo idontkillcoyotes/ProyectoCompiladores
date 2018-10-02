@@ -15,6 +15,10 @@ public abstract class EMiembro extends EntradaTS{
 		return tokenNombre;
 	}
 	
+	public String getNombreAridad(){
+		return this.getNombre()+"/"+this.getAridad();
+	}
+	
 	public EClase getClase(){
 		return this.clase;
 	}

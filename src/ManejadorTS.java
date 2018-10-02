@@ -28,7 +28,7 @@ public class ManejadorTS {
 	
 	public void crearMetodo(Token tn,FormaMetodo f,Tipo tipo) throws SemanticException{
 		if (this.claseActual!=null){
-			Bloque b=new Bloque("metodo: "+tn.getLexema()+" de clase: "+this.claseActual.getNombre());
+			Bloque b=new Bloque("Este metodo pertenece a la clase: "+this.claseActual.getNombre());
 			EMetodo m=new EMetodo(claseActual,tn,f,tipo,b);
 			this.ambienteActual=m;			
 		}
@@ -43,7 +43,7 @@ public class ManejadorTS {
 	public void crearConstructor(Token tn) throws SemanticException{		
 		if (this.claseActual!=null){
 			if (tn.getLexema().equals(claseActual.getNombre())){				
-				EConstructor c=new EConstructor(claseActual,tn,new Bloque("const"));
+				EConstructor c=new EConstructor(claseActual,tn,new Bloque("constructor"));
 				this.ambienteActual=c;
 			}
 			else throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),"El nombre del constructor no es el mismo que el nombre de la clase.");

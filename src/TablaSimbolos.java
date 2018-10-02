@@ -30,8 +30,13 @@ public class TablaSimbolos {
 	}
 	
 	public void consolidar() throws SemanticException{
+		boolean main=false;
 		for(EClase c: clases){
 			c.consolidar();
+			main=c.hasMain();
+		}
+		if(!main){
+			throw new SemanticException(0,0,"Falta un metodo main.");
 		}
 		this.consolidado=true;
 	}

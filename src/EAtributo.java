@@ -31,9 +31,9 @@ public class EAtributo extends EParametro{
 	
 	public String toString(){
 		String s="\n";
-		s+="Nombre:\t"+this.getNombre()+"\n";
-		s+="Visibilidad:\t"+this.visibilidad+"\n";		
-		s+="Tipo:\t"+this.tipo.toString()+"\n";		
+		s+="Nombre:\t\t\t"+this.getNombre()+"\n";
+		s+="Visibilidad:\t\t"+this.visibilidad+"\n";		
+		s+="Tipo:\t\t\t"+this.tipo.toString()+"\n";		
 		return s;
 	}	
 
