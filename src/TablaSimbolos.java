@@ -43,8 +43,17 @@ public class TablaSimbolos {
 			}
 		}
 		return ret;
-	}
+	}	
 	
+	public boolean estaDefinida(String n){
+		boolean ret=false;
+		for(EClase c: clases){
+			if(c.getNombre().equals(n)){
+				return true;
+			}
+		}
+		return ret;
+	}
 	
 	public void imprimir(){
 		System.out.println("*****************************************");

@@ -33,13 +33,8 @@ public class EAtributo extends EParametro{
 		String s="\n";
 		s+="Nombre:\t"+this.getNombre()+"\n";
 		s+="Visibilidad:\t"+this.visibilidad+"\n";		
-		s+="Tipo:\t"+this.tipo.getTipo()+"\n";		
+		s+="Tipo:\t"+this.tipo.toString()+"\n";		
 		return s;
-	}
-	
-	public void consolidar(){
-		System.out.println("consolidando atributo...");
-		consolidado=true;
-	}
+	}	
 
 }

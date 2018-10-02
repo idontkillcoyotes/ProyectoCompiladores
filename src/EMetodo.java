@@ -6,12 +6,13 @@ public class EMetodo extends EMiembro{
 	private FormaMetodo forma;
 	private Tipo tipoRetorno;
 	
-	public EMetodo(EClase clase,Token tn,FormaMetodo f,Tipo tiporet){
+	public EMetodo(EClase clase,Token tn,FormaMetodo f,Tipo tiporet,Bloque b){
 		this.clase=clase;
 		this.tokenNombre=tn;
 		this.forma=f;
 		this.tipoRetorno=tiporet;		
 		this.parametros=new ArrayList<EParametro>();
+		this.bloque=b;
 		this.consolidado=false;
 	}	
 
@@ -51,13 +52,15 @@ public class EMetodo extends EMiembro{
 		String s="\n";
 		s+="Metodo:\t"+this.getNombre()+"\n";
 		s+="Forma:\t"+this.forma+"\n";
-		s+="Tipo retorno:\t"+this.tipoRetorno.getTipo()+"\n";
+		s+="Tipo retorno:\t"+this.tipoRetorno.toString()+"\n";
 		s+="Aridad:\t"+this.getAridad()+"\n";
-		s+="Parametros:\n"+this.parametros.toString()+"\n";		
+		s+="Parametros:\n"+this.parametros.toString()+"\n";
+		s+="______________________________________\n";
+		s+="Bloque:\t"+this.bloque.getContenido()+"\n";
 		return s;
 	}
 
-	public void consolidar() {
+	public void consolidar() throws SemanticException {
 		System.out.println("consolidando metodo...");
 		for(EParametro p: parametros){
 			p.consolidar();

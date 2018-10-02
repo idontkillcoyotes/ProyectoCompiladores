@@ -40,13 +40,15 @@ public class EParametro extends EntradaTS{
 	public String toString(){
 		String s="\n";
 		s+="Nombre:\t"+this.getNombre()+"\n";
-		s+="Tipo:\t"+this.tipo.getTipo()+"\n";
+		s+="Tipo:\t"+this.tipo.toString()+"\n";
 		return s;
 	}
 	
-	public void consolidar(){
-		System.out.println("consolidando parametro...");
-		consolidado=true;
+	public void consolidar() throws SemanticException{
+		if (!this.tipo.estaDefinido()){
+			throw new SemanticException(tipo.getToken().getNroLinea(),tipo.getToken().getNroColumna(),"El tipo no está definido.");
+		}
+		this.consolidado=true;
 	}
 
 }

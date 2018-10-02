@@ -329,8 +329,9 @@ public class AnalizadorSintactico {
 		//TipoMetodo -> Tipo
 		//TipoMetodo -> void
 		if (tokenAct.esTipo(Utl.TPC_VOID)){
-			match(Utl.TPC_VOID);
-			return new TipoSimple("void");
+			Token tn=tokenAct;
+			consumirToken();
+			return new TipoSimple(tn);
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
 			return tipo();
@@ -344,29 +345,33 @@ public class AnalizadorSintactico {
 	private Tipo tipo() throws SintacticException {
 		//Tipo -> boolean PosibleArreglo | char PosibleArreglo | int PosibleArreglo | idClase | String
 		if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
-			match(Utl.TPC_BOOLEAN);
-			return posibleArreglo(new TipoSimple("boolean"));
+			Token tn=tokenAct;
+			consumirToken();
+			return posibleArreglo(new TipoSimple(tn));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_CHAR)){
-			match(Utl.TPC_CHAR);
-			return posibleArreglo(new TipoSimple("char"));
+			Token tn=tokenAct;
+			consumirToken();
+			return posibleArreglo(new TipoSimple(tn));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_INT)){
-			match(Utl.TPC_INT);
-			return posibleArreglo(new TipoSimple("int"));
+			Token tn=tokenAct;
+			consumirToken();
+			return posibleArreglo(new TipoSimple(tn));
 		}
 		else if (tokenAct.esTipo(Utl.TT_IDCLASE)){
 			Token tk=tokenAct;
-			match(Utl.TT_IDCLASE);
+			consumirToken();
 			//para logro posibleArreglo();
 			//Comentar si es que hay problemas
 			return posibleArreglo(new TipoClase(tk));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_STRING)){
-			match(Utl.TPC_STRING);
+			Token tn=tokenAct;
+			consumirToken();
 			//para logro posibleArreglo();
 			//Comentar si es que hay problemas
-			return posibleArreglo(new TipoSimple("string"));
+			return posibleArreglo(new TipoSimple(tn));
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Tipo invalido.\n"

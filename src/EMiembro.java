@@ -5,6 +5,7 @@ public abstract class EMiembro extends EntradaTS{
 	protected Token tokenNombre;
 	protected ArrayList<EParametro> parametros;
 	protected EClase clase;
+	protected Bloque bloque;
 	
 	public String getNombre() {
 		return tokenNombre.getLexema();
@@ -16,6 +17,10 @@ public abstract class EMiembro extends EntradaTS{
 	
 	public EClase getClase(){
 		return this.clase;
+	}
+	
+	public Bloque getBloque(){
+		return this.bloque;
 	}
 	
 	public ArrayList<EParametro> getParametros() {

@@ -2,10 +2,11 @@ import java.util.ArrayList;
 
 public class EConstructor extends EMiembro {
 	
-	public EConstructor(EClase clase,Token t){
+	public EConstructor(EClase clase,Token t,Bloque b){
 		this.clase=clase;
 		this.parametros=new ArrayList<EParametro>();
 		this.tokenNombre=t;		
+		this.bloque=b;
 		consolidado=false;
 	}	
 
@@ -32,7 +33,7 @@ public class EConstructor extends EMiembro {
 		s+="Parametros:\n"+this.parametros.toString()+"\n";		
 		return s;
 	}
-	public void consolidar(){
+	public void consolidar() throws SemanticException{
 		System.out.println("consolidando constructor...");
 		for(EParametro p: parametros){
 			p.consolidar();

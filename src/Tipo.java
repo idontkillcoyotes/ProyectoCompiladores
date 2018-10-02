@@ -1,15 +1,17 @@
 
 public abstract class Tipo {
 	
-	public String nombre;
-	public boolean arreglo;
+	protected Token tokenNombre;
+	protected boolean arreglo;	
 	
-	//TODO No estoy seguro si voy a necesitar un metodo como este...
-	public abstract boolean compatible(Tipo t);
+	@Override
+	public String toString(){
+		if (arreglo) return ("ar_"+this.tokenNombre.getLexema());
+		else return this.tokenNombre.getLexema();
+	}
 	
-	public String getTipo(){
-		if (arreglo) return ("ar_"+this.nombre);
-		else return this.nombre;
+	public Token getToken(){
+		return this.tokenNombre;
 	}
 	
 	public void setArreglo(){
@@ -19,5 +21,7 @@ public abstract class Tipo {
 	public boolean isArreglo(){
 		return this.arreglo;
 	}
+	
+	public abstract boolean estaDefinido();
 
 }

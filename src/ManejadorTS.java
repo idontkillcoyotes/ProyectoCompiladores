@@ -12,19 +12,24 @@ public class ManejadorTS {
 	}
 	
 	public void crearClase(Token tn,Token padre) throws SemanticException{
-		EClase c=new EClase(tn,padre);
-		boolean b=Utl.ts.addClase(c);
-		if ( (b) && (!c.getNombre().equals("Object")) && (!c.getNombre().equals("System")) ) {
-			Utl.ts.setClaseAct(c);
-			this.claseActual=Utl.ts.getClaseAct();
+		//checkeo que el nombre de la clase no sea object ni system
+		if ( (!tn.getLexema().equals("Object")) && (!tn.getLexema().equals("System")) ) {
+			EClase c=new EClase(tn,padre);
+			boolean b=Utl.ts.addClase(c);
+			if (b) {
+				Utl.ts.setClaseAct(c);
+				this.claseActual=Utl.ts.getClaseAct();
+			}
+			else throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),"El nombre de la clase esta duplicado.");
 		}
-		else throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),"El nombre de la clase esta duplicado.");
+		else throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),"El nombre de la clase es un nombre de clase predeterminada.");
 	}
 	
 	
 	public void crearMetodo(Token tn,FormaMetodo f,Tipo tipo) throws SemanticException{
 		if (this.claseActual!=null){
-			EMetodo m=new EMetodo(claseActual,tn,f,tipo);
+			Bloque b=new Bloque("metodo: "+tn.getLexema()+" de clase: "+this.claseActual.getNombre());
+			EMetodo m=new EMetodo(claseActual,tn,f,tipo,b);
 			this.ambienteActual=m;			
 		}
 	}
@@ -37,8 +42,8 @@ public class ManejadorTS {
 	
 	public void crearConstructor(Token tn) throws SemanticException{		
 		if (this.claseActual!=null){
-			if (tn.getLexema().equals(claseActual.getNombre())){
-				EConstructor c=new EConstructor(claseActual,tn);
+			if (tn.getLexema().equals(claseActual.getNombre())){				
+				EConstructor c=new EConstructor(claseActual,tn,new Bloque("const"));
 				this.ambienteActual=c;
 			}
 			else throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),"El nombre del constructor no es el mismo que el nombre de la clase.");
