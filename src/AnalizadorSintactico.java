@@ -81,7 +81,7 @@ public class AnalizadorSintactico {
 			//Guardo el token de nombre de clase
 			Token tn=tokenAct;
 			match(Utl.TT_IDCLASE);										
-			//Guardo el nombre de la clase padre
+			//Guardo el token de nombre de la clase padre
 			Token padre=herencia();
 			
 			mts.crearClase(tn, padre);

@@ -129,7 +129,8 @@ public class ManejadorTS {
 			Utl.ts.setClaseAct(c);
 			this.claseActual=Utl.ts.getClaseAct();
 		}
-		else throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),"El nombre de la clase esta duplicado.");
+		else throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),
+				"El nombre de la clase esta duplicado.");
 	}
 	
 	
@@ -166,7 +167,7 @@ public class ManejadorTS {
 		}
 	}
 	
-	public void crearAtributo(Token tn,Tipo tipo,Visibilidad vis) throws SemanticException{
+	private void crearAtributo(Token tn,Tipo tipo,Visibilidad vis) throws SemanticException{
 		if (this.claseActual!=null){
 			EAtributo a=new EAtributo(claseActual,tn,tipo,vis);
 			boolean b=this.claseActual.addAtributo(a);

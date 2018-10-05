@@ -20,7 +20,7 @@ public class TipoSimple extends Tipo{
 			return false;
 		}
 	}
-
+	@Override	
 	public boolean estaDefinido() {
 		return true;
 	}

@@ -1,40 +1,85 @@
+Antes de inicio se crean las clases predefinidas Object y System con sus respectivos metodos y se agregan a la Tabla de Simbolos
 Inicio -> Clase Clases $
+Luego de inicio se consolida la Tabla de simbolos
+
 Clases -> Clase Clases 
 Clases -> ε
-Clase -> class idClase /* crea clase con nombre idClase */ Herencia { Miembros }
-Herencia -> extends idClase /* retorna nombre de clase padre */
-Herencia -> ε
+
+
+Clase -> class idClase {Se guarda el token con el nombre de la clase} Herencia 
+{Se guarda el token con el nombre del padre de la clase que retorna Herencia, se crea la clase, se agrega a la Tabla de Simbolos y se la setea como clase actual}
+{ Miembros }
+
+Herencia -> extends {Se guarda el token de nombre de la clase} idClase {Herencia retorna el token de nombre de clase}
+Herencia -> ε {Se retorna un token nulo}
+
 Miembros -> Miembro Miembros 
 Miembros -> ε
 Miembro -> Atributo 
 Miembro -> Ctor
 Miembro -> Metodo 
-Atributo -> Visibilidad Tipo ListaDecVars Inicializacion ;
+
+Atributo -> Visibilidad {Se guarda la visibilidad} Tipo {Se guarda el tipo y se crea una lista de variables con el tipo para pasarle a ListaDecVars}
+ ListaDecVars {Se crean los atributos con la lista de nombres de variables y tipo y se agrega a la clase actual} Inicializacion ;
+ 
 Inicializacion -> = Expresion
 Inicializacion -> ε
-Metodo -> FormaMetodo TipoMetodo idMetVar ArgsFormales Bloque
-Ctor -> idClase ArgsFormales Bloque
+
+Metodo -> FormaMetodo {Se guarda la forma del metodo} TipoMetodo {Se guarda el tipo de retorno del metodo}
+ idMetVar {Se guarda el token del nombre del metodo, se crea un metodo con forma, tipo de retorno y nombre y se lo setea como miembro actual} ArgsFormales
+ {Se agrega el metodo a la tabla de simbolos} Bloque
+
+Ctor -> idClase {Se guarda el token del nombre del constructor, se crea el constructor y se lo setea como miembro actual}
+ ArgsFormales {Se agrega el constructor a la tabla de simbolos} Bloque
+
 ArgsFormales -> ( ListaArg )
 ListaArg -> Arg ArgFormales
 ListaArg -> ε
 ArgFormales -> , Arg ArgFormales
 ArgFormales -> ε
-Arg -> Tipo idMetVar
-FormaMetodo -> static /* retorna forma de metodo */
-FormaMetodo -> dynamic
-Visibilidad -> public /* retorna visibilidad */
-Visibilidad -> private
-TipoMetodo -> Tipo
-TipoMetodo -> void
-Tipo -> boolean PosibleArreglo /* retorna string con tipo */
-Tipo -> char PosibleArreglo
-Tipo -> int PosibleArreglo
-Tipo -> idClase PosibleArreglo
-Tipo -> String PosibleArreglo
-PosibleArreglo -> [ ] PosibleArreglo /* Permitir matrices? */
-PosibleArreglo -> ε
-ListaDecVars -> idMetVar ListaDV /* recibe tipo y visibilidad y crea un atributo */ /* deberia retornar una lista de nombres? */
-ListaDV -> , idMetVar ListaDV /* recibe tipo y visibilidad y crea un atributo */
+
+Arg -> Tipo {Se guarda el tipo del parametro} idMetVar {Se guarda el token del nombre del parametro, se crea el parametro y se agrega al miembro actual}
+
+
+FormaMetodo -> static {Retorna forma static}
+
+FormaMetodo -> dynamic {Retorna forma dynamic}
+
+Visibilidad -> public {Retorna visibilidad public}
+
+Visibilidad -> private {Retorna visibilidad private}
+
+TipoMetodo -> Tipo {Retorna el tipo que retorna Tipo}
+
+TipoMetodo -> void {Se crea un tipo simple con el token de nombre void y se retorna}
+
+Tipo -> boolean {Se crea un tipo simple con el token de nombre boolean y se pasa como parametro a PosibleArreglo}
+ PosibleArreglo {Retorna el tipo que retorna PosibleArreglo}
+
+Tipo -> char Se crea un tipo simple con el token de nombre char y se pasa como parametro a PosibleArreglo} 
+PosibleArreglo {Retorna el tipo que retorna PosibleArreglo}
+
+Tipo -> int {Se crea un tipo simple con el token de nombre int y se pasa como parametro a PosibleArreglo} 
+PosibleArreglo {Retorna el tipo que retorna PosibleArreglo} 
+
+Tipo -> idClase {Se crea un tipo clase con el token de nombre de la clase y se pasa como parametro a PosibleArreglo} 
+ PosibleArreglo {Retorna el tipo que retorna PosibleArreglo}
+
+Tipo -> String {Se crea un tipo simple con el token de nombre String y se pasa como parametro a PosibleArreglo} 
+ PosibleArreglo {Retorna el tipo que retorna PosibleArreglo}
+
+PosibleArreglo -> [ ] {Setea que es arreglo al tipo recibido como parametro y se retorna}
+
+PosibleArreglo -> ε {Retorna el tipo recibido como parametro}
+
+{Recibe como parametros un tipo y una lista de parametros}
+ListaDecVars -> idMetVar {Se guarda el token de nombre del parametro, se crea un parametro con ese nombre y el tipo y se agrega a la lista}
+ {Se pasa como parametro el tipo y la lista a ListaDV} ListaDV
+
+{Recibe como parametros un tipo y una lista de parametros}
+ListaDV -> , idMetVar {Se guarda el token de nombre del parametro, se crea un parametro con ese nombre y el tipo y se agrega a la lista}
+ {Se pasa como parametro el tipo y la lista a ListaDV} ListaDV
+
 ListaDV -> ε
 Bloque -> { Sentencias }
 Sentencias -> Sentencia Sentencias

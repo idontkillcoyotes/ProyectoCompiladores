@@ -22,10 +22,6 @@ public class EConstructor extends EMiembro {
 		return hash;	
 	}
 	
-	
-	public ArrayList<EParametro> getParametros(){
-		return this.parametros;
-	}
 	public String toString(){
 		String s="\n";
 		s+="______________________________________\n";

@@ -43,6 +43,11 @@ public class EMetodo extends EMiembro{
 			return false;
 		}
 	}
+	@Override
+	public int hashCode() {		
+		int hash=this.getNombre().hashCode();
+		return hash;
+	}
 	public boolean hardEquals(EMetodo m) {
 		//el nombre y la aridad siempre van a ser iguales
 		if( ( this.forma.equals(m.getForma()) ) &&
@@ -69,11 +74,7 @@ public class EMetodo extends EMiembro{
 		return igual;
 	}
 
-	@Override
-	public int hashCode() {		
-		int hash=this.getNombre().hashCode();
-		return hash;
-	}
+	
 	public boolean isMain(){
 		if( (this.forma==FormaMetodo.fStatic)&&
 			(this.tipoRetorno.esTipo(Utl.TPC_VOID))&&
