@@ -22,6 +22,10 @@ public class TablaSimbolos {
 		return this.clases.add(c);
 	}
 	
+	public EMetodo getMain(){
+		return this.main;
+	}
+	
 	public void setClaseAct(EClase c){
 		this.claseActual=c;
 	}
