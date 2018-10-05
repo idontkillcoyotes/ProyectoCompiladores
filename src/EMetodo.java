@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class EMetodo extends EMiembro{
 	
@@ -42,6 +43,32 @@ public class EMetodo extends EMiembro{
 			return false;
 		}
 	}
+	public boolean hardEquals(EMetodo m) {
+		//el nombre y la aridad siempre van a ser iguales
+		if( ( this.forma.equals(m.getForma()) ) &&
+			( this.tipoRetorno.compatible(m.getTipoRetorno()) ) &&			
+			( this.parametrosIguales(m.getParametros()) )){
+			return true;			
+		}
+		else{ 
+			return false;
+		}		
+	}
+	
+	
+	private boolean parametrosIguales(ArrayList<EParametro> par) {
+		boolean igual=true;
+		//no es necesario comparar la cantidad de elementos porque siempre seran iguales
+		Iterator<EParametro> params=par.iterator();
+		for(EParametro p: this.parametros){
+			if(params.hasNext()){					
+				//solo me importa el orden y los tipos de los parametros
+				igual=(igual && (p.getTipo().compatible(params.next().getTipo()))) ;
+			}
+		}
+		return igual;
+	}
+
 	@Override
 	public int hashCode() {		
 		int hash=this.getNombre().hashCode();
@@ -55,6 +82,20 @@ public class EMetodo extends EMiembro{
 			return true;
 		}
 		else return false;
+	}
+	
+	@Override
+	public void consolidar() throws SemanticException{
+		if(!consolidado){
+			if (!this.tipoRetorno.estaDefinido()){
+				throw new SemanticException(tipoRetorno.getToken().getNroLinea(),tipoRetorno.getToken().getNroColumna(),
+						"El tipo "+this.tipoRetorno.toString()+" no está definido.");
+			}
+			for(EParametro p: parametros){
+				p.consolidar();
+			}
+			this.consolidado=true;
+		}
 	}
 	
 	
@@ -71,11 +112,6 @@ public class EMetodo extends EMiembro{
 		return s;
 	}
 
-	public void consolidar() throws SemanticException {
-		for(EParametro p: parametros){
-			p.consolidar();
-		}
-		consolidado=true;		
-	}
+
 
 }

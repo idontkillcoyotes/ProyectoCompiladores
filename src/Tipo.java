@@ -6,7 +6,7 @@ public abstract class Tipo {
 	
 	@Override
 	public String toString(){
-		if (arreglo) return ("ar_"+this.tokenNombre.getLexema());
+		if (arreglo) return (this.tokenNombre.getLexema()+"[]");
 		else return this.tokenNombre.getLexema();
 	}
 	
@@ -26,6 +26,13 @@ public abstract class Tipo {
 		return (this.tokenNombre.getTipo()==t);
 	}
 	
-	public abstract boolean estaDefinido();
+	public String getTipo() {
+		return this.tokenNombre.getLexema();
+	}
+	
+	public abstract boolean compatible(Tipo t);	
+
+	
+	public abstract boolean estaDefinido();	
 
 }

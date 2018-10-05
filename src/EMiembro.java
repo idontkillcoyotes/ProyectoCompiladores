@@ -43,4 +43,14 @@ public abstract class EMiembro extends EntradaTS{
 	public int getAridad(){
 		return this.parametros.size();
 	}
+	
+	public void consolidar() throws SemanticException{
+		if(!consolidado){
+			for(EParametro p: parametros){
+				p.consolidar();
+			}
+			this.consolidado=true;
+		}
+	}
+	
 }

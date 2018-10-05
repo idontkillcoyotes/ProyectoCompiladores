@@ -6,8 +6,19 @@ public class TipoSimple extends Tipo{
 		this.arreglo=false;
 	}
 	
+	@Override
 	public boolean compatible(Tipo t) {
-		return true;
+		if(arreglo==t.isArreglo()){
+			if(t.esTipo(this.tokenNombre.getTipo())){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
 	}
 
 	public boolean estaDefinido() {

@@ -22,10 +22,7 @@ public class EParametro extends EntradaTS{
 		return this.tokenNombre;
 	}
 	
-	/*
-	 * Redefino equals para que considere dos parametros iguales a aquellos 
-	 * que tienen mismo nombre y tipo
-	 */
+
 	@Override
 	public boolean equals(Object e){
 		EParametro par=(EParametro) e;
@@ -45,10 +42,13 @@ public class EParametro extends EntradaTS{
 	}
 	
 	public void consolidar() throws SemanticException{
-		if (!this.tipo.estaDefinido()){
-			throw new SemanticException(tipo.getToken().getNroLinea(),tipo.getToken().getNroColumna(),"El tipo no está definido.");
+		if(!consolidado){
+			if (!this.tipo.estaDefinido()){
+				throw new SemanticException(tipo.getToken().getNroLinea(),tipo.getToken().getNroColumna(),
+						"El tipo "+this.tipo.toString()+" no está definido.");
+			}
+			this.consolidado=true;
 		}
-		this.consolidado=true;
 	}
 
 }

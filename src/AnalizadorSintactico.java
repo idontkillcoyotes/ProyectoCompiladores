@@ -44,6 +44,7 @@ public class AnalizadorSintactico {
 	}
 	
 	public void start() throws SintacticException, SemanticException{
+		mts.crearClasesPredefinidas();
 		inicio();
 		mts.consolidarTS();
 	}
@@ -98,7 +99,7 @@ public class AnalizadorSintactico {
 	//Retorna el token de la clase padre, o un token nuevo con 'Object'
 	private Token herencia() throws SintacticException{
 		//Herencia -> extends idClase | epsilon
-		Token ret=new Token(Utl.TT_IDCLASE,"Object",0,0);
+		Token ret=null;
 		if (tokenAct.esTipo(Utl.TPC_EXTENDS)){
 			match(Utl.TPC_EXTENDS);
 			ret=tokenAct;

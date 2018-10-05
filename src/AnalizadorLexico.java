@@ -245,6 +245,14 @@ public class AnalizadorLexico {
 				}
 				else{
 					//token es Entero
+					try{
+						Integer.parseInt(this.lexemaActual);
+					}
+					catch(NumberFormatException e){
+						int linea=this.entradaSalida.getNroLinea();
+						int col=this.entradaSalida.getNroColumna();
+						throw new LexicoException(linea,col,"El numero es demasiado grande.");
+					}
 					return createToken(Utl.TT_LITENTERO);
 				}
 				break;

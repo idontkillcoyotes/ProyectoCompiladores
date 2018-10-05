@@ -36,10 +36,4 @@ public class EConstructor extends EMiembro {
 		s+="______________________________________\n";
 		return s;
 	}
-	public void consolidar() throws SemanticException{
-		for(EParametro p: parametros){
-			p.consolidar();
-		}
-		consolidado=true;
-	}
 }

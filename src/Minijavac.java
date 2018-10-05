@@ -1,5 +1,5 @@
 
-public class Minijavac {	
+public class Minijavac {
 	
 	public static void main(String[] args) {	
 		if (args.length==1){
@@ -8,10 +8,10 @@ public class Minijavac {
 			AnalizadorSintactico asin=new AnalizadorSintactico(alex);
 			try {	
 				asin.start();				
-				Utl.ts.imprimir();
+				//Utl.ts.imprimir();
 				System.out.println("Compilación exitosa.");
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				System.out.println(e.getMessage());				
 			}
 			
 		}

@@ -4,6 +4,7 @@ public class TablaSimbolos {
 	
 	private HashSet<EClase> clases;
 	private EClase claseActual;
+	private EMetodo main;
 	private boolean consolidado;
 	
 	public TablaSimbolos(){
@@ -33,7 +34,10 @@ public class TablaSimbolos {
 		boolean main=false;
 		for(EClase c: clases){
 			c.consolidar();
-			main=c.hasMain();
+			main=(main||c.hasMain());
+			if (main){
+				this.main=c.getMain();
+			}
 		}
 		if(!main){
 			throw new SemanticException(0,0,"Falta un metodo main.");
@@ -64,9 +68,12 @@ public class TablaSimbolos {
 		System.out.println("*****************************************");
 		System.out.println("\tTABLA DE SIMBOLOS:");
 		System.out.println("*****************************************");
+		System.out.println("Total de clases en la tabla: "+this.clases.size());
 		for(EClase c: clases){
-			System.out.println(c.toString());
-			System.out.println("***************************");
+			if ((!c.getNombre().equals("Object"))&&(!c.getNombre().equals("System"))){
+				System.out.println(c.toString());
+				System.out.println("*****************************************");
+			}			
 		}
 	}
 	
