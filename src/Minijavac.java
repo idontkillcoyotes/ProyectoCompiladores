@@ -11,7 +11,8 @@ public class Minijavac {
 				//Utl.ts.imprimir();
 				System.out.println("Compilación exitosa.");
 			} catch (Exception e) {
-				System.out.println(e.getMessage());				
+				System.out.println(e.getMessage());
+				//e.printStackTrace();
 			}
 			
 		}

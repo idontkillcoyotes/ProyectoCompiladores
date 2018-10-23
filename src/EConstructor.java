@@ -2,11 +2,12 @@ import java.util.ArrayList;
 
 public class EConstructor extends EMiembro {
 	
-	public EConstructor(EClase clase,Token t,Bloque b){
+	public EConstructor(EClase clase,Token t,String texto){
 		this.clase=clase;
 		this.parametros=new ArrayList<EParametro>();
-		this.tokenNombre=t;		
-		this.bloque=b;
+		this.tokenNombre=t;
+		this.texto=texto;
+		this.bloque=null;
 		consolidado=false;
 	}	
 
@@ -22,14 +23,22 @@ public class EConstructor extends EMiembro {
 		return hash;	
 	}
 	
+	@Override
 	public String toString(){
 		String s="\n";
 		s+="______________________________________\n";
 		s+="\t| Constructor |\n";
 		s+="Aridad:\t\t\t"+this.getAridad()+"\n";
 		s+="Parametros:\n"+this.parametros.toString()+"\n";
-		s+="Bloque:\n"+this.bloque.getContenido()+"\n";
+		s+="Descripcion:\n"+this.texto+"\n";
+		if (bloque!=null) s+="Bloque:\n********************************\n"+this.bloque.toString();
+		s+="********************************\n";
 		s+="______________________________________\n";
 		return s;
+	}	
+
+	@Override
+	public void check() throws SemanticException {
+		// TODO Auto-generated method stub		
 	}
 }

@@ -1,5 +1,5 @@
 
-public class TipoClase extends Tipo{
+public class TipoClase extends TipoReferencia{
 	
 	public TipoClase(Token tk){
 		this.tokenNombre=tk;
@@ -11,7 +11,7 @@ public class TipoClase extends Tipo{
 	}
 
 	@Override
-	public boolean compatible(Tipo t) {
+	public boolean mismoTipo(Tipo t) {
 		if(this.arreglo==t.isArreglo()){
 			if(this.tokenNombre.getLexema().equals(t.getTipo())){
 				return true;
@@ -25,4 +25,9 @@ public class TipoClase extends Tipo{
 		}
 	}
 
+	@Override
+	public boolean esCompatible(Tipo t) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

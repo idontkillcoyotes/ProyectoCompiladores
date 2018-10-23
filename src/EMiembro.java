@@ -5,14 +5,20 @@ public abstract class EMiembro extends EntradaTS{
 	protected Token tokenNombre;
 	protected ArrayList<EParametro> parametros;
 	protected EClase clase;
-	protected Bloque bloque;
+	protected NodoBloque bloque;
+	protected String texto;
 	
+	@Override
 	public String getNombre() {
 		return tokenNombre.getLexema();
 	}
 
 	public Token getToken() {
 		return tokenNombre;
+	}
+	
+	public String getTexto(){
+		return this.texto;
 	}
 	
 	public String getNombreAridad(){
@@ -23,8 +29,12 @@ public abstract class EMiembro extends EntradaTS{
 		return this.clase;
 	}
 	
-	public Bloque getBloque(){
+	public NodoBloque getBloque(){
 		return this.bloque;
+	}
+	
+	public void setBloque(NodoBloque b){
+		this.bloque=b;
 	}
 	
 	public ArrayList<EParametro> getParametros() {
@@ -44,6 +54,7 @@ public abstract class EMiembro extends EntradaTS{
 		return this.parametros.size();
 	}
 	
+	@Override
 	public void consolidar() throws SemanticException{
 		if(!consolidado){
 			for(EParametro p: parametros){
@@ -51,6 +62,14 @@ public abstract class EMiembro extends EntradaTS{
 			}
 			this.consolidado=true;
 		}
+	}
+	
+	@Override
+	public void check() throws SemanticException {
+		//seteo miembro actual
+		Utl.ts.setMiembroActual(this);
+		Utl.ts.setBloqueActual(null);
+		if (bloque!=null) bloque.check();
 	}
 	
 }

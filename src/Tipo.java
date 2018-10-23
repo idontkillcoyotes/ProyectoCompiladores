@@ -2,37 +2,34 @@
 public abstract class Tipo {
 	
 	protected Token tokenNombre;
-	protected boolean arreglo;	
-	
-	@Override
-	public String toString(){
-		if (arreglo) return (this.tokenNombre.getLexema()+"[]");
-		else return this.tokenNombre.getLexema();
-	}
 	
 	public Token getToken(){
 		return this.tokenNombre;
 	}
 	
-	public void setArreglo(){
-		this.arreglo=true;
-	}
-	
-	public boolean isArreglo(){
-		return this.arreglo;
-	}
-	
-	public boolean esTipo(int t) {
-		return (this.tokenNombre.getTipo()==t);
-	}
-	
-	public String getTipo() {
+	public String getTipo(){
 		return this.tokenNombre.getLexema();
 	}
 	
-	public abstract boolean compatible(Tipo t);	
-
+	public boolean mismoTipoBase(Tipo t) {
+		if(t.esTipo(this.tokenNombre.getTipo())){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	
-	public abstract boolean estaDefinido();	
+	public abstract boolean mismoTipo(Tipo t);
+	
+	public abstract boolean esCompatible(Tipo t);		
+	
+	public abstract boolean isArreglo();
+	
+	public abstract boolean esTipo(int tipo);
+
+	public abstract void setArreglo();
+
+	public abstract boolean estaDefinido();
 
 }

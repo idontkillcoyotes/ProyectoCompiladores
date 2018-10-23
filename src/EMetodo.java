@@ -7,13 +7,14 @@ public class EMetodo extends EMiembro{
 	private FormaMetodo forma;
 	private Tipo tipoRetorno;
 	
-	public EMetodo(EClase clase,Token tn,FormaMetodo f,Tipo tiporet,Bloque b){
+	public EMetodo(EClase clase,Token tn,FormaMetodo f,Tipo tiporet,String texto){
 		this.clase=clase;
 		this.tokenNombre=tn;
 		this.forma=f;
 		this.tipoRetorno=tiporet;		
 		this.parametros=new ArrayList<EParametro>();
-		this.bloque=b;
+		this.texto=texto;
+		this.bloque=null;
 		this.consolidado=false;
 	}	
 
@@ -43,15 +44,17 @@ public class EMetodo extends EMiembro{
 			return false;
 		}
 	}
+	
 	@Override
 	public int hashCode() {		
 		int hash=this.getNombre().hashCode();
 		return hash;
 	}
+	
 	public boolean hardEquals(EMetodo m) {
 		//el nombre y la aridad siempre van a ser iguales
 		if( ( this.forma.equals(m.getForma()) ) &&
-			( this.tipoRetorno.compatible(m.getTipoRetorno()) ) &&			
+			( this.tipoRetorno.mismoTipo(m.getTipoRetorno()) ) &&			
 			( this.parametrosIguales(m.getParametros()) )){
 			return true;			
 		}
@@ -68,7 +71,7 @@ public class EMetodo extends EMiembro{
 		for(EParametro p: this.parametros){
 			if(params.hasNext()){					
 				//solo me importa el orden y los tipos de los parametros
-				igual=(igual && (p.getTipo().compatible(params.next().getTipo()))) ;
+				igual=(igual && (p.getTipo().mismoTipo(params.next().getTipo()))) ;
 			}
 		}
 		return igual;
@@ -90,7 +93,7 @@ public class EMetodo extends EMiembro{
 		if(!consolidado){
 			if (!this.tipoRetorno.estaDefinido()){
 				throw new SemanticException(tipoRetorno.getToken().getNroLinea(),tipoRetorno.getToken().getNroColumna(),
-						"El tipo "+this.tipoRetorno.toString()+" no está definido.");
+						"El tipo "+this.tipoRetorno.getTipo()+" no está definido.");
 			}
 			for(EParametro p: parametros){
 				p.consolidar();
@@ -99,7 +102,7 @@ public class EMetodo extends EMiembro{
 		}
 	}
 	
-	
+	@Override
 	public String toString(){
 		String s="\n";
 		s+="______________________________________\n";
@@ -108,11 +111,10 @@ public class EMetodo extends EMiembro{
 		s+="Tipo retorno:\t\t"+this.tipoRetorno.toString()+"\n";
 		s+="Aridad:\t\t\t"+this.getAridad()+"\n";
 		s+="Parametros:\n"+this.parametros.toString()+"\n";		
-		s+="Bloque:\n"+this.bloque.getContenido()+"\n";
+		s+="Descripcion:\n"+this.texto+"\n";
+		if (bloque!=null) s+="Bloque:\n********************************\n"+this.bloque.toString();
+		s+="********************************\n";
 		s+="______________________________________\n";
 		return s;
 	}
-
-
-
 }

@@ -34,7 +34,7 @@ public class AnalizadorSintactico {
 		}
 	}
 	
-	private void consumirToken() {
+	private void matchSimple() {
 		try {
 			tokenAct = alex.nextToken();
 		}
@@ -76,7 +76,7 @@ public class AnalizadorSintactico {
 		//Clase -> class idClase Herencia { Miembros }
 		//If para reportar mejor el error:
 		if (tokenAct.esTipo(Utl.TPC_CLASS)){
-			match(Utl.TPC_CLASS);
+			matchSimple();
 			
 			//Guardo el token de nombre de clase
 			Token tn=tokenAct;
@@ -101,7 +101,7 @@ public class AnalizadorSintactico {
 		//Herencia -> extends idClase | epsilon
 		Token ret=null;
 		if (tokenAct.esTipo(Utl.TPC_EXTENDS)){
-			match(Utl.TPC_EXTENDS);
+			matchSimple();
 			ret=tokenAct;
 			match(Utl.TT_IDCLASE);			
 		}
@@ -161,20 +161,34 @@ public class AnalizadorSintactico {
 		//Agrego los atributos a la clase
 		mts.crearAtributos(lista, vis);
 		
-		//Comentar la siguiente llamada si es que hay problemas
-		inicializacion();		
+		//Creo nodo declaracion variables para pasarle a inicializacion
+		NodoDeclaracionVars n=new NodoDeclaracionVars(lista);	
+		inicializacion(n);
+		
+		//Obtengo el nodo expresion del valor
+		NodoExpresion val=n.getValor();		
+		
+		if(val!=null){
+			//Seteo que esta en una declaracion de atributos
+			val.setValorAtributo(true);
+			mts.setValorAtributos(val);
+		}
+		
 		match(Utl.TT_PUNPUNTOCOMA);
 	}
 	//Aca empieza el logro de inicializacion en declaracion
 	//Comentar este metedo si es que hay problemas
-	private void inicializacion() throws SintacticException {
+	private void inicializacion(NodoDeclaracionVars n) throws SintacticException {
 		//Inicializacion -> = Expresion | epsilon
 		if (tokenAct.esTipo(Utl.TT_ASIGIGUAL)){
-			match(Utl.TT_ASIGIGUAL);
-			expresion();
+			n.setTokenIgual(tokenAct);
+			matchSimple();
+			n.setValor(expresion());
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
 			//vacio
+			n.setValor(null);
+			n.setTokenIgual(null);	
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -203,14 +217,20 @@ public class AnalizadorSintactico {
 		//Agrego metodo a clase cuando ya tengo todos sus parametros
 		mts.agregarMetodo();	
 		
-		bloque();
+		//Seteo bloque actual como null
+		mts.setBloqueActual(null);
+		
+		NodoBloque b=bloque();
+		
+		//Agrego el bloque al miembro
+		mts.agregarBloque(b);
 	}
 	private void ctor() throws SintacticException, SemanticException{
 		//Ctor -> idClase ArgsFormales Bloque		
 		if (tokenAct.esTipo(Utl.TT_IDCLASE)){
 			//Guardo el token de nombre del constructor
 			Token tn=tokenAct;
-			consumirToken();
+			matchSimple();
 			
 			//Creo constructor
 			mts.crearConstructor(tn);
@@ -220,7 +240,13 @@ public class AnalizadorSintactico {
 			//Agrego constructor a clase cuando ya tengo todos sus parametros
 			mts.agregarConstructor();
 			
-			bloque();
+			//Seteo bloque actual como null
+			mts.setBloqueActual(null);
+			
+			NodoBloque b=bloque();
+			
+			//Agrego el bloque al miembro
+			mts.agregarBloque(b);			
 		}
 		else {
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Constructor mal formado.\n"
@@ -232,7 +258,7 @@ public class AnalizadorSintactico {
 		//ArgsFormales -> ( ListaArg )
 		//If para retornar un mejor error
 		if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
-			match(Utl.TT_PUNPARENT_A);
+			matchSimple();
 			listaArg();
 			match(Utl.TT_PUNPARENT_C);
 		}
@@ -260,7 +286,7 @@ public class AnalizadorSintactico {
 	private void argFormales()  throws SintacticException, SemanticException{
 		//ArgFormales -> , Arg ArgFormales | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCOMA)){
-			match(Utl.TT_PUNCOMA);
+			matchSimple();
 			arg();
 			argFormales();
 		}
@@ -282,7 +308,7 @@ public class AnalizadorSintactico {
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){			
 			//Guardo el token del nombre del parametro
 			Token tn=tokenAct;
-			consumirToken();
+			matchSimple();
 			//Agrego parametro al miembro
 			mts.crearParametro(tn, tipo);			
 		}
@@ -296,11 +322,11 @@ public class AnalizadorSintactico {
 		//FormaMetodo -> static
 		//FormaMetodo -> dynamic
 		if (tokenAct.esTipo(Utl.TPC_STATIC)){
-			match(Utl.TPC_STATIC);
+			matchSimple();
 			return FormaMetodo.fStatic;
 		}
 		else if (tokenAct.esTipo(Utl.TPC_DYNAMIC)){
-			match(Utl.TPC_DYNAMIC);
+			matchSimple();
 			return FormaMetodo.fDynamic;
 		}
 		else{
@@ -313,11 +339,11 @@ public class AnalizadorSintactico {
 		//Visibilidad -> public 
 		//Visibilidad -> private
 		if (tokenAct.esTipo(Utl.TPC_PUBLIC)){
-			match(Utl.TPC_PUBLIC);
+			matchSimple();
 			return Visibilidad.vPublic;
 		}
 		else if (tokenAct.esTipo(Utl.TPC_PRIVATE)){
-			match(Utl.TPC_PRIVATE);
+			matchSimple();
 			return Visibilidad.vPrivate;
 		}
 		else{
@@ -331,8 +357,8 @@ public class AnalizadorSintactico {
 		//TipoMetodo -> void
 		if (tokenAct.esTipo(Utl.TPC_VOID)){
 			Token tn=tokenAct;
-			consumirToken();
-			return new TipoSimple(tn);
+			matchSimple();
+			return new TipoVoid(tn);
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
 			return tipo();
@@ -347,32 +373,32 @@ public class AnalizadorSintactico {
 		//Tipo -> boolean PosibleArreglo | char PosibleArreglo | int PosibleArreglo | idClase | String
 		if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
 			Token tn=tokenAct;
-			consumirToken();
-			return posibleArreglo(new TipoSimple(tn));
+			matchSimple();
+			return posibleArreglo(new TipoBool(tn));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_CHAR)){
 			Token tn=tokenAct;
-			consumirToken();
-			return posibleArreglo(new TipoSimple(tn));
+			matchSimple();
+			return posibleArreglo(new TipoChar(tn));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_INT)){
 			Token tn=tokenAct;
-			consumirToken();
-			return posibleArreglo(new TipoSimple(tn));
+			matchSimple();
+			return posibleArreglo(new TipoInt(tn));
 		}
 		else if (tokenAct.esTipo(Utl.TT_IDCLASE)){
 			Token tk=tokenAct;
-			consumirToken();
+			matchSimple();
 			//para logro posibleArreglo();
 			//Comentar si es que hay problemas
 			return posibleArreglo(new TipoClase(tk));
 		}
 		else if (tokenAct.esTipo(Utl.TPC_STRING)){
 			Token tn=tokenAct;
-			consumirToken();
+			matchSimple();
 			//para logro posibleArreglo();
 			//Comentar si es que hay problemas
-			return posibleArreglo(new TipoSimple(tn));
+			return posibleArreglo(new TipoString(tn));
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Tipo invalido.\n"
@@ -383,10 +409,10 @@ public class AnalizadorSintactico {
 	private Tipo posibleArreglo(Tipo tipo) throws SintacticException {
 		//PosibleArreglo -> [ ] | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCORCH_A)){
-			match(Utl.TT_PUNCORCH_A);
+			matchSimple();
 			
 			if (tokenAct.esTipo(Utl.TT_PUNCORCH_C)){
-				match(Utl.TT_PUNCORCH_C);
+				matchSimple();
 				//seteo que es arreglo
 				tipo.setArreglo();
 				//retorno
@@ -410,34 +436,14 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	//Este metodo no es usado si hago el logro de arreglos de todo tipo
-	//Descomentar si es que hay problemas
-	/*
-	private void tipoPrimitivo() throws SintacticException {
-		//TipoPrimitivo -> boolean | char | int
-		if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
-			match(Utl.TPC_BOOLEAN);
-		}
-		else if (tokenAct.esTipo(Utl.TPC_CHAR)){
-			match(Utl.TPC_CHAR);
-		}
-		else if (tokenAct.esTipo(Utl.TPC_INT)){
-			match(Utl.TPC_INT);
-		}
-		else{
-			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
-					"Se esperaba un token dentro del grupo: boolean char int\n"
-					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
-		}
-	}
-	*/
+
 	private void listaDecVars(Tipo tipo,ArrayList<EParametro> l)  throws SintacticException, SemanticException{
 		//ListaDecVars -> idMetVar ListaDV
 		//If para reportar mejor el error
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
 			//Obtengo el token nombre de la variable
 			Token t=tokenAct;
-			match(Utl.TT_IDMETVAR);
+			matchSimple();
 			
 			//creo la variable con el tipo pasado por parametro
 			EParametro var=new EParametro(t,tipo);
@@ -455,11 +461,11 @@ public class AnalizadorSintactico {
 	private void listaDV(Tipo tipo,ArrayList<EParametro> l) throws SintacticException, SemanticException {
 		//ListaDV -> , idMetVar ListaDV | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCOMA)){
-			match(Utl.TT_PUNCOMA);
+			matchSimple();
 			if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
 				//Obtengo el token nombre de la variable
 				Token t=tokenAct;
-				match(Utl.TT_IDMETVAR);
+				matchSimple();
 				
 				//creo la variable con el tipo pasado por parametro
 				EParametro var=new EParametro(t,tipo);
@@ -474,11 +480,8 @@ public class AnalizadorSintactico {
 						+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 			}
 		}
-		//TODO Logro de inicializacion en declaracion, los siguientes de ListaDV con el logro cambian
-		//viejos siguientes: ;
-		//nuevos siguientes: ; = } idClase public private static dynamic if while return boolean char
-		// 					 int String { ( idMetVar this else
-		//Tengo dudas si los nuevos siguientes son esos, o son solo: = ;
+		//siguientes: ; = } idClase public private static dynamic if while return boolean char
+		// 			  int String { ( idMetVar this else
 		else if (tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TT_ASIGIGUAL,Utl.TT_PUNLLAVE_C,Utl.TT_IDCLASE,Utl.TPC_PUBLIC,Utl.TPC_PRIVATE,
 			Utl.TPC_STATIC,Utl.TPC_DYNAMIC,Utl.TPC_IF,Utl.TPC_WHILE,Utl.TPC_RETURN,Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TPC_STRING,
 			Utl.TT_PUNLLAVE_A,Utl.TT_PUNPARENT_A,Utl.TT_IDMETVAR,Utl.TPC_THIS,Utl.TPC_ELSE})){
@@ -490,16 +493,40 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}	
-	private void bloque() throws SintacticException, SemanticException {
+	private NodoBloque bloque() throws SintacticException, SemanticException {
 		//Bloque -> { Sentencias }
 		match(Utl.TT_PUNLLAVE_A);
+		
+		//Creo nodo bloque con padre bloque actual
+		NodoBloque b=new NodoBloque(mts.bloqueAct());		
+		
+		/*
+		//Si el padre no es nulo deberia agregarle el nuevo bloque a sus sentencias
+		if(mts.bloqueAct()!=null){
+			mts.bloqueAct().addSentencia(b);		
+		}		
+		*/
+		
+		//El nuevo bloque es el bloque actual
+		mts.setBloqueActual(b);
+		
+		//Voy agregando sentencias
 		sentencias();
+		
 		match(Utl.TT_PUNLLAVE_C);
+		
+		//Aca termino el bloque, seteo el padre como bloque actual		
+		mts.setBloqueActual(mts.bloqueAct().getPadre());
+		
+		//Retorno el bloque nuevo
+		return b;
 	}
 	private void sentencias() throws SintacticException, SemanticException {
 		//Sentencias -> Sentencia Sentencias | epsilon
 		if(tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TPC_IF,Utl.TPC_WHILE,Utl.TPC_RETURN,Utl.TT_IDMETVAR,Utl.TPC_THIS,Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING,Utl.TT_PUNPARENT_A,Utl.TT_PUNLLAVE_A})){
-			sentencia();
+			NodoSentencia s=sentencia();
+			//agrego sentencia al bloque actual
+			mts.agregarSentencia(s);
 			sentencias();
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_C)){
@@ -511,56 +538,83 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}	
 	}
-	private void sentencia() throws SintacticException, SemanticException {
+	private NodoSentencia sentencia() throws SintacticException, SemanticException {
 		//Sentencia -> ; | if ( Expresion ) Sentencia SentenciaElse | while ( Expresion ) Sentencia | return Expresiones ;
 		//Sentencia -> Asignacion ; | SentenciaLlamada ; | Tipo ListaDecVars ; | Bloque
-		if (tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
-			match(Utl.TT_PUNPUNTOCOMA);
+		if (tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){	
+			// ;
+			//Creo un nuevo nodo punto y coma
+			NodoPuntoComa n=new NodoPuntoComa(tokenAct);
+			matchSimple();
+			return n;
 		}
 		else if (tokenAct.esTipo(Utl.TPC_IF)){
-			match(Utl.TPC_IF);
+			//if ( expresion ) sentencia sentenciaElse 
+			
+			//Creo un nuevo nodo if
+			NodoIf n=new NodoIf(tokenAct);
+			matchSimple();
 			match(Utl.TT_PUNPARENT_A);
-			expresion();
+			//Asigno la condicion
+			n.setCondicion(expresion());
 			match(Utl.TT_PUNPARENT_C);
-			sentencia();
-			sentenciaElse();
-			//TODO checkear si la ambiguedad se resuelve aca
+			
+			//Asigno sentencia y else
+			n.setSentenciathen(sentencia());	
+			n.setSentenciaelse(sentenciaElse());			
+			
+			return n;
 		}
 		else if (tokenAct.esTipo(Utl.TPC_WHILE)){
-			match(Utl.TPC_WHILE);
+			//while ( expresion ) sentencia 
+			//Creo nodo while
+			NodoWhile n=new NodoWhile(tokenAct);
+			matchSimple();			
 			match(Utl.TT_PUNPARENT_A);
-			expresion();
+			//Asigno condicion
+			n.setCondicion(expresion());
 			match(Utl.TT_PUNPARENT_C);
-			sentencia();
+			//Asigno sentencia
+			n.setSentencia(sentencia());
+			return n;
 		}
 		else if (tokenAct.esTipo(Utl.TPC_RETURN)){
-			match(Utl.TPC_RETURN);
-			expresiones();
+			//return expresiones 
+			NodoReturn n=new NodoReturn(tokenAct);
+			matchSimple();
+			//Asigno expresiones 
+			n.setExpresion(expresiones());
 			match(Utl.TT_PUNPUNTOCOMA);
+			return n;
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TT_IDMETVAR,Utl.TPC_THIS})){
-			//asignacion ;
-			asignacion();
+			//asignacion			
+			NodoAsignacion n=asignacion();
 			match(Utl.TT_PUNPUNTOCOMA);
+			return n;
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
-			//sentenciallamada ;
-			sentenciaLlamada();
+			//sentenciallamada			 
+			NodoSentenciaSimple n=new NodoSentenciaSimple();
+			n.setExpresion(sentenciaLlamada());
 			match(Utl.TT_PUNPUNTOCOMA);
+			return n;
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,Utl.TPC_STRING})){
-			//tipo listadecvars inicializacion ;
-			Tipo t = tipo();
+			//tipo listadecvars inicializacion 
+			Tipo t = tipo();			
 			ArrayList<EParametro> vars=new ArrayList<EParametro>();
 			listaDecVars(t,vars);
-			//Logro de inicializacion en declaracion
-			//Comentar siguiente llamada si es que hay problemas
-			inicializacion();
+			//Creo nodo declaracion variables con la lista
+			NodoDeclaracionVars n=new NodoDeclaracionVars(vars);
+			//Asigno la expresion valor
+			inicializacion(n);
 			match(Utl.TT_PUNPUNTOCOMA);
+			return n;
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNLLAVE_A)){
 			//bloque
-			bloque();
+			return bloque();
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Sentencia mal formada.\n"
@@ -568,17 +622,19 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void sentenciaElse()  throws SintacticException, SemanticException{
+	private NodoSentencia sentenciaElse()  throws SintacticException, SemanticException{
 		//SentenciaElse -> else Sentencia | epsilon
 		if (tokenAct.esTipo(Utl.TPC_ELSE)){
-			match(Utl.TPC_ELSE);
-			sentencia();
+			matchSimple();
+			return sentencia();
 		}
 		else if(tokenAct.esTipo(new int[]{Utl.TPC_ELSE,Utl.TT_PUNLLAVE_C,Utl.TT_PUNPUNTOCOMA,Utl.TPC_IF,
 				Utl.TPC_WHILE,Utl.TPC_RETURN,Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TT_IDCLASE,
 				Utl.TPC_STRING,Utl.TT_PUNLLAVE_A,Utl.TT_PUNPARENT_A,Utl.TT_IDMETVAR,Utl.TPC_THIS})){
 			//siguientes: else } ; if while return boolean char int idClase String { ( idMetVar this
 			//vacio
+			//TODO ver si conviene que retorno un nodo puntocoma en vez de null
+			return null;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Sentencia mal formada.\n"
@@ -586,13 +642,15 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void expresiones()  throws SintacticException{
+	private NodoExpresion expresiones()  throws SintacticException{
 		//Expresiones -> Expresion | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPNEGBOOL,Utl.TPC_NULL,Utl.TPC_TRUE,Utl.TPC_FALSE,Utl.TT_LITENTERO,Utl.TT_LITCARACTER,Utl.TT_LITSTRING,Utl.TT_IDMETVAR,Utl.TT_PUNPARENT_A,Utl.TT_IDCLASE,Utl.TPC_THIS,Utl.TPC_NEW})){
-			expresion();
+			return expresion();
 		}
 		else if(tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
 			//vacio
+			//TODO ver si conviene que retorne una expresion vacia en vez de null
+			return null;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -600,17 +658,28 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
-	private void asignacion()  throws SintacticException{
-		//Asignacion -> AccesoVar = Expresion | AccesoThis = Expresion
+	private NodoAsignacion asignacion()  throws SintacticException{
+		//Asignacion -> AccesoVar = Expresion | AccesoThis = Expresion		
+		//Creo el nodo asignacion
+		NodoAsignacion n=new NodoAsignacion();
+		
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
-			accesoVar();
+			NodoVar v=accesoVar(true);
+			n.setLadoizq(v);
+			Token t=tokenAct;
 			match(Utl.TT_ASIGIGUAL);
-			expresion();
+			n.setTokenIgual(t);
+			n.setLadoder(expresion());
+			return n;
 		}
 		else if(tokenAct.esTipo(Utl.TPC_THIS)){
-			accesoThis();
+			NodoThis t=accesoThis(true);
+			n.setLadoizq(t);
+			Token ig=tokenAct;
 			match(Utl.TT_ASIGIGUAL);
-			expresion();
+			n.setTokenIgual(ig);
+			n.setLadoder(expresion());
+			return n;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -618,31 +687,40 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
-	private void sentenciaLlamada() throws SintacticException {
+	private NodoPrimario sentenciaLlamada() throws SintacticException {
 		//SentenciaLlamada -> ( Primario )
+		
 		match(Utl.TT_PUNPARENT_A);
-		primario();
+		NodoPrimario n=primario();
 		match(Utl.TT_PUNPARENT_C);
+		return n;
 	}
-	private void expOr()  throws SintacticException{
-		//ExpOr -> ExpAnd ExpOrR
-		expAnd();
-		expOrR();
-	}
-	private void expresion()  throws SintacticException{
+	private NodoExpresion expresion()  throws SintacticException{
 		//Expresion -> ExpOr
-		expOr();
+		return expOr();
+	}	
+	private NodoExpresion expOr()  throws SintacticException{
+		//ExpOr -> ExpAnd ExpOrR
+		NodoExpresion n=expAnd();
+		return expOrR(n);
 	}
-	private void expOrR()  throws SintacticException{
+	private NodoExpresion expOrR(NodoExpresion izq)  throws SintacticException{
 		//ExpOrR -> || ExpAnd ExpOrR | epsilon
 		if (tokenAct.esTipo(Utl.TT_OPORDOBLE)){
-			match(Utl.TT_OPORDOBLE);
-			expAnd();
-			expOrR();
+			//creo operador bool
+			OpBool op=new OpBool(tokenAct);
+			matchSimple();
+			//creo nodo expresion binaria con operador y lado izq
+			NodoExpBinaria n=new NodoExpBinaria(op,izq);
+			//asigno lado derecho con el resultado de llamada
+			n.setLadoder(expAnd());
+			//paso como parametro el nodo creado y retorno
+			return expOrR(n);			
 		}
 		else if(tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C,Utl.TT_PUNCOMA})){
 			//siguientes ; , ) ]
 			//vacio
+			return izq;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
@@ -650,22 +728,26 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void expAnd() throws SintacticException{
+	private NodoExpresion expAnd() throws SintacticException{
 		//ExpAnd -> ExpIg ExpAndR
-		expIg();
-		expAndR();
+		NodoExpresion n=expIg();
+		return expAndR(n);
 	}
-	private void expAndR()  throws SintacticException{
+	private NodoExpresion expAndR(NodoExpresion izq)  throws SintacticException{
 		//ExpAndR -> && ExpIg ExpAndR | epsilon
 		if (tokenAct.esTipo(Utl.TT_OPANDDOBLE)){
-			match(Utl.TT_OPANDDOBLE);
-			expIg();
-			expAndR();
+			//creo operador bool
+			OpBool op=new OpBool(tokenAct);
+			matchSimple();
+			NodoExpBinaria n=new NodoExpBinaria(op,izq);
+			n.setLadoder(expIg());
+			return expAndR(n);
 		}
 		else if(tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_OPORDOBLE,
 				Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C})){
 			//siguientes: ; , || ) ] 
 			//vacio
+			return izq;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
@@ -673,22 +755,24 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void expIg()  throws SintacticException{
+	private NodoExpresion expIg()  throws SintacticException{
 		//ExpIg -> ExpComp ExpIgR
-		expComp();
-		expIgR();
+		NodoExpresion n=expComp();
+		return expIgR(n);
 	} 
-	private void expIgR() throws SintacticException {
+	private NodoExpresion expIgR(NodoExpresion izq) throws SintacticException {
 		//ExpIgR -> OpIgual ExpComp ExpIgR | epsilon
-		if (tokenAct.esTipo(new int[]{Utl.TT_OPDOBLEIGUAL,Utl.TT_OPDESIGUAL})){
-			opIgual();
-			expComp();
-			expIgR();
+		if (tokenAct.esTipo(new int[]{Utl.TT_OPDOBLEIGUAL,Utl.TT_OPDESIGUAL})){			
+			OpComp op=opIgual();
+			NodoExpBinaria n=new NodoExpBinaria(op,izq);
+			n.setLadoder(expComp());
+			return expIgR(n);
 		}
 		else if(tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_OPANDDOBLE,Utl.TT_OPORDOBLE,
 				Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C})){
 			//siguientes: ; , && || ) ]
 			//vacio
+			return izq;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
@@ -696,21 +780,25 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void expComp()  throws SintacticException{
+	private NodoExpresion expComp()  throws SintacticException{
 		//ExpComp -> ExpAd ExpCompR
-		expAd();
-		expCompR();
+		NodoExpresion n=expAd();
+		return expCompR(n);
 	}
-	private void expCompR() throws SintacticException {
+	private NodoExpresion expCompR(NodoExpresion izq) throws SintacticException {
 		//ExpCompR -> OpComp ExpAd
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPMENOR,Utl.TT_OPMENORIG,Utl.TT_OPMAYOR,Utl.TT_OPMAYORIG})){
-			opComp();
-			expAd();
+			Operador op=opComp();
+			NodoExpBinaria n=new NodoExpBinaria(op,izq);
+			n.setLadoder(expAd());
+			//TODO ver si esto es correcto
+			return n;
 		}
 		else if(tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_OPDOBLEIGUAL,Utl.TT_OPDESIGUAL,
 				Utl.TT_OPANDDOBLE,Utl.TT_OPORDOBLE,Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C})){
 			//siguientes: ; , == != && || ) ] 
 			//vacio
+			return izq;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
@@ -718,23 +806,25 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void expAd()  throws SintacticException{
+	private NodoExpresion expAd()  throws SintacticException{
 		//ExpAd -> ExpMul ExpAdR
-		expMul();
-		expAdR();
+		NodoExpresion n=expMul();
+		return expAdR(n);
 	} 
-	private void expAdR()  throws SintacticException{
+	private NodoExpresion expAdR(NodoExpresion izq)  throws SintacticException{
 		//ExpAdR -> OpAd ExpMul ExpAdR | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPSUMA,Utl.TT_OPRESTA})){
-			opAd();
-			expMul();
-			expAdR();
+			Operador op=opAd();
+			NodoExpBinaria n=new NodoExpBinaria(op,izq);
+			n.setLadoder(expMul());
+			return expAdR(n);
 		}
 		else if(tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_OPMENOR,Utl.TT_OPMENORIG,
 				Utl.TT_OPMAYOR,Utl.TT_OPMAYORIG,Utl.TT_OPDOBLEIGUAL,Utl.TT_OPDESIGUAL,Utl.TT_OPANDDOBLE,
 				Utl.TT_OPORDOBLE,Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C})){
 			//siguientes: ; , < > <= >= == != && || ) ] 
 			//vacio
+			return izq;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
@@ -742,17 +832,18 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void expMul()  throws SintacticException{
+	private NodoExpresion expMul()  throws SintacticException{
 		//ExpMul -> ExpUn ExpMulR
-		expUn();
-		expMulR();
+		NodoExpresion n=expUn();
+		return expMulR(n);
 	}
-	private void expMulR() throws SintacticException {
+	private NodoExpresion expMulR(NodoExpresion izq) throws SintacticException {
 		//ExpMulR -> OpMul ExpUn ExpMulR | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPMULT,Utl.TT_OPDIV})){
-			opMul();
-			expUn();
-			expMulR();
+			Operador op=opMul();
+			NodoExpBinaria n=new NodoExpBinaria(op,izq);
+			n.setLadoder(expUn());
+			return expMulR(n);
 		}
 		else if(tokenAct.esTipo(new int[]
 				{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPMENOR,Utl.TT_OPMENORIG,
@@ -760,6 +851,7 @@ public class AnalizadorSintactico {
 				Utl.TT_OPORDOBLE,Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C})){
 			//siguientes: ; , + - < <= > >= == != && || ) ] 
 			//vacio
+			return izq;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
@@ -767,14 +859,16 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void expUn() throws SintacticException {
+	private NodoExpresion expUn() throws SintacticException {
 		//ExpUn -> OpUn ExpUn
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPNEGBOOL})){
-			opUn();
-			expUn();
+			Operador op=opUn();
+			NodoExpUnaria n=new NodoExpUnaria(op);
+			n.setExpresion(expUn());
+			return n;
 		}
 		else if(tokenAct.esTipo(new int[]{Utl.TPC_NULL,Utl.TPC_TRUE,Utl.TPC_FALSE,Utl.TT_LITENTERO,Utl.TT_LITCARACTER,Utl.TT_LITSTRING,Utl.TT_IDMETVAR,Utl.TT_PUNPARENT_A,Utl.TT_IDCLASE,Utl.TPC_THIS,Utl.TPC_NEW})){
-			operando();
+			return operando();
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),"Expresion mal formada.\n"
@@ -782,64 +876,84 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
-	private void opIgual() throws SintacticException {
+	private OpComp opIgual() throws SintacticException {
 		//OpIgual -> == | !=
 		if (tokenAct.esTipo(Utl.TT_OPDOBLEIGUAL)){
-			match(Utl.TT_OPDOBLEIGUAL);
+			OpComp op=new OpComp(tokenAct);
+			matchSimple();
+			return op;
 		}
 		else if (tokenAct.esTipo(Utl.TT_OPDESIGUAL)){
-			match(Utl.TT_OPDESIGUAL);
+			OpComp op=new OpComp(tokenAct);
+			matchSimple();
+			return op;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: == !=\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
-		}
+		}		
 	}
-	private void opComp() throws SintacticException {
+	private OpCompMat opComp() throws SintacticException {
 		//OpComp -> < | > | <= | >=
+		OpCompMat op=new OpCompMat(null);
 		if (tokenAct.esTipo(Utl.TT_OPMENOR)){
-			match(Utl.TT_OPMENOR);
+			op.setOperador(tokenAct);
+			matchSimple();
 		}
 		else if (tokenAct.esTipo(Utl.TT_OPMENORIG)){
-			match(Utl.TT_OPMENORIG);
+			op.setOperador(tokenAct);
+			matchSimple();
 		}
 		else if (tokenAct.esTipo(Utl.TT_OPMAYOR)){
-			match(Utl.TT_OPMAYOR);
+			op.setOperador(tokenAct);
+			matchSimple();
 		}
 		else if (tokenAct.esTipo(Utl.TT_OPMAYORIG)){
-			match(Utl.TT_OPMAYORIG);
+			op.setOperador(tokenAct);
+			matchSimple();
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: < <= > >=\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
+		return op;
 	}
-	private void opAd() throws SintacticException {
+	private OpMat opAd() throws SintacticException {
 		//OpAd -> + | -
+		OpMat op=new OpMat(null);
 		if (tokenAct.esTipo(Utl.TT_OPSUMA)){
-			match(Utl.TT_OPSUMA);
+			op.setOperador(tokenAct);
+			matchSimple();
 		}
 		else if (tokenAct.esTipo(Utl.TT_OPRESTA)){
-			match(Utl.TT_OPRESTA);
+			op.setOperador(tokenAct);
+			matchSimple();
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: + -\n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
+		return op;
 	} 
-	private void opUn()  throws SintacticException{
+	private Operador opUn()  throws SintacticException{
 		//OpUn -> + | - | !
 		if (tokenAct.esTipo(Utl.TT_OPSUMA)){
-			match(Utl.TT_OPSUMA);
+			OpMat op=new OpMat(tokenAct);
+			matchSimple();
+			return op;
 		}
 		else if (tokenAct.esTipo(Utl.TT_OPRESTA)){
-			match(Utl.TT_OPRESTA);
+			OpMat op=new OpMat(tokenAct);
+			matchSimple();
+			return op;
 		}
 		else if (tokenAct.esTipo(Utl.TT_OPNEGBOOL)){
-			match(Utl.TT_OPNEGBOOL);
+			OpBool op=new OpBool(tokenAct);
+			matchSimple();
+			return op;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -847,29 +961,33 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
-	private void opMul()  throws SintacticException{
+	private OpMat opMul()  throws SintacticException{
 		//OpMul -> * | /
+		OpMat op=new OpMat(null);
 		if (tokenAct.esTipo(Utl.TT_OPMULT)){
-			match(Utl.TT_OPMULT);
+			op.setOperador(tokenAct);
+			matchSimple();
 		}
 		else if (tokenAct.esTipo(Utl.TT_OPDIV)){
-			match(Utl.TT_OPDIV);
+			op.setOperador(tokenAct);
+			matchSimple();
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
 					"Se esperaba un token dentro del grupo: * / \n"
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
+		return op;
 	} 
-	private void operando() throws SintacticException {
+	private NodoExpresion operando() throws SintacticException {
 		//Operando -> Literal | Primario
 		if (tokenAct.esTipo(new int[]{Utl.TPC_NULL,Utl.TPC_TRUE,Utl.TPC_FALSE,
 				Utl.TT_LITENTERO,Utl.TT_LITCARACTER,Utl.TT_LITSTRING})){
-			literal();
+			return literal();
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TT_IDMETVAR,Utl.TT_IDCLASE,Utl.TT_PUNPARENT_A,
 				Utl.TPC_THIS,Utl.TPC_NEW})){
-			primario();
+			return primario();
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -878,25 +996,37 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void literal()  throws SintacticException{
+	private NodoLiteral literal()  throws SintacticException{
 		//Literal -> null | true | false | intLiteral | charLiteral | stringLiteral
 		if (tokenAct.esTipo(Utl.TPC_NULL)){
-			match(Utl.TPC_NULL);
+			Token t=tokenAct;
+			matchSimple();
+			return new NodoLitNull(t);
 		}
 		else if (tokenAct.esTipo(Utl.TPC_TRUE)){
-			match(Utl.TPC_TRUE);
+			Token t=tokenAct;
+			matchSimple();
+			return new NodoLitBoolean(t);
 		}
 		else if (tokenAct.esTipo(Utl.TPC_FALSE)){
-			match(Utl.TPC_FALSE);
+			Token t=tokenAct;
+			matchSimple();
+			return new NodoLitBoolean(t);
 		}
 		else if (tokenAct.esTipo(Utl.TT_LITENTERO)){
-			match(Utl.TT_LITENTERO);
+			Token t=tokenAct;
+			matchSimple();
+			return new NodoLitEntero(t);
 		}
 		else if (tokenAct.esTipo(Utl.TT_LITCARACTER)){
-			match(Utl.TT_LITCARACTER);
+			Token t=tokenAct;
+			matchSimple();
+			return new NodoLitChar(t);
 		}
 		else if (tokenAct.esTipo(Utl.TT_LITSTRING)){
-			match(Utl.TT_LITSTRING);
+			Token t=tokenAct;
+			matchSimple();
+			return new NodoLitString(t);
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -904,23 +1034,24 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	} 
-	private void primario() throws SintacticException {
+	private NodoPrimario primario() throws SintacticException {
 		//Primario -> idMetVar MetodoVariable | ExpresionParentizada | AccesoThis | LlamadaMetodoEstatico | LlamadaCtor
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
-			match(Utl.TT_IDMETVAR);
-			metodoVariable();
+			Token id=tokenAct;
+			matchSimple();
+			return metodoVariable(id);
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
-			expresionParentizada();
+			return expresionParentizada();
 		}
 		else if (tokenAct.esTipo(Utl.TPC_THIS)){
-			accesoThis();
+			return accesoThis(true);
 		}
 		else if (tokenAct.esTipo(Utl.TT_IDCLASE)){
-			llamadaMetodoEstatico();
+			return llamadaMetodoEstatico();
 		}
 		else if (tokenAct.esTipo(Utl.TPC_NEW)){
-			llamadaCtor();
+			return llamadaCtor();
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -928,11 +1059,16 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void metodoVariable() throws SintacticException {
+	private NodoPrimario metodoVariable(Token id) throws SintacticException {
 		//MetodoVariable -> ArgsActuales Encadenado | Encadenado
 		if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
-			argsActuales();
-			encadenado();
+			//creo nodo llamada directa con token id
+			NodoLlamadaDirecta n=new NodoLlamadaDirecta(id);
+			//paso lista de argumentos para que se agreguen
+			argsActuales(n.getArgsactuales());
+			//asigno encadenado
+			n.setEncadenado(encadenado());
+			return n;
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTO,Utl.TT_PUNCORCH_A,
 				Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_ASIGIGUAL,Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPMULT,
@@ -941,7 +1077,12 @@ public class AnalizadorSintactico {
 			//primeros y siguientes de encadenado
 			//primeros: . [ 
 			//siguientes: ; , = + - * / < <= > >= == != && || ) ]
-			encadenado();
+
+			//Creo nodo var
+			NodoVar n=new NodoVar(id);
+			//Asigno encadenado
+			n.setEncadenado(encadenado());
+			return n;
 		}
 		else{
 			//este error seria siempre de expresiones mal formadas?
@@ -950,23 +1091,30 @@ public class AnalizadorSintactico {
 					+"Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void expresionParentizada()  throws SintacticException{
+	private NodoExpParent expresionParentizada()  throws SintacticException{
 		//ExpresionParentizada -> ( Expresion ) Encadenado
 		match(Utl.TT_PUNPARENT_A);
-		expresion();
+		//creo nodo expresion parentizada
+		NodoExpParent n=new NodoExpParent();
+		//asigno expresion
+		n.setExpresion(expresion());
 		match(Utl.TT_PUNPARENT_C);
-		encadenado();
+		//asigno encadenado
+		n.setEncadenado(encadenado());
+		return n;		
 	}
-	private void encadenado() throws SintacticException {
+	private Encadenado encadenado() throws SintacticException {
 		//Encadenado -> . idMetVar Acceso | AccesoArregloEncadenado | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNPUNTO)){
-			match(Utl.TT_PUNPUNTO);
+			matchSimple();
 			//TODO agregar un if para reportar mejor el error?
+			//guardo el token id
+			Token id=tokenAct;
 			match(Utl.TT_IDMETVAR);
-			acceso();
+			return acceso(id);
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNCORCH_A)){
-			accesoArregloEncadenado();
+			return accesoArregloEncadenado();
 		}
 		else if(tokenAct.esTipo(new int[]
 				{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_ASIGIGUAL,Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPMULT,
@@ -974,6 +1122,8 @@ public class AnalizadorSintactico {
 				Utl.TT_OPDESIGUAL,Utl.TT_OPANDDOBLE,Utl.TT_OPORDOBLE,Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C})){
 			//siguientes: ; , = + - * / < <= > >= == != && || ) ] 
 			//vacio
+			//TODO ver si conviene retornar null o un tipo especial de encadenado
+			return null;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -982,10 +1132,10 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));			
 		}
 	}
-	private void acceso() throws SintacticException {
+	private Encadenado acceso(Token id) throws SintacticException {
 		//Acceso -> LlamadaMetodoEncadenado | AccesoVarEncadenado
 		if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
-			llamadaMetodoEncadenado();
+			return llamadaMetodoEncadenado(id);
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTO,Utl.TT_PUNCORCH_A,Utl.TT_PUNPUNTOCOMA,
 				Utl.TT_PUNCOMA,Utl.TT_ASIGIGUAL,Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPMULT,
@@ -995,7 +1145,7 @@ public class AnalizadorSintactico {
 			//primeros y siguientes de encadenado:
 			//primeros: . [
 			//siguientes: ; , = + - * / < > <= >= == != && || ) ]
-			accesoVarEncadenado();
+			return accesoVarEncadenado(id);
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -1003,51 +1153,74 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
 		}
 	}
-	private void accesoThis() throws SintacticException {
+	private NodoThis accesoThis(boolean ladoizq) throws SintacticException {
 		//AccesoThis -> this Encadenado
 		match(Utl.TPC_THIS);
-		encadenado();
+		//creo el nodo this con la clase actual
+		NodoThis n=new NodoThis(mts.claseAct());
+		n.setLadoizq(ladoizq);
+		//asigno el encadenado
+		n.setEncadenado(encadenado());
+		return n;
 	}
-	private void accesoVar()  throws SintacticException{
+	private NodoVar accesoVar(boolean ladoizq)  throws SintacticException{
 		//AccesoVar -> idMetVar Encadenado
+		Token t=tokenAct;
 		match(Utl.TT_IDMETVAR);
-		encadenado();
+		//creo el nodo variable con el token id
+		NodoVar n=new NodoVar(t);
+		n.setLadoizq(ladoizq);
+		//asigno el encadenado
+		n.setEncadenado(encadenado());
+		return n;
 	}
-	private void llamadaMetodo()  throws SintacticException{
+	private NodoLlamadaEstatica llamadaMetodo(Token tc)  throws SintacticException{
 		//LlamadaMetodo -> idMetVar ArgsActuales Encadenado
+		Token tm=tokenAct;
 		match(Utl.TT_IDMETVAR);
-		argsActuales();
-		encadenado();
+		//TODO ver como conseguir la clase estatica
+		//creo nodo llamada estatica con tokens del metodo y clase
+		NodoLlamadaEstatica n=new NodoLlamadaEstatica(tc, tm);
+		//paso la lista de argumentos para que se vayan agregando
+		argsActuales(n.getArgsactuales());
+		//asigno encadenado
+		n.setEncadenado(encadenado());
+		return n;
 	}
-	private void llamadaMetodoEstatico()  throws SintacticException{
+	private NodoLlamadaEstatica llamadaMetodoEstatico()  throws SintacticException{
 		//LlamadaMetodoEstatico -> idClase . LlamadaMetodo
+		//TODO podria agregar ifs para reportar mejor un error sintáctico
+		//guardo el token de idclase
+		Token tc=tokenAct;	
 		match(Utl.TT_IDCLASE);
-		match(Utl.TT_PUNPUNTO);
-		llamadaMetodo();
+		match(Utl.TT_PUNPUNTO);		
+		return llamadaMetodo(tc);
 	}
-	private void llamadaCtor()  throws SintacticException{
+	private NodoConst llamadaCtor()  throws SintacticException{
 		//LlamadaCtor -> new LlamadaCtorR
 		match(Utl.TPC_NEW);
-		llamadaCtorR();
+		return llamadaCtorR();
 	}
-	private void llamadaCtorR()  throws SintacticException{
+	private NodoConst llamadaCtorR()  throws SintacticException{
 		//LlamadaCtorR -> idClase LlamadaCtorRIDClase | TipoArreglo [ Expresion ] Encadenado
 		if (tokenAct.esTipo(Utl.TT_IDCLASE)){
-			match(Utl.TT_IDCLASE);
-			//Logro de arreglo de todo, necesito un nuevo metodo
-			//Comentar la siguietne y descomentar las ultimas llamadas si es que hay problemas
-			llamadaCtorRIDClase();
-			//argsActuales();
-			//encadenado();
+			Token t=tokenAct;
+			matchSimple();
+			return llamadaCtorRIDClase(t);
 		}
 		else if (tokenAct.esTipo(new int[]{Utl.TPC_BOOLEAN,Utl.TPC_CHAR,Utl.TPC_INT,Utl.TPC_STRING})){
-			//Logro de arreglo de todo, comentar la siguiente y descomentar llamada a tipoprimitivo si es que hay problemas
+			//Creo nodo constructor arreglo
+			NodoConstArray n=new NodoConstArray(tokenAct);
 			tipoArreglo();
-			//tipoPrimitivo();
 			match(Utl.TT_PUNCORCH_A);
-			expresion();
+			
+			//Asigno la expresion del tamaño
+			n.setTamaño(expresion());
 			match(Utl.TT_PUNCORCH_C);
-			encadenado();
+			
+			//Asigno el encadenado
+			n.setEncadenado(encadenado());
+			return n;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -1056,17 +1229,35 @@ public class AnalizadorSintactico {
 		}
 	}
 	//Metodo para logro de arreglo de todo, comentar si es que hay problemas
-	private void llamadaCtorRIDClase() throws SintacticException  {
+	private NodoConst llamadaCtorRIDClase(Token t) throws SintacticException  {
 		//LlamadaCtorRIDClase -> ArgsActuales Encadenado | [ Expresion ] Encadenado
-		if (tokenAct.esTipo(Utl.TT_PUNCORCH_A)){
-			match(Utl.TT_PUNCORCH_A);
-			expresion();
+		if (tokenAct.esTipo(Utl.TT_PUNCORCH_A)){			
+			matchSimple();
+			
+			//Creo nuevo nodo constructor de arreglo de clase
+			NodoConstArray n=new NodoConstArray(t);			
+						
+			//Asigno la expresion del tamaño al nodo
+			n.setTamaño(expresion());			
 			match(Utl.TT_PUNCORCH_C);
-			encadenado();
+			
+			//Asigno el encadenado al nodo
+			n.setEncadenado(encadenado());
+			
+			return n;			
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_A)){
-			argsActuales();
-			encadenado();
+			
+			//Creo nuevo nodo constructor comun de clase
+			NodoConstComun n=new NodoConstComun(t);
+			
+			//Paso lista de argumentos para que sean agregados
+			argsActuales(n.getArgsactuales());
+			
+			//Asigno el encadenado al nodo
+			n.setEncadenado(encadenado());
+			
+			return n;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -1078,16 +1269,16 @@ public class AnalizadorSintactico {
 	private void tipoArreglo() throws SintacticException {
 		//TipoArreglo -> char | int | boolean | String
 		if (tokenAct.esTipo(Utl.TPC_CHAR)){
-			match(Utl.TPC_CHAR);
+			matchSimple();
 		}
 		else if (tokenAct.esTipo(Utl.TPC_BOOLEAN)){
-			match(Utl.TPC_BOOLEAN);
+			matchSimple();
 		}
 		else if (tokenAct.esTipo(Utl.TPC_INT)){
-			match(Utl.TPC_INT);
+			matchSimple();
 		}
 		else if (tokenAct.esTipo(Utl.TPC_STRING)){
-			match(Utl.TPC_STRING);
+			matchSimple();
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -1095,19 +1286,20 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
 		}		
 	}
-	private void argsActuales() throws SintacticException {
+	private void argsActuales(ArrayList<NodoExpresion> l) throws SintacticException {
 		//ArgsActuales -> ( ListaExpresiones )
 		match(Utl.TT_PUNPARENT_A);
-		listaExpresiones();
+		listaExpresiones(l);
 		match(Utl.TT_PUNPARENT_C);
 	}
-	private void listaExpresiones() throws SintacticException {
+	private void listaExpresiones(ArrayList<NodoExpresion> l) throws SintacticException {
 		//ListaExpresiones -> Expresion ListaExp | epsilon
 		if (tokenAct.esTipo(new int[]{Utl.TT_OPSUMA,Utl.TT_OPRESTA,Utl.TT_OPNEGBOOL,Utl.TPC_NULL,
 				Utl.TPC_TRUE,Utl.TPC_FALSE,Utl.TT_LITENTERO,Utl.TT_LITCARACTER,Utl.TT_LITSTRING,
 				Utl.TT_IDMETVAR,Utl.TT_PUNPARENT_A,Utl.TT_IDCLASE,Utl.TPC_THIS,Utl.TPC_NEW})){
-			expresion();
-			listaExp();
+			NodoExpresion e=expresion();
+			l.add(e);
+			listaExp(l);
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_C)){
 			//vacio
@@ -1119,12 +1311,13 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
 		}
 	}
-	private void listaExp() throws SintacticException {
+	private void listaExp(ArrayList<NodoExpresion> l) throws SintacticException {
 		//ListaExp -> , Expresion ListaExp | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNCOMA)){
-			match(Utl.TT_PUNCOMA);
-			expresion();
-			listaExp();
+			matchSimple();
+			NodoExpresion e=expresion();
+			l.add(e);
+			listaExp(l);
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPARENT_C)){
 			//vacio
@@ -1135,20 +1328,26 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));
 		}
 	}
-	private void llamadaMetodoEncadenado() throws SintacticException {
+	private NodoLlamadaEncad llamadaMetodoEncadenado(Token id) throws SintacticException {
 		//LlamadaMetodoEncadenado -> ArgsActuales Encadenado
-		argsActuales();
-		encadenado();
+		NodoLlamadaEncad n=new NodoLlamadaEncad(id);
+		argsActuales(n.getArgsactuales());
+		n.setEncadenado(encadenado());
+		return n;
 	}
-	private void accesoVarEncadenado() throws SintacticException{
+	private NodoVarEncad accesoVarEncadenado(Token id) throws SintacticException{
 		//AccesoVarEncadenado -> Encadenado
-		encadenado();
+		NodoVarEncad n=new NodoVarEncad(id);
+		n.setEncadenado(encadenado());
+		return n;
 	}
-	private void accesoArregloEncadenado() throws SintacticException {
+	private NodoArregloEncad accesoArregloEncadenado() throws SintacticException {
 		//AccesoArregloEncadenado -> [ Expresion ] Encadenado
-		match(Utl.TT_PUNCORCH_A);
-		expresion();
+		NodoArregloEncad n=new NodoArregloEncad();
+		match(Utl.TT_PUNCORCH_A);		
+		n.setExpresion(expresion());
 		match(Utl.TT_PUNCORCH_C);
-		encadenado();
+		n.setEncadenado(encadenado());
+		return n;
 	}
 }

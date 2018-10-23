@@ -110,6 +110,7 @@ public class EClase extends EntradaTS{
 		this.clasePadre = padre;
 	}
 	
+	@Override
 	public String getNombre() {
 		return tokenNombre.getLexema();
 	}
@@ -206,6 +207,8 @@ public class EClase extends EntradaTS{
 		}
 		else return false;
 	}
+	
+	
 	private boolean herenciaCircular(EClase padre, EClase clase){
 		if(padre.equals(clase)){
 			return true;
@@ -244,7 +247,7 @@ public class EClase extends EntradaTS{
 					if(this.constructores.isEmpty()){
 						//si no hay constructor definido, genero uno sin parametros
 						Token tn=new Token(Utl.TT_IDCLASE,this.tokenNombre.getLexema(),0);
-						EConstructor c=new EConstructor(this,tn,new Bloque("constructor generado automaticamente"));
+						EConstructor c=new EConstructor(this,tn,"constructor generado automaticamente");
 						this.constructores.add(c);
 					}					
 					
@@ -285,61 +288,23 @@ public class EClase extends EntradaTS{
 			this.consolidado=true;
 		}
 	}
-
-
-	
-	/*
-	public void consolidar() throws SemanticException{
-		if (!this.consolidado){
-			boolean b;
-			if (tokenPadre!=null)			
-				//Chequear que la clase padre esta definida
-				EClase cpadre=Utl.ts.getClase(tokenPadre.getLexema());
-				if (cpadre!=null){
-					this.clasePadre=cpadre;				
-					//Agrego miembros de padre			
-					for (EAtributo atr: cpadre.getAtributos()){
-						b=this.addAtributo(atr);
-						if (!b) throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
-								"Hay conflictos de nombres con atibutos de la clase padre:"+cpadre.getNombre()+".\n"
-										+ "El atributo:"+atr.getNombre()+", esta duplicado.");					
-					}
-					for (EMetodo met: cpadre.getMetodos()){
-						b=this.addMetodoHeredado(met);
-						if (!b) throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
-								"Hay conflictos con los metodos de la clase padre: "+cpadre.getNombre()+".\n"
-										+ "El metodo: "+met.getNombre()+", esta duplicado.");
-
-					}
-
-					for(EAtributo e: atributos){
-						e.consolidar();
-					}
-					for(EMetodo e: metodos){
-						e.consolidar();
-					}
-					for(EConstructor e: constructores){
-						e.consolidar();
-					}
-
-				}
-				else throw new SemanticException(tokenPadre.getNroLinea(),tokenPadre.getNroColumna(),"La clase "+tokenPadre.getLexema()+" no está definida.");		
-			}
-			if(this.constructores.isEmpty()){
-				//Si no hay constructor definido, genero uno sin parametros
-				Token tn=new Token(Utl.TT_IDCLASE,this.tokenNombre.getLexema(),0);
-				EConstructor c=new EConstructor(this,tn,new Bloque("constructor generado automaticamente"));
-				this.constructores.add(c);
-			}	
-
-			this.consolidado=true;
-
-			//Chequeo herencia circular:
-			if (this.esSubtipo(this)){					
-				throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
-						"Esta clase hereda de si misma. No puede existir herencia circular.");
-			}
+	@Override
+	public void check() throws SemanticException {
+		//Seteo clase actual
+		Utl.ts.setClaseAct(this);
+		for(EMetodo m:metodos){
+			m.check();
+		}		
+		for(EConstructor c:constructores){
+			c.check();
 		}
-	}*/
+	}
+	
+	public void setValorAtributos(NodoExpresion val) {
+		for(EAtributo at: atributos){
+			at.setValor(val);
+		}
+	}
+	
 }
 

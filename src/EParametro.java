@@ -14,12 +14,13 @@ public class EParametro extends EntradaTS{
 		return this.tipo;
 	}
 	
-	public String getNombre(){
-		return this.tokenNombre.getLexema();
-	}
-	
 	public Token getToken(){
 		return this.tokenNombre;
+	}
+	
+	@Override
+	public String getNombre(){
+		return this.tokenNombre.getLexema();
 	}
 	
 
@@ -34,6 +35,7 @@ public class EParametro extends EntradaTS{
 		return hash;
 	}
 	
+	@Override
 	public String toString(){
 		String s="\n";
 		s+="Nombre:\t\t\t"+this.getNombre()+"\n";
@@ -41,6 +43,7 @@ public class EParametro extends EntradaTS{
 		return s;
 	}
 	
+	@Override
 	public void consolidar() throws SemanticException{
 		if(!consolidado){
 			if (!this.tipo.estaDefinido()){
@@ -49,6 +52,12 @@ public class EParametro extends EntradaTS{
 			}
 			this.consolidado=true;
 		}
+	}
+
+	@Override
+	public void check() throws SemanticException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

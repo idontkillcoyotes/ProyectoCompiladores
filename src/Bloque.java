@@ -8,6 +8,9 @@ public class Bloque {
 	}
 	
 	public String getContenido(){
+		{ } { { { } { { } } } }
+		{ { { } } } { } { }
+		;{;}{;{{;}}{;{;}}}{;;;}		
 		return this.contenido;
 	}
 
