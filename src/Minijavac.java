@@ -8,11 +8,11 @@ public class Minijavac {
 			AnalizadorSintactico asin=new AnalizadorSintactico(alex);
 			try {	
 				asin.start();				
-				//Utl.ts.imprimir();
+				Utl.ts.imprimir();
 				System.out.println("Compilación exitosa.");
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 			
 		}

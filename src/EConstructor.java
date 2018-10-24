@@ -8,7 +8,8 @@ public class EConstructor extends EMiembro {
 		this.tokenNombre=t;
 		this.texto=texto;
 		this.bloque=null;
-		consolidado=false;
+		this.consolidado=false;
+		this.esConstructor=true;
 	}	
 
 	
@@ -40,5 +41,10 @@ public class EConstructor extends EMiembro {
 	@Override
 	public void check() throws SemanticException {
 		// TODO Auto-generated method stub		
+	}
+
+	@Override
+	public Tipo getTipoRetorno() {
+		return new TipoClase(this.clase.getToken());
 	}
 }

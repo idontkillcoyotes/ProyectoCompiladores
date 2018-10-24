@@ -27,8 +27,10 @@ public class TipoChar extends TipoGenerico{
 
 	@Override
 	public boolean esCompatible(Tipo t) {
-		// TODO Auto-generated method stub
-		return false;
+		if(t.esTipo(Utl.TPC_CHAR))
+			return true;
+		else
+			return false;
 	}
 
 }

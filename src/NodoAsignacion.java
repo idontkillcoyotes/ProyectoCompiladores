@@ -41,7 +41,8 @@ public class NodoAsignacion extends NodoSentencia{
 		Tipo izq=this.ladoizq.check();
 		if (!der.esCompatible(izq)) 
 			throw new SemanticException(igual.getNroLinea(),igual.getNroColumna(),"Tipos incompatibles.\n"
-					+ izq.getTipo() +" es incompatible con "+ der.getTipo());
+					+ izq.getTipo() +" es incomp"
+							+ "atible con "+ der.getTipo());
 	}
 	
 	@Override

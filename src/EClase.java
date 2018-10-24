@@ -305,6 +305,30 @@ public class EClase extends EntradaTS{
 			at.setValor(val);
 		}
 	}
+	public EAtributo getAtributoPublico(String n) {
+		EAtributo a=this.getAtributo(n);
+		if ((a!=null)&&(a.esPublico())){
+			return a;
+		}
+		return a;			
+	}
+	public EAtributo getAtributo(String n) {
+		for(EAtributo a:atributos){
+			if(a.getNombre().equals(n)){
+				return a;
+			}					
+		}		
+		return null;	
+	}
 	
+	public EMetodo getMetodo(String n) {
+		for(EMetodo m:metodos){
+			if(m.getNombre().equals(n)){
+				return m;
+			}					
+		}		
+		return null;
+	}	
+
 }
 

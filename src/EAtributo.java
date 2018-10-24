@@ -19,6 +19,10 @@ public class EAtributo extends EParametro{
 		return visibilidad;
 	}
 	
+	public boolean esPublico(){
+		return (this.visibilidad==Visibilidad.vPublic);
+	}
+	
 	public void setValor(NodoExpresion n){
 		this.valor=n;
 	}

@@ -16,6 +16,7 @@ public class EMetodo extends EMiembro{
 		this.texto=texto;
 		this.bloque=null;
 		this.consolidado=false;
+		this.esConstructor=false;
 	}	
 
 	public FormaMetodo getForma() {

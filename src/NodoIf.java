@@ -38,7 +38,17 @@ public class NodoIf extends NodoSentencia {
 	}
 
 	@Override
-	public void check() {		
+	public void check() throws SemanticException {
+		Tipo exp=this.condicion.check();
+		if(exp.esTipo(Utl.TPC_BOOLEAN)){
+			this.sentenciathen.check();
+			if(this.sentenciaelse!=null){
+				this.sentenciaelse.check();
+			}
+		}
+		else throw new SemanticException(token.getNroLinea(),token.getNroColumna()+6,
+			"Condicion no booleana.\nEl resultado de la expresion de condicion debe ser de tipo booleano.");
+		
 	}
 	
 	@Override

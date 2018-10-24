@@ -4,7 +4,7 @@ public abstract class Encadenado {
 	protected Encadenado encadenado;
 	protected boolean ladoizq;
 	
-	public abstract Tipo check(Tipo t);	
+	public abstract Tipo check(Tipo t) throws SemanticException;	
 
 	public void setEncadenado(Encadenado encadenado) {
 		this.encadenado = encadenado;

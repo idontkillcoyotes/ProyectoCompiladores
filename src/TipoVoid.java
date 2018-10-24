@@ -34,8 +34,7 @@ public class TipoVoid extends Tipo{
 	}
 
 	@Override
-	public boolean esCompatible(Tipo t) {
-		// TODO Auto-generated method stub
+	public boolean esCompatible(Tipo t){
 		return false;
 	}
 }

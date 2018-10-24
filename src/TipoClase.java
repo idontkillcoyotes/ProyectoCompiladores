@@ -1,13 +1,26 @@
 
 public class TipoClase extends TipoReferencia{
 	
+	public EClase clase;
+	
 	public TipoClase(Token tk){
 		this.tokenNombre=tk;
+		this.clase=null;
 		this.arreglo=false;
 	}
 
 	public boolean estaDefinido() {
-		return Utl.ts.estaDefinida(this.tokenNombre.getLexema());
+		if(Utl.ts.estaDefinida(this.tokenNombre.getLexema())){
+			this.clase=Utl.ts.getClase(tokenNombre.getLexema());
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public EClase getClase(){
+		return this.clase;
 	}
 
 	@Override

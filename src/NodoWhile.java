@@ -38,6 +38,10 @@ public class NodoWhile extends NodoSentencia{
 		if(exp.esTipo(Utl.TPC_BOOLEAN)){
 			this.sentencia.check();
 		}
+		else
+			throw new SemanticException(token.getNroLinea(),token.getNroColumna()+6,
+					"Condicion no booleana.\nEl resultado de la expresion de condicion debe ser de tipo booleano.");
+		
 	}
 
 	@Override

@@ -7,11 +7,14 @@ public abstract class EMiembro extends EntradaTS{
 	protected EClase clase;
 	protected NodoBloque bloque;
 	protected String texto;
+	protected boolean esConstructor;
 	
 	@Override
 	public String getNombre() {
 		return tokenNombre.getLexema();
 	}
+	
+	public abstract Tipo getTipoRetorno();
 
 	public Token getToken() {
 		return tokenNombre;
@@ -70,6 +73,15 @@ public abstract class EMiembro extends EntradaTS{
 		Utl.ts.setMiembroActual(this);
 		Utl.ts.setBloqueActual(null);
 		if (bloque!=null) bloque.check();
+	}
+
+	public EParametro getParametro(String n) {
+		for(EParametro p:parametros){
+			if(p.getNombre().equals(n)){
+				return p;
+			}
+		}		
+		return null;
 	}
 	
 }

@@ -27,7 +27,9 @@ public class TipoNull extends TipoReferencia{
 
 	@Override
 	public boolean esCompatible(Tipo t) {
-		// TODO Auto-generated method stub
-		return false;
+		if(t.esTipo(Utl.TT_IDCLASE))
+			return true;
+		else
+			return false;
 	}
 }
