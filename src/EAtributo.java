@@ -3,12 +3,16 @@ public class EAtributo extends EParametro{
 	private Visibilidad visibilidad;
 	private EClase clase;
 	private NodoExpresion valor;
+	private boolean heredado;
+	private boolean checked;
 
-	public EAtributo(EClase clase,Token tn,Tipo tipo,Visibilidad v){		
+	public EAtributo(EClase clase,Token tn,Tipo tipo,Visibilidad v,NodoExpresion valor){		
 		super(tn,tipo);
 		this.clase=clase;
 		this.visibilidad=v;
-		this.valor=null;
+		this.valor=valor;
+		this.heredado=false;
+		this.checked=false;
 	}
 	
 	public EClase getClase(){
@@ -17,8 +21,20 @@ public class EAtributo extends EParametro{
 	
 	public Visibilidad getVisibilidad() {
 		return visibilidad;
-	}
+	}	
 	
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public boolean isHeredado() {
+		return heredado;
+	}
+
+	public void setHeredado(boolean heredado) {
+		this.heredado = heredado;
+	}
+
 	public boolean esPublico(){
 		return (this.visibilidad==Visibilidad.vPublic);
 	}
@@ -33,10 +49,15 @@ public class EAtributo extends EParametro{
 	
 	@Override
 	public void check() throws SemanticException {
-		Tipo val=valor.check();
-		if(!val.esCompatible(this.tipo))
-			throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
-					"Tipos incompatibles.");
+		if(!checked){
+			if(valor!=null){
+				Tipo val=valor.check();
+				if(!val.esCompatible(this.tipo))
+					throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
+							"Tipos incompatibles.");
+			}
+			this.checked=true;
+		}
 	}
 
 	@Override
@@ -50,11 +71,11 @@ public class EAtributo extends EParametro{
 		return hash;
 	}
 	
-	public String toString(){
-		String s="\n";
-		s+="Nombre:\t\t\t"+this.getNombre()+"\n";
-		s+="Visibilidad:\t\t"+this.visibilidad+"\n";		
-		s+="Tipo:\t\t\t"+this.tipo.toString()+"\n";		
+	public String toString(){		
+		String s="";		
+		s+=this.visibilidad+" ";		
+		s+=this.tipo.toString()+" ";
+		s+=this.getNombre();
 		return s;
 	}	
 

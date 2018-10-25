@@ -41,4 +41,16 @@ public class NodoExpBinaria extends NodoExpresion{
 		return s;
 	}
 
+	@Override
+	public Token getToken() {
+		return this.operador.getOperador();
+	}
+
+	@Override
+	public void setValorAtributo(boolean b) {
+		this.valorAtributo=b;
+		this.ladoder.setValorAtributo(b);
+		this.ladoizq.setValorAtributo(b);
+	}
+
 }

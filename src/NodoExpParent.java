@@ -23,7 +23,8 @@ public class NodoExpParent extends NodoPrimario{
 		}
 		else{
 			Tipo exp=this.expresion.check();
-			return this.encadenado.check(exp);		
+			//TODO esto es una chanchada
+			return this.encadenado.check(exp,expresion.getToken());		
 		}		
 	}
 	
@@ -34,6 +35,20 @@ public class NodoExpParent extends NodoPrimario{
 			s+=encadenado.toString();
 		}
 		return s;
+	}
+
+
+	@Override
+	public Token getToken() {
+		return this.expresion.getToken();
+	}
+
+
+	@Override
+	public void setValorAtributo(boolean b) {
+		this.valorAtributo=b;
+		this.expresion.setValorAtributo(b);
+		if (this.encadenado!=null) this.encadenado.setValorAtributo(b);
 	}
 
 }

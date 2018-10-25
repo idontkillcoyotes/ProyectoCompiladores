@@ -4,7 +4,7 @@ public abstract class NodoLiteral extends NodoOperando{
 	protected Token literal;
 	protected Token tktipo;
 
-	public Token getLiteral() {
+	public Token getToken() {
 		return literal;
 	}
 	public Token getTokenTipo() {
@@ -18,6 +18,11 @@ public abstract class NodoLiteral extends NodoOperando{
 	@Override
 	public String toString(){
 		return this.literal.getLexema();
+	}
+	
+	@Override
+	public void setValorAtributo(boolean b) {
+		this.valorAtributo=b;
 	}
 
 }

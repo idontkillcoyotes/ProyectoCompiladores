@@ -156,39 +156,32 @@ public class AnalizadorSintactico {
 		
 		//Creo lista de parametros para pasarle a listaDecVars
 		ArrayList<EParametro> lista=new ArrayList<EParametro>();		
-		listaDecVars(tipo,lista);		
+		listaDecVars(tipo,lista);	
+		
+		//obtengo el valor de inicializacion
+		NodoExpresion val=inicializacion();
 		
 		//Agrego los atributos a la clase
-		mts.crearAtributos(lista, vis);
-		
-		//Creo nodo declaracion variables para pasarle a inicializacion
-		NodoDeclaracionVars n=new NodoDeclaracionVars(lista);	
-		inicializacion(n);
-		
-		//Obtengo el nodo expresion del valor
-		NodoExpresion val=n.getValor();		
+		mts.crearAtributos(lista, vis, val);
 		
 		if(val!=null){
 			//Seteo que esta en una declaracion de atributos
-			val.setValorAtributo(true);
-			mts.setValorAtributos(val);
-		}
+			val.setValorAtributo(true);		
+		}	
 		
 		match(Utl.TT_PUNPUNTOCOMA);
 	}
 	//Aca empieza el logro de inicializacion en declaracion
 	//Comentar este metedo si es que hay problemas
-	private void inicializacion(NodoDeclaracionVars n) throws SintacticException {
+	private NodoExpresion inicializacion() throws SintacticException {
 		//Inicializacion -> = Expresion | epsilon
 		if (tokenAct.esTipo(Utl.TT_ASIGIGUAL)){
-			n.setTokenIgual(tokenAct);
 			matchSimple();
-			n.setValor(expresion());
+			return expresion();
 		}
 		else if (tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
 			//vacio
-			n.setValor(null);
-			n.setTokenIgual(null);	
+			return null;
 		}
 		else{
 			throw new SintacticException(tokenAct.getNroLinea(),tokenAct.getNroColumna(),
@@ -414,7 +407,7 @@ public class AnalizadorSintactico {
 			if (tokenAct.esTipo(Utl.TT_PUNCORCH_C)){
 				matchSimple();
 				//seteo que es arreglo
-				tipo.setArreglo();
+				tipo.setArreglo(true);
 				//retorno
 				return tipo;
 				//La siguiente llamada permite definir matrices
@@ -606,9 +599,9 @@ public class AnalizadorSintactico {
 			ArrayList<EParametro> vars=new ArrayList<EParametro>();
 			listaDecVars(t,vars);
 			//Creo nodo declaracion variables con la lista
-			NodoDeclaracionVars n=new NodoDeclaracionVars(vars);
+			NodoDeclaracionVars n=new NodoDeclaracionVars(t,vars);
 			//Asigno la expresion valor
-			inicializacion(n);
+			n.setValor(inicializacion());
 			match(Utl.TT_PUNPUNTOCOMA);
 			return n;
 		}
@@ -1107,7 +1100,6 @@ public class AnalizadorSintactico {
 		//Encadenado -> . idMetVar Acceso | AccesoArregloEncadenado | epsilon
 		if (tokenAct.esTipo(Utl.TT_PUNPUNTO)){
 			matchSimple();
-			//TODO agregar un if para reportar mejor el error?
 			//guardo el token id
 			Token id=tokenAct;
 			match(Utl.TT_IDMETVAR);
@@ -1155,9 +1147,10 @@ public class AnalizadorSintactico {
 	}
 	private NodoThis accesoThis(boolean ladoizq) throws SintacticException {
 		//AccesoThis -> this Encadenado
+		Token t=tokenAct;
 		match(Utl.TPC_THIS);
 		//creo el nodo this con la clase actual
-		NodoThis n=new NodoThis(mts.claseAct());
+		NodoThis n=new NodoThis(mts.claseAct(),t);
 		n.setLadoizq(ladoizq);
 		//asigno el encadenado
 		n.setEncadenado(encadenado());

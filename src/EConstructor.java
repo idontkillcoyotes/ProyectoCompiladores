@@ -1,10 +1,12 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class EConstructor extends EMiembro {
 	
 	public EConstructor(EClase clase,Token t,String texto){
 		this.clase=clase;
 		this.parametros=new ArrayList<EParametro>();
+		this.varslocales=new LinkedList<EParametro>();
 		this.tokenNombre=t;
 		this.texto=texto;
 		this.bloque=null;
@@ -29,22 +31,24 @@ public class EConstructor extends EMiembro {
 		String s="\n";
 		s+="______________________________________\n";
 		s+="\t| Constructor |\n";
-		s+="Aridad:\t\t\t"+this.getAridad()+"\n";
-		s+="Parametros:\n"+this.parametros.toString()+"\n";
-		s+="Descripcion:\n"+this.texto+"\n";
-		if (bloque!=null) s+="Bloque:\n********************************\n"+this.bloque.toString();
+		//s+="Aridad:\t\t\t"+this.getAridad()+"\n";
+		s+="Parametros:\t\t"+this.parametros.toString()+"\n";
+		//s+="Descripcion:\n"+this.texto+"\n";
+		if (bloque!=null) s+="\n********************************\n"+this.bloque.toString();
 		s+="********************************\n";
 		s+="______________________________________\n";
 		return s;
-	}	
-
-	@Override
-	public void check() throws SemanticException {
-		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public Tipo getTipoRetorno() {
-		return new TipoClase(this.clase.getToken());
+		TipoClase tc=new TipoClase(this.clase.getToken(),this.clase);
+		return tc;
+	}
+
+
+	@Override
+	public boolean esEstatico() {
+		return false;
 	}
 }

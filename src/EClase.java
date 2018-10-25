@@ -86,6 +86,7 @@ public class EClase extends EntradaTS{
 		//voy a recibir atributos de la clase padre en orden inverso
 		if(index==-1){
 			//agrego al principio
+			a.setHeredado(true);
 			this.atributos.addFirst(a);
 		}
 		else{
@@ -190,22 +191,21 @@ public class EClase extends EntradaTS{
 	 */
 	public boolean esSubtipo(EClase ancestro){
 		if(consolidado){
-			if(this.clasePadre!=null){
-				if(this.clasePadre.equals(ancestro)){
-					//clase padre es ancestro
-					return true;
-				}
-				else{
-					//> clase padre es descendiente de ancestro?
+			if(this.equals(ancestro)){
+				return true;
+			}
+			else{
+				if (this.clasePadre!=null){
 					return this.clasePadre.esSubtipo(ancestro);
 				}
-			}			
-			else{
-				//clase padre null -> false
-				return false;				
+				else{
+					return false;
+				}
 			}
 		}
-		else return false;
+		else{
+			return false;
+		}
 	}
 	
 	
@@ -292,6 +292,9 @@ public class EClase extends EntradaTS{
 	public void check() throws SemanticException {
 		//Seteo clase actual
 		Utl.ts.setClaseAct(this);
+		for(EAtributo a:atributos){
+			a.check();
+		}		
 		for(EMetodo m:metodos){
 			m.check();
 		}		
@@ -301,16 +304,53 @@ public class EClase extends EntradaTS{
 	}
 	
 	public void setValorAtributos(NodoExpresion val) {
+		System.out.println("seteando valor: "+val.toString());
 		for(EAtributo at: atributos){
+			System.out.println("a atributo: "+at.tokenNombre.getLexema());
 			at.setValor(val);
 		}
 	}
-	public EAtributo getAtributoPublico(String n) {
-		EAtributo a=this.getAtributo(n);
-		if ((a!=null)&&(a.esPublico())){
-			return a;
+	
+	/*
+	 * Metodo usado para el NodoVarEncadenado que solo chequea que el atributo sea publico
+	 */
+	public EParametro getAtributoPublico(String n) {
+		EAtributo a=this.getAtributo(n);		
+		if (a!=null){
+			if(a.esPublico()){
+				//a es publico
+				return a;
+			}
+			else{
+				//a no es publico
+				return null;
+			}
+			
 		}
-		return a;			
+		else return null;
+	}
+	/*
+	 * Metodo usado para el NodoVar que chequea que el atributo sea visible
+	 * (de la misma clase o heredado y publico)
+	 */
+	public EAtributo getAtributoVisible(String n) {
+		EAtributo a=this.getAtributo(n);		
+		if (a!=null){
+			if(!a.isHeredado()){
+				//a no es heredado
+				return a;
+			}
+			else if(a.esPublico()){
+				//a es heredado pero es publico
+				return a;
+			}
+			else{
+				//a es heredado y no es publico
+				return null;
+			}
+			
+		}
+		else return null;			
 	}
 	public EAtributo getAtributo(String n) {
 		for(EAtributo a:atributos){
@@ -328,6 +368,42 @@ public class EClase extends EntradaTS{
 			}					
 		}		
 		return null;
+	}
+	public EMetodo getMetodoEstatico(String n) {
+		EMetodo m=getMetodo(n);
+		if ((m!=null)&&(m.esEstatico())){
+			return m;
+		}
+		return null;
+	}
+	public LinkedList<EConstructor> getConstAridad(int ar) {
+		LinkedList<EConstructor> lista=new LinkedList<EConstructor>();
+		for(EConstructor c: constructores){
+			if(c.getAridad()==ar){
+				lista.add(c);
+			}
+		}		
+		return lista;
+	}
+	public EConstructor getConstDefault() {
+		EConstructor con=null;
+		for(EConstructor c: constructores){
+			if(c.getAridad()==0){
+				con=c;
+			}
+		}
+		return con;
+	}
+	public String imprimirBloques() {
+		String s="\n";
+		s+="______________________________________\n";
+		s+="\t| Clase "+this.getNombre()+" |\n";
+		if(this.tokenPadre!=null) s+="Hereda de:\t\t"+this.tokenPadre.getLexema()+"\n";		
+		s+="Atributos:\n"+this.atributos.toString()+"\n";
+		s+="Constructores:\n"+this.constructores.toString()+"\n";
+		s+="Metodos:\n"+this.metodos.toString()+"\n";		
+		s+="______________________________________\n";
+		return s;
 	}	
 
 }

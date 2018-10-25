@@ -37,12 +37,15 @@ public class NodoAsignacion extends NodoSentencia{
 
 	@Override
 	public void check() throws SemanticException{
-		Tipo der=this.ladoder.check();
+		Tipo der=this.ladoder.check();		
 		Tipo izq=this.ladoizq.check();
+		//izq.estaDefinido();
+		//der.estaDefinido();
+		//System.out.print(ladoizq.toString()+">"+izq.toString());
+		//System.out.println(" = "+der.toString()+"<"+ladoder.toString());
 		if (!der.esCompatible(izq)) 
-			throw new SemanticException(igual.getNroLinea(),igual.getNroColumna(),"Tipos incompatibles.\n"
-					+ izq.getTipo() +" es incomp"
-							+ "atible con "+ der.getTipo());
+			throw new SemanticException(ladoder.getToken().getNroLinea(),ladoder.getToken().getNroColumna(),"Tipos incompatibles.\n"
+					+ izq.getTipo() +" es incompatible con "+ der.getTipo());
 	}
 	
 	@Override

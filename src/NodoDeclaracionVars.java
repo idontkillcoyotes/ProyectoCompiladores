@@ -5,13 +5,11 @@ public class NodoDeclaracionVars extends NodoSentencia{
 	private ArrayList<EParametro> varlocales;
 	private NodoExpresion valor;
 	private Tipo tipo;
-	private Token igual;
 	
-	public NodoDeclaracionVars(ArrayList<EParametro> varlocales) {
+	public NodoDeclaracionVars(Tipo t,ArrayList<EParametro> varlocales) {
 		this.varlocales = varlocales;
+		this.tipo=t;
 		this.valor=null;
-		this.tipo=null;
-		this.igual=null;
 	}	
 
 	public NodoExpresion getValor() {
@@ -21,14 +19,6 @@ public class NodoDeclaracionVars extends NodoSentencia{
 		this.valor = valor;
 	}
 	
-	public Token getTokenIgual() {
-		return igual;
-	}
-
-	public void setTokenIgual(Token igual) {
-		this.igual = igual;
-	}
-
 	public Tipo getTipo(){
 		return this.tipo;
 	}
@@ -38,25 +28,33 @@ public class NodoDeclaracionVars extends NodoSentencia{
 	}
 
 	@Override
-	public void check() throws SemanticException{
-		//seteo el tipo con la primer variable 
-		//como minimo siempre hay una variable declarada
-		this.tipo=this.varlocales.get(0).getTipo();
-		
+	public void check() throws SemanticException{		
 		//si tiene expresion para inicializar el valor
+		if (this.tipo.estaDefinido()){
 		if(valor!=null){
 			//chequeo expresion y obtengo su tipo
 			Tipo exp=valor.check();
 			//si los tipos son incompatibles hay error
 			if(!exp.esCompatible(tipo))
-				throw new SemanticException(igual.getNroLinea(),igual.getNroColumna(),"Tipos incompatibles");
+				throw new SemanticException(valor.getToken().getNroLinea(),valor.getToken().getNroColumna(),"Tipos incompatibles");
 		}		
 		for(EParametro var: varlocales){
-			if (!Utl.ts.getBloqueAct().addVarLocal(var))
+			//intento agregar la variable local a las variables locales del miembro actual
+			if (!Utl.ts.getMiembroAct().pushVarLocal(var)){
+				//si hay conflictos de nombre lanzo error
 				throw new SemanticException(var.getToken().getNroLinea(),var.getToken().getNroColumna(),
-						"Nombre de variable duplicado.\nEl nombre de la variable ya está en uso.");
+						"Variable duplicada.\nLa variable '"+var.getNombre()+"' ya está en uso.");
+			}
+			else{
+				//si no hay errores la agrego a las variables locales del bloque actual				
+				Utl.ts.getBloqueAct().addVarLocal(var);
+			}
 		}
-		
+		}
+		else{
+			throw new SemanticException(tipo.getToken().getNroLinea(),tipo.getToken().getNroColumna(),
+					"Clase no definida.\nLa clase "+tipo.getTipo()+" no esta definida.");
+		}	
 	}
 	
 	@Override

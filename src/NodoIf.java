@@ -39,8 +39,8 @@ public class NodoIf extends NodoSentencia {
 
 	@Override
 	public void check() throws SemanticException {
-		Tipo exp=this.condicion.check();
-		if(exp.esTipo(Utl.TPC_BOOLEAN)){
+		Tipo tcon=this.condicion.check();
+		if(tcon.esTipo(Utl.TPC_BOOLEAN)){
 			this.sentenciathen.check();
 			if(this.sentenciaelse!=null){
 				this.sentenciaelse.check();
@@ -60,7 +60,7 @@ public class NodoIf extends NodoSentencia {
 		if (this.sentenciaelse!=null){
 			s+="\telse\n\t"+this.sentenciaelse.toString()+"\n";
 		}
-		return s;		
+		return s;	
 	}
 
 }

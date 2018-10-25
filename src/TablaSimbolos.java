@@ -112,6 +112,19 @@ public class TablaSimbolos {
 	public HashSet<EClase> getClases() {
 		return clases;
 	}
+
+	public void imprimirBloques() {
+		System.out.println("*********************");
+		System.out.println("\tClases:");
+		System.out.println("*********************");
+		for(EClase c: clases){
+			if ((!c.getNombre().equals("Object"))&&(!c.getNombre().equals("System"))){
+				System.out.println(c.imprimirBloques());
+				System.out.println("*****************************************");
+			}			
+		}
+		
+	}
 	
 	
 	

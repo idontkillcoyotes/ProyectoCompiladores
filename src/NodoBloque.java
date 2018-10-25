@@ -1,19 +1,19 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class NodoBloque extends NodoSentencia{
 	
 	private ArrayList<NodoSentencia> sentencias;
-	private HashMap<String,EParametro> varslocales;
+	private ArrayList<EParametro> varslocales;
 	private NodoBloque padre;
+	private boolean checked;
 		
 	
 
 	public NodoBloque(NodoBloque padre) {
-		super();
 		this.sentencias = new ArrayList<NodoSentencia>();
-		this.varslocales = new HashMap<String,EParametro>();
+		this.varslocales = new ArrayList<EParametro>();
 		this.padre = padre;
+		this.checked=false;
 	}
 
 	public ArrayList<NodoSentencia> getSentencias() {
@@ -30,9 +30,19 @@ public class NodoBloque extends NodoSentencia{
 	
 	@Override
 	public void check() throws SemanticException {
-		Utl.ts.setBloqueActual(this);
-		for(NodoSentencia s: sentencias){
-			s.check();
+		if(!checked){
+			Utl.ts.setBloqueActual(this);
+			for(NodoSentencia s: sentencias){
+				s.check();
+			}
+			//saco las var locales de este bloque del miembro act
+			int vars=this.varslocales.size();
+
+			if(vars>0) Utl.ts.getMiembroAct().popVarLocales(vars);
+
+			//seteo al padre de este bloque como bloque actual
+			Utl.ts.setBloqueActual(this.padre);
+			this.checked=true;
 		}
 	}
 	
@@ -47,15 +57,7 @@ public class NodoBloque extends NodoSentencia{
 	}
 
 	public boolean addVarLocal(EParametro var) {
-		if (varslocales.containsKey(var.getNombre()))
-			return false;
-		else{
-			varslocales.put(var.getNombre(),var);
-			return true;
-		}
+		return this.varslocales.add(var);
 	}
-	
-	public EParametro getVarLocal(String n){
-		return this.varslocales.get(n);
-	}
+
 }

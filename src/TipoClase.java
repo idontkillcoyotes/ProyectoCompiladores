@@ -5,13 +5,19 @@ public class TipoClase extends TipoReferencia{
 	
 	public TipoClase(Token tk){
 		this.tokenNombre=tk;
+		this.arreglo=false;
 		this.clase=null;
+	}
+	
+	public TipoClase(Token t,EClase c){
+		this.tokenNombre=t;
+		this.clase=c;
 		this.arreglo=false;
 	}
-
+	
 	public boolean estaDefinido() {
-		if(Utl.ts.estaDefinida(this.tokenNombre.getLexema())){
-			this.clase=Utl.ts.getClase(tokenNombre.getLexema());
+		this.clase=Utl.ts.getClase(tokenNombre.getLexema());
+		if(this.clase!=null){
 			return true;
 		}
 		else{
@@ -38,9 +44,21 @@ public class TipoClase extends TipoReferencia{
 		}
 	}
 
-	@Override
-	public boolean esCompatible(Tipo t) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean esCompatible(Tipo t) {		
+		if(t.esTipo(Utl.TT_IDCLASE)){
+			TipoClase tc=(TipoClase)t;
+			//System.out.println("t izq: "+tc.getClase().getNombre());
+			//System.out.println("this der: "+this.clase.getNombre());
+			if(this.clase.esSubtipo(tc.getClase())){
+				return true;
+			}
+			else{
+				return false;
+			}				
+		}
+		else{
+			return false;
+		}
 	}
 }
+

@@ -14,7 +14,8 @@ public class OpMat extends Operador{
 			return new TipoInt(tktipo);
 		}
 		else{
-			throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos invalidos.");
+			throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos incompatibles.\n"
+				+ "El operador "+op.getLexema()+" opera solo con tipos enteros.");
 		}
 	}
 
@@ -25,7 +26,8 @@ public class OpMat extends Operador{
 			return new TipoInt(tktipo);
 		}
 		else{
-			throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos invalidos.");
+			throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos incompatibles.\n"
+					+ "El operador "+op.getLexema()+" opera solo con un tipo entero.");
 		}
 	}
 }

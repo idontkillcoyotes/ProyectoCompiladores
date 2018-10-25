@@ -14,7 +14,8 @@ public class OpBool extends Operador{
 			return new TipoBool(tktipo);
 		}
 		else{
-			throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos invalidos.");
+			throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos incompatibles.\n"
+					+ "El operador "+op.getLexema()+" opera solo con tipos booleanos.");
 		}
 	}
 

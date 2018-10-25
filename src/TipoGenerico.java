@@ -3,8 +3,8 @@ public abstract class TipoGenerico extends Tipo{
 	
 	protected boolean arreglo;	
 	
-	public void setArreglo(){
-		this.arreglo=true;
+	public void setArreglo(boolean b){
+		this.arreglo=b;
 	}
 	
 	public boolean isArreglo(){

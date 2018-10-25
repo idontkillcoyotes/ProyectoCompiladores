@@ -10,9 +10,17 @@ public class NodoVarEncad extends Encadenado{
 	public NodoVarEncad(Token id) {
 		this.id = id;
 	}
+	
+	@Override
+	public Token getToken(Token t) {
+		if(this.encadenado!=null)
+			return this.encadenado.getToken(id);		
+		else
+			return id;	
+	}	
 
 	@Override
-	public Tipo check(Tipo t) throws SemanticException {
+	public Tipo check(Tipo t,Token tid) throws SemanticException {
 		//TODO ver que pasa cuando el metodo es estático
 		if (t.esTipo(Utl.TT_IDCLASE)){
 			//si es tipo clase casteo
@@ -24,14 +32,14 @@ public class NodoVarEncad extends Encadenado{
 				if (var==null){
 					//si no tiene error
 					throw new SemanticException(id.getNroLinea(),id.getNroColumna(),
-							"Variable desconocida.\nLa variable no ha sido declarada o no "
-									+ "es visible desde este bloque.");
+							"Variable desconocida.\nLa variable de instancia '"+id.getLexema()+"' no existe o no es visible "
+									+ "desde este bloque.");
 				}
 				//aca ya tengo el atributo publico, obtengo su tipo
 				Tipo tvar=var.getTipo();
 				if(this.encadenado!=null){
 					//si hay encadenado retorno lo que retorne el encadenado
-					return this.encadenado.check(tvar);
+					return this.encadenado.check(tvar,id);
 				}
 				else{
 					//sino retorno el tipo del atributo de la clase

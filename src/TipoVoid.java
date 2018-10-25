@@ -14,7 +14,11 @@ public class TipoVoid extends Tipo{
 			return false;
 		}
 	}
-
+	@Override
+	public String toString(){
+		return this.tokenNombre.getLexema();
+	}
+	
 	@Override
 	public boolean isArreglo() {
 		return false;
@@ -26,7 +30,7 @@ public class TipoVoid extends Tipo{
 	}
 
 	@Override
-	public void setArreglo() {}
+	public void setArreglo(boolean b) {}
 
 	@Override
 	public boolean estaDefinido() {

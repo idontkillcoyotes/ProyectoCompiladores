@@ -2,16 +2,15 @@
 public abstract class Encadenado {
 	
 	protected Encadenado encadenado;
-	protected boolean ladoizq;
+	protected boolean valorAtributo;
+	protected boolean ladoIzquierdo;
 	
-	public abstract Tipo check(Tipo t) throws SemanticException;	
+	public abstract Tipo check(Tipo t,Token id) throws SemanticException;
+	
+	public abstract Token getToken(Token t);
 
 	public void setEncadenado(Encadenado encadenado) {
 		this.encadenado = encadenado;
-	}
-
-	public void setLadoizq(boolean ladoizq) {
-		this.ladoizq = ladoizq;
 	}
 
 	public Encadenado getEncadenado() {
@@ -19,7 +18,20 @@ public abstract class Encadenado {
 	}
 
 	public boolean hasLadoizq() {
-		return ladoizq;
+		return ladoIzquierdo;
+	}
+
+	public void setLadoizq(boolean b) {
+		this.ladoIzquierdo = b;
+	}
+
+	public boolean isValorAtributo() {
+		return valorAtributo;
+	}
+
+	public void setValorAtributo(boolean b) {
+		this.valorAtributo = b;
+		if (this.encadenado!=null) this.encadenado.setValorAtributo(b);
 	}
 
 }

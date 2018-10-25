@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class EMetodo extends EMiembro{
 	
@@ -13,6 +14,7 @@ public class EMetodo extends EMiembro{
 		this.forma=f;
 		this.tipoRetorno=tiporet;		
 		this.parametros=new ArrayList<EParametro>();
+		this.varslocales=new LinkedList<EParametro>();
 		this.texto=texto;
 		this.bloque=null;
 		this.consolidado=false;
@@ -25,6 +27,11 @@ public class EMetodo extends EMiembro{
 	
 	public Tipo getTipoRetorno() {
 		return tipoRetorno;
+	}
+	
+	@Override
+	public boolean esEstatico() {
+		return (this.forma==FormaMetodo.fStatic);
 	}
 	
 	@Override
@@ -110,12 +117,14 @@ public class EMetodo extends EMiembro{
 		s+="\t| Metodo "+this.getNombre()+" |\n";
 		s+="Forma:\t\t\t"+this.forma+"\n";
 		s+="Tipo retorno:\t\t"+this.tipoRetorno.toString()+"\n";
-		s+="Aridad:\t\t\t"+this.getAridad()+"\n";
-		s+="Parametros:\n"+this.parametros.toString()+"\n";		
-		s+="Descripcion:\n"+this.texto+"\n";
-		if (bloque!=null) s+="Bloque:\n********************************\n"+this.bloque.toString();
+		//s+="Aridad:\t\t\t"+this.getAridad()+"\n";
+		s+="Parametros:\t\t"+this.parametros.toString()+"\n";		
+		//s+="Descripcion:\n"+this.texto+"\n";
+		if (bloque!=null) s+="\n********************************\n"+this.bloque.toString();
 		s+="********************************\n";
 		s+="______________________________________\n";
 		return s;
 	}
+
+
 }

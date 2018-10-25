@@ -7,6 +7,12 @@ public class NodoExpUnaria extends NodoExpresion{
 	public NodoExpUnaria(Operador operador) {
 		this.expresion = null;
 		this.operador = operador;
+	}	
+
+	@Override
+	public void setValorAtributo(boolean b) {
+		this.valorAtributo=b;
+		this.expresion.setValorAtributo(b);
 	}
 
 	public NodoExpresion getExpresion() {
@@ -34,4 +40,8 @@ public class NodoExpUnaria extends NodoExpresion{
 		return s;
 	}
 
+	@Override
+	public Token getToken() {
+		return this.operador.getOperador();
+	}
 }

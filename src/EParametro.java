@@ -37,9 +37,9 @@ public class EParametro extends EntradaTS{
 	
 	@Override
 	public String toString(){
-		String s="\n";
-		s+="Nombre:\t\t\t"+this.getNombre()+"\n";
-		s+="Tipo:\t\t\t"+this.tipo.toString()+"\n";
+		String s="";
+		s+=this.tipo.toString()+" ";
+		s+=this.getNombre();
 		return s;
 	}
 	
@@ -59,5 +59,6 @@ public class EParametro extends EntradaTS{
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

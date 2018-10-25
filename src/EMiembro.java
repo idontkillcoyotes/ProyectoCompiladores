@@ -1,9 +1,11 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public abstract class EMiembro extends EntradaTS{
 	
 	protected Token tokenNombre;
 	protected ArrayList<EParametro> parametros;
+	protected LinkedList<EParametro> varslocales;
 	protected EClase clase;
 	protected NodoBloque bloque;
 	protected String texto;
@@ -43,6 +45,43 @@ public abstract class EMiembro extends EntradaTS{
 	public ArrayList<EParametro> getParametros() {
 		return parametros;
 	}
+	
+	public LinkedList<EParametro> getVarsLocales(){
+		return varslocales;
+	}
+	
+	public void copiarParametros(){
+		this.varslocales.addAll(this.parametros);
+	}
+	
+	public boolean pushVarLocal(EParametro p) {
+		if (!this.varslocales.contains(p)){
+			//uso push para luego poder hacer pop de las var locales del bloque
+			this.varslocales.push(p);
+			//System.out.println("push: "+p.toString());
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	public void popVarLocales(int n){
+		for(int i=0;i<n;i++){			
+			//System.out.println("pop: "+
+					this.varslocales.pop() ;
+			//);
+		}
+	}
+	
+
+	public EParametro getVarLocal(String n) {
+		for(EParametro var: varslocales){
+			if(var.getNombre().equals(n)){
+				return var;
+			}
+		}
+		return null;
+	}
 
 	public boolean addParametro(EParametro p) {
 		if (!this.parametros.contains(p)){
@@ -72,6 +111,8 @@ public abstract class EMiembro extends EntradaTS{
 		//seteo miembro actual
 		Utl.ts.setMiembroActual(this);
 		Utl.ts.setBloqueActual(null);
+		//agrego parametros a las varslocales
+		this.copiarParametros();
 		if (bloque!=null) bloque.check();
 	}
 
@@ -83,5 +124,7 @@ public abstract class EMiembro extends EntradaTS{
 		}		
 		return null;
 	}
+
+	public abstract boolean esEstatico();
 	
 }

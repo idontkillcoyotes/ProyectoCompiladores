@@ -169,9 +169,9 @@ public class ManejadorTS {
 		}
 	}
 	
-	private void crearAtributo(Token tn,Tipo tipo,Visibilidad vis) throws SemanticException{
+	private void crearAtributo(Token tn,Tipo tipo,Visibilidad vis,NodoExpresion valor) throws SemanticException{
 		if (this.claseActual!=null){
-			EAtributo a=new EAtributo(claseActual,tn,tipo,vis);
+			EAtributo a=new EAtributo(claseActual,tn,tipo,vis,valor);
 			boolean b=this.claseActual.addAtributo(a);
 			if (!b){
 				throw new SemanticException(tn.getNroLinea(),tn.getNroColumna(),
@@ -180,9 +180,9 @@ public class ManejadorTS {
 		}
 	}	
 	
-	public void crearAtributos(ArrayList<EParametro> lista,Visibilidad vis) throws SemanticException {
+	public void crearAtributos(ArrayList<EParametro> lista,Visibilidad vis,NodoExpresion valor) throws SemanticException {
 		for(EParametro p: lista){
-			crearAtributo(p.getToken(),p.getTipo(),vis);
+			crearAtributo(p.getToken(),p.getTipo(),vis,valor);
 		}
 	}
 	

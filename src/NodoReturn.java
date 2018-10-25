@@ -28,8 +28,8 @@ public class NodoReturn extends NodoSentencia{
 				//expresion no nula
 				Tipo exp=this.expresion.check();
 				if(!exp.esCompatible(retorno))
-					throw new SemanticException(token.getNroLinea(),token.getNroColumna(),
-							"Tipo invalido.\nEl tipo de la expresion no es igual al tipo de retorno del metodo");
+					throw new SemanticException(expresion.getToken().getNroLinea(),expresion.getToken().getNroColumna(),
+							"Tipo invalido.\nEl tipo de retorno no es compatible con el tipo de retorno del metodo");
 			}
 			else{
 				//expresion nula
@@ -40,6 +40,10 @@ public class NodoReturn extends NodoSentencia{
 							+ "de tipo "+retorno.getTipo());
 			}
 			
+		}
+		else{
+			throw new SemanticException(token.getNroLinea(),token.getNroColumna(),
+					"Constructor con retorno.\nUn constructor no puede retornar un valor.");
 		}
 	}
 	
