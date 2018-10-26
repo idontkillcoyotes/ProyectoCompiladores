@@ -57,4 +57,9 @@ public class NodoAsignacion extends NodoSentencia{
 		return s;
 	}
 
+	@Override
+	public boolean tieneRetorno() {
+		return false;
+	}
+
 }

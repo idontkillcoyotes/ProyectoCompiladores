@@ -15,6 +15,10 @@ public class NodoSentenciaSimple extends NodoSentencia{
 	public NodoExpresion getExpresion() {
 		return expresion;
 	}
+	@Override
+	public boolean tieneRetorno() {
+		return false;
+	}
 
 	@Override
 	public void check() throws SemanticException{

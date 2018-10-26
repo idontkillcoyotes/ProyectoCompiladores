@@ -25,7 +25,7 @@ public class EMetodo extends EMiembro{
 		return forma;
 	}
 	
-	public Tipo getTipoRetorno() {
+	public Tipo getTipoRetorno() {	
 		return tipoRetorno;
 	}
 	
@@ -109,6 +109,26 @@ public class EMetodo extends EMiembro{
 			this.consolidado=true;
 		}
 	}
+	@Override
+	public void check() throws SemanticException {
+		//seteo miembro actual
+		Utl.ts.setMiembroActual(this);
+		Utl.ts.setBloqueActual(null);
+		//agrego parametros a las varslocales
+		this.copiarParametros();
+		if (bloque!=null) bloque.check();
+		//chequeo que tenga al menos un retorno si no es void
+		if (!this.tipoRetorno.esTipo(Utl.TPC_VOID)){
+			//si no es retorno void
+			if(this.bloque!=null){
+				if(!this.bloque.tieneRetorno()){
+					throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
+							"Metodo sin retorno.");
+				}
+			}
+		}
+	}
+	
 	
 	@Override
 	public String toString(){

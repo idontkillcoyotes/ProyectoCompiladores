@@ -41,14 +41,54 @@ public class NodoIf extends NodoSentencia {
 	public void check() throws SemanticException {
 		Tipo tcon=this.condicion.check();
 		if(tcon.esTipo(Utl.TPC_BOOLEAN)){
-			this.sentenciathen.check();
-			if(this.sentenciaelse!=null){
-				this.sentenciaelse.check();
+			//please dont boch me jajaja 			
+			if (!(sentenciathen instanceof NodoDeclaracionVars)){
+				this.sentenciathen.check();
+				if(this.sentenciaelse!=null){
+					if (!(sentenciathen instanceof NodoDeclaracionVars)){
+						this.sentenciaelse.check();
+					}
+					else{
+						//si es declaracion de variables seteo que es sentencia unica y chequeo
+						NodoDeclaracionVars selse=(NodoDeclaracionVars)this.sentenciaelse;
+						selse.setSentenciaUnica(true);
+						this.sentenciaelse.check();		
+					}
+					
+				}
+			
+			}
+			else{
+				//la sentencia del if es solo una de declaracion de variables
+				//seteo sentencia unica
+				NodoDeclaracionVars sthen=(NodoDeclaracionVars)this.sentenciathen;
+				sthen.setSentenciaUnica(true);
+				this.sentenciathen.check();	
+				if (!(sentenciathen instanceof NodoDeclaracionVars)){
+					this.sentenciaelse.check();
+				}
+				else{
+					NodoDeclaracionVars selse=(NodoDeclaracionVars)this.sentenciaelse;
+					selse.setSentenciaUnica(true);
+					this.sentenciaelse.check();		
+				}
 			}
 		}
 		else throw new SemanticException(token.getNroLinea(),token.getNroColumna()+6,
 			"Condicion no booleana.\nEl resultado de la expresion de condicion debe ser de tipo booleano.");
 		
+	}
+	@Override
+	public boolean tieneRetorno() {
+		if(this.sentenciaelse!=null){
+			//si tiene else
+			boolean aux=sentenciathen.tieneRetorno();
+			aux=(aux||sentenciaelse.tieneRetorno());
+			return aux;
+		}
+		else{
+			return this.sentenciathen.tieneRetorno();
+		}
 	}
 	
 	@Override

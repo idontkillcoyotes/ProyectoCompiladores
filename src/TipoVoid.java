@@ -36,6 +36,10 @@ public class TipoVoid extends Tipo{
 	public boolean estaDefinido() {
 		return true;
 	}
+	@Override
+	public Tipo clonarTipoBase() {
+		return new TipoVoid(this.tokenNombre);
+	}
 
 	@Override
 	public boolean esCompatible(Tipo t){

@@ -3,7 +3,6 @@ public class EAtributo extends EParametro{
 	private Visibilidad visibilidad;
 	private EClase clase;
 	private NodoExpresion valor;
-	private boolean heredado;
 	private boolean checked;
 
 	public EAtributo(EClase clase,Token tn,Tipo tipo,Visibilidad v,NodoExpresion valor){		
@@ -11,7 +10,6 @@ public class EAtributo extends EParametro{
 		this.clase=clase;
 		this.visibilidad=v;
 		this.valor=valor;
-		this.heredado=false;
 		this.checked=false;
 	}
 	
@@ -25,14 +23,6 @@ public class EAtributo extends EParametro{
 	
 	public boolean isChecked() {
 		return checked;
-	}
-
-	public boolean isHeredado() {
-		return heredado;
-	}
-
-	public void setHeredado(boolean heredado) {
-		this.heredado = heredado;
 	}
 
 	public boolean esPublico(){
@@ -72,7 +62,7 @@ public class EAtributo extends EParametro{
 	}
 	
 	public String toString(){		
-		String s="";		
+		String s="";
 		s+=this.visibilidad+" ";		
 		s+=this.tipo.toString()+" ";
 		s+=this.getNombre();

@@ -40,9 +40,9 @@ public class NodoArregloEncad extends Encadenado{
 					return this.encadenado.check(t,id);					
 				}
 				else{
-					//TODO ver si esta mal que cambie el tipo pasado como parametro
-					t.setArreglo(false);
-					return t;
+					//TODO ver si esta mal que cambie el tipo pasado como parametro. MUY MALLLL!!!
+					Tipo tret=t.clonarTipoBase();					
+					return tret;
 				}
 			}
 			else
@@ -51,7 +51,7 @@ public class NodoArregloEncad extends Encadenado{
 		}
 		else
 			throw new SemanticException(id.getNroLinea(),id.getNroColumna(),
-					"No es arreglo.\nEl tipo de la variable "+id.getLexema()+" no es un arreglo.");
+					"Tipo invalido.\nEl tipo de la expresion no es un arreglo.");
 		
 	}
 	@Override

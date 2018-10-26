@@ -19,6 +19,7 @@ public abstract class Tipo {
 			return false;
 		}
 	}
+	public abstract Tipo clonarTipoBase();
 	
 	/*
 	 * Chequea que los tipos sean exactamente iguales

@@ -9,5 +9,6 @@ public abstract class NodoAcceso extends NodoPrimario{
 
 	public void setLadoizq(boolean ladoizq) {
 		this.ladoizq = ladoizq;
+		if(this.encadenado!=null) this.encadenado.setLadoizq(ladoizq);
 	}
 }

@@ -85,8 +85,7 @@ public class EClase extends EntradaTS{
 		int index=this.atributos.indexOf(a);
 		//voy a recibir atributos de la clase padre en orden inverso
 		if(index==-1){
-			//agrego al principio
-			a.setHeredado(true);
+			//agrego al principio			
 			this.atributos.addFirst(a);
 		}
 		else{
@@ -256,6 +255,7 @@ public class EClase extends EntradaTS{
 					//recorro las listas de miembros del padre en orden inverso para poder agregarlos
 					//en el orden correcto a esta clase (al principio)
 					//para mantener un offset que representaria el orden de las vtables
+					//TODO System.out.println("\n\naparentemente esta clase: "+this.getNombre()+" tiene padre: "+cpadre.getNombre());
 					Iterator<EAtributo> atributospadre=cpadre.getAtributos().descendingIterator();
 					while(atributospadre.hasNext()){
 						this.addAtributoHeredado(atributospadre.next());
@@ -312,45 +312,30 @@ public class EClase extends EntradaTS{
 	}
 	
 	/*
-	 * Metodo usado para el NodoVarEncadenado que solo chequea que el atributo sea publico
-	 */
-	public EParametro getAtributoPublico(String n) {
-		EAtributo a=this.getAtributo(n);		
-		if (a!=null){
-			if(a.esPublico()){
-				//a es publico
-				return a;
-			}
-			else{
-				//a no es publico
-				return null;
-			}
-			
-		}
-		else return null;
-	}
-	/*
-	 * Metodo usado para el NodoVar que chequea que el atributo sea visible
+	 * Metodo usado para chequear que un atributo sea visible desde la clase actual
 	 * (de la misma clase o heredado y publico)
 	 */
 	public EAtributo getAtributoVisible(String n) {
 		EAtributo a=this.getAtributo(n);		
 		if (a!=null){
-			if(!a.isHeredado()){
-				//a no es heredado
+			if(a.esPublico()){
+				//a es publico				
 				return a;
-			}
-			else if(a.esPublico()){
-				//a es heredado pero es publico
+			}			
+			else if(a.getClase().equals(this)){
+				//esta clase es la clase en donde fue declarado el atributo
+				//a es privado pero no heredado
 				return a;
 			}
 			else{
-				//a es heredado y no es publico
+				//esta clase no es la clase en donde fue declarado el atributo
+				//a es privado y heredado
 				return null;
 			}
-			
 		}
-		else return null;			
+		else {
+			return null;			
+		}
 	}
 	public EAtributo getAtributo(String n) {
 		for(EAtributo a:atributos){

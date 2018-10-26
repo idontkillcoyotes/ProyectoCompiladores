@@ -48,17 +48,24 @@ public class NodoLlamadaEncad extends Encadenado{
 		if(t.esTipo(Utl.TT_IDCLASE)){
 			//casteo a tipoclase
 			TipoClase tc=(TipoClase)t;
-			EMetodo met=tc.getClase().getMetodo(id.getLexema());
+			EMetodo met=tc.getClase().getMetodo(id.getLexema());			
 			if(met!=null){
-					//si no estoy en una inicializacion de atributo
-					
+					//si no estoy en una inicializacion de atributo					
 					//chequeo arguementos
 					Tipo retorno=checkArgumentos(met);					
 					if(this.encadenado!=null){
 						return this.encadenado.check(retorno,this.id);
 					}
 					else{
-						return retorno;
+						//si no hay encadenado y estoy del lado izquierdo hay error
+						if(!ladoIzquierdo){
+							return retorno;
+						}
+						else{
+							throw new SemanticException(id.getNroLinea(),id.getNroColumna(),
+									"Asignacion invalida.\nEl lado izquierdo de una asignacion solo puede "
+									+ "ser un acceso a una variable.");
+						}
 					}				
 			}
 			else

@@ -33,4 +33,9 @@ public class TipoString extends TipoReferencia{
 			return false;
 	}
 	
+	@Override
+	public Tipo clonarTipoBase() {
+		return new TipoString(this.tokenNombre);
+	}
+	
 }

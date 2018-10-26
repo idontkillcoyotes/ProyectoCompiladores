@@ -35,4 +35,9 @@ public class TipoBool extends TipoGenerico{
 			return false;
 	}
 
+	@Override
+	public Tipo clonarTipoBase() {
+		return new TipoBool(this.tokenNombre);
+	}
+
 }

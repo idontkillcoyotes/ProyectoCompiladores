@@ -28,7 +28,7 @@ public class NodoVarEncad extends Encadenado{
 			if (tc.estaDefinido()){
 				//si la clase esta definida
 				//chequeo que tenga un atributo publico con nombre id
-				EParametro var=tc.getClase().getAtributoPublico(id.getLexema());				
+				EParametro var=tc.getClase().getAtributoVisible(id.getLexema());				
 				if (var==null){
 					//si no tiene error
 					throw new SemanticException(id.getNroLinea(),id.getNroColumna(),
@@ -53,7 +53,7 @@ public class NodoVarEncad extends Encadenado{
 		}
 		else{
 			throw new SemanticException(t.getToken().getNroLinea(),t.getToken().getNroColumna(),
-					t.getTipo()+" no es una clase.\nNo se puede acceder a los miembros de un tipo"
+					"Acceso invalido.\nNo se puede acceder a los miembros de un tipo"
 							+ " que no es tipo clase.");
 		}
 

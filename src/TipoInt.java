@@ -32,6 +32,9 @@ public class TipoInt extends TipoGenerico{
 		else
 			return false;
 	}
-
+	@Override
+	public Tipo clonarTipoBase() {
+		return new TipoInt(this.tokenNombre);
+	}
 
 }

@@ -60,5 +60,11 @@ public class TipoClase extends TipoReferencia{
 			return false;
 		}
 	}
+
+	@Override
+	public Tipo clonarTipoBase() {
+		TipoClase t=new TipoClase(this.tokenNombre,this.clase);
+		return t;
+	}
 }
 

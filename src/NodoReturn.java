@@ -46,6 +46,11 @@ public class NodoReturn extends NodoSentencia{
 					"Constructor con retorno.\nUn constructor no puede retornar un valor.");
 		}
 	}
+	@Override
+	public boolean tieneRetorno() {
+		return true;
+	}
+	
 	
 	@Override
 	public String toString(){

@@ -22,17 +22,17 @@ public class NodoThis extends NodoAcceso{
 	@Override
 	public Tipo check() throws SemanticException {
 		if(!valorAtributo){
-		if(!Utl.ts.getMiembroAct().esEstatico()){
-			Tipo t=new TipoClase(thisclase.getToken(),thisclase);
-			if(this.encadenado!=null)
-				return this.encadenado.check(t, tk);
-			else
-				return t;
-		}
-		else{
-			throw new SemanticException(tk.getNroLinea(),tk.getNroColumna(),
-					"Referencia invalida.\nNo es posible referenciar a una instancia de clase dentro de un metodo estatico.");
-		}
+			if(!Utl.ts.getMiembroAct().esEstatico()){
+				Tipo t=new TipoClase(thisclase.getToken(),thisclase);
+				if(this.encadenado!=null)
+					return this.encadenado.check(t, tk);
+				else
+					return t;
+			}
+			else{
+				throw new SemanticException(tk.getNroLinea(),tk.getNroColumna(),
+						"Referencia invalida.\nNo es posible referenciar a una instancia de clase dentro de un metodo estatico.");
+			}
 		}
 		else{
 			throw new SemanticException(tk.getNroLinea(),tk.getNroColumna(),"Referencia invalida.\n"

@@ -12,7 +12,7 @@ public class Minijavac {
 				System.out.println("Compilación exitosa.");
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			
 		}

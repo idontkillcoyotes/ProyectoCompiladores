@@ -32,4 +32,8 @@ public class TipoNull extends TipoReferencia{
 		else
 			return false;
 	}
+	@Override
+	public Tipo clonarTipoBase() {
+		return null;
+	}
 }

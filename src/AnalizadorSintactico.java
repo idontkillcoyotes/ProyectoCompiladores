@@ -659,6 +659,7 @@ public class AnalizadorSintactico {
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
 			NodoVar v=accesoVar(true);
 			n.setLadoizq(v);
+			v.setLadoizq(true);
 			Token t=tokenAct;
 			match(Utl.TT_ASIGIGUAL);
 			n.setTokenIgual(t);
@@ -668,6 +669,7 @@ public class AnalizadorSintactico {
 		else if(tokenAct.esTipo(Utl.TPC_THIS)){
 			NodoThis t=accesoThis(true);
 			n.setLadoizq(t);
+			t.setLadoizq(true);
 			Token ig=tokenAct;
 			match(Utl.TT_ASIGIGUAL);
 			n.setTokenIgual(ig);

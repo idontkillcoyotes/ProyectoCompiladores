@@ -17,6 +17,10 @@ public class NodoWhile extends NodoSentencia{
 	public void setCondicion(NodoExpresion condicion) {
 		this.condicion = condicion;
 	}
+	@Override
+	public boolean tieneRetorno() {
+		return sentencia.tieneRetorno();
+	}
 
 
 	public void setSentencia(NodoSentencia sentencia) {
@@ -36,7 +40,15 @@ public class NodoWhile extends NodoSentencia{
 	public void check() throws SemanticException {
 		Tipo exp=this.condicion.check();
 		if(exp.esTipo(Utl.TPC_BOOLEAN)){
-			this.sentencia.check();
+			if (!(sentencia instanceof NodoDeclaracionVars)){
+				this.sentencia.check();
+			}
+			else{
+				//si es declaracion de variables seteo que es sentencia unica y chequeo
+				NodoDeclaracionVars s=(NodoDeclaracionVars)this.sentencia;
+				s.setSentenciaUnica(true);
+				this.sentencia.check();	
+			}
 		}
 		else
 			throw new SemanticException(token.getNroLinea(),token.getNroColumna()+6,

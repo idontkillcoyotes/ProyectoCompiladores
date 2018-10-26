@@ -14,6 +14,10 @@ public class NodoPuntoComa extends NodoSentencia {
 	public void check() {
 		return;
 	}
+	@Override
+	public boolean tieneRetorno() {
+		return false;
+	}
 	
 	@Override
 	public String toString(){

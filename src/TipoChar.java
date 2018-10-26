@@ -26,6 +26,11 @@ public class TipoChar extends TipoGenerico{
 	}
 
 	@Override
+	public Tipo clonarTipoBase() {
+		return new TipoChar(this.tokenNombre);
+	}
+	
+	@Override
 	public boolean esCompatible(Tipo t) {
 		if(t.esTipo(Utl.TPC_CHAR))
 			return true;

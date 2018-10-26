@@ -28,6 +28,15 @@ public class NodoBloque extends NodoSentencia{
 		return this.sentencias.add(s);
 	}
 	
+	public boolean tieneRetorno(){
+		boolean aux=false;
+		for(NodoSentencia s: sentencias){
+			aux=(aux||s.tieneRetorno());
+		}
+		return aux;
+	}
+	
+	
 	@Override
 	public void check() throws SemanticException {
 		if(!checked){
