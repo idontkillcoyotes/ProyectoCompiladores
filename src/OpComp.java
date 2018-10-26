@@ -11,12 +11,21 @@ public class OpComp extends Operador{
 	public Tipo checkBin(Tipo t1, Tipo t2) throws SemanticException {
 		//debo chequear si son compatibles
 		if(t1.esCompatible(t2)){
+			//chequeo de un lado
 			TipoBool ret=new TipoBool(tktipo);
 			return ret;
 		}
-		else
-			throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos incompatibles.\n"
-					+t2.getTipo()+ " es incompatible con "+t1.getTipo());
+		else{
+			if(t2.esCompatible(t1)){
+				//chequeo del otro lado
+				TipoBool ret=new TipoBool(tktipo);
+				return ret;
+			}
+			else{
+				throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos incompatibles.\n"
+						+t2.getTipo()+ " es incompatible con "+t1.getTipo());
+			}
+		}
 		
 	}
 

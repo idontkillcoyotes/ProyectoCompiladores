@@ -1,7 +1,7 @@
 
 public abstract class NodoAcceso extends NodoPrimario{
 	
-	private boolean ladoizq;
+	protected boolean ladoizq;
 
 	public boolean isLadoizq() {
 		return ladoizq;
