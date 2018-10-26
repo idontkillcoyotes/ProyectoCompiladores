@@ -24,6 +24,7 @@ public class NodoVarEncad extends Encadenado{
 		//TODO ver que pasa cuando el metodo es estático
 		if (t.esTipo(Utl.TT_IDCLASE)){
 			//si es tipo clase casteo
+			//TODO dejar de usar el casteo?
 			TipoClase tc=(TipoClase)t;
 			if (tc.estaDefinido()){
 				//si la clase esta definida

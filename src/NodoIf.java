@@ -81,13 +81,14 @@ public class NodoIf extends NodoSentencia {
 	@Override
 	public boolean tieneRetorno() {
 		if(this.sentenciaelse!=null){
-			//si tiene else
+			//si tiene else, ambos deben tener retorno
 			boolean aux=sentenciathen.tieneRetorno();
-			aux=(aux||sentenciaelse.tieneRetorno());
+			aux=(aux&&sentenciaelse.tieneRetorno());
 			return aux;
 		}
 		else{
-			return this.sentenciathen.tieneRetorno();
+			//si no tiene else, no tiene retorno
+			return false;
 		}
 	}
 	
@@ -102,5 +103,6 @@ public class NodoIf extends NodoSentencia {
 		}
 		return s;	
 	}
+
 
 }

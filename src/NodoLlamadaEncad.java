@@ -49,8 +49,7 @@ public class NodoLlamadaEncad extends Encadenado{
 			//casteo a tipoclase
 			TipoClase tc=(TipoClase)t;
 			EMetodo met=tc.getClase().getMetodo(id.getLexema());			
-			if(met!=null){
-					//si no estoy en una inicializacion de atributo					
+			if(met!=null){			
 					//chequeo arguementos
 					Tipo retorno=checkArgumentos(met);					
 					if(this.encadenado!=null){

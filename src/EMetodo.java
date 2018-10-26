@@ -123,7 +123,7 @@ public class EMetodo extends EMiembro{
 			if(this.bloque!=null){
 				if(!this.bloque.tieneRetorno()){
 					throw new SemanticException(tokenNombre.getNroLinea(),tokenNombre.getNroColumna(),
-							"Metodo sin retorno.");
+							"Metodo sin retorno.\nEste metodo debe retornar un valor de tipo "+tipoRetorno.toString()+".");
 				}
 			}
 		}

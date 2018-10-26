@@ -30,12 +30,11 @@ public class NodoConstComun extends NodoConst {
 	public Tipo check() throws SemanticException {
 		//deberia chequear que existe la clase, y que su constructor 
 		//es llamado correctamente
-
 		this.clase=Utl.ts.getClase(this.tokenNombre.getLexema());
 		if(this.clase!=null){
 			//clase esta definida			
 			//si hay argumentos entonces se usa el constructor por defecto o
-			//un constructor definido, pero siempre hay uno.
+			//un constructor definido, pero siempre hay uno. NO SIEMPRE!!!
 			int args=this.argsactuales.size();			
 			if(args>0){
 				//si el llamado al constructor tiene mas de un argumento, debo chequear que este definido

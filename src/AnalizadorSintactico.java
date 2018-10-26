@@ -161,7 +161,7 @@ public class AnalizadorSintactico {
 		//obtengo el valor de inicializacion
 		NodoExpresion val=inicializacion();
 		
-		//Agrego los atributos a la clase
+		//Agrego los atributos a la clase con valor
 		mts.crearAtributos(lista, vis, val);
 		
 		if(val!=null){
@@ -213,6 +213,7 @@ public class AnalizadorSintactico {
 		//Seteo bloque actual como null
 		mts.setBloqueActual(null);
 		
+		//Llamo y guardo el bloque
 		NodoBloque b=bloque();
 		
 		//Agrego el bloque al miembro
@@ -492,13 +493,6 @@ public class AnalizadorSintactico {
 		
 		//Creo nodo bloque con padre bloque actual
 		NodoBloque b=new NodoBloque(mts.bloqueAct());		
-		
-		/*
-		//Si el padre no es nulo deberia agregarle el nuevo bloque a sus sentencias
-		if(mts.bloqueAct()!=null){
-			mts.bloqueAct().addSentencia(b);		
-		}		
-		*/
 		
 		//El nuevo bloque es el bloque actual
 		mts.setBloqueActual(b);
@@ -1148,23 +1142,25 @@ public class AnalizadorSintactico {
 		}
 	}
 	private NodoThis accesoThis(boolean ladoizq) throws SintacticException {
+		//TODO borrar el parametro
 		//AccesoThis -> this Encadenado
 		Token t=tokenAct;
 		match(Utl.TPC_THIS);
 		//creo el nodo this con la clase actual
 		NodoThis n=new NodoThis(mts.claseAct(),t);
-		n.setLadoizq(ladoizq);
+		//n.setLadoizq(ladoizq);
 		//asigno el encadenado
 		n.setEncadenado(encadenado());
 		return n;
 	}
 	private NodoVar accesoVar(boolean ladoizq)  throws SintacticException{
+		//TODO borrar el parametro
 		//AccesoVar -> idMetVar Encadenado
 		Token t=tokenAct;
 		match(Utl.TT_IDMETVAR);
 		//creo el nodo variable con el token id
 		NodoVar n=new NodoVar(t);
-		n.setLadoizq(ladoizq);
+		//n.setLadoizq(ladoizq);
 		//asigno el encadenado
 		n.setEncadenado(encadenado());
 		return n;

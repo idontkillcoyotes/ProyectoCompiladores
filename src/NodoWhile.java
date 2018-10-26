@@ -19,7 +19,9 @@ public class NodoWhile extends NodoSentencia{
 	}
 	@Override
 	public boolean tieneRetorno() {
-		return sentencia.tieneRetorno();
+		//el while nunca tiene retorno, porque puede
+		//que nunca entre por la condicion
+		return false;
 	}
 
 

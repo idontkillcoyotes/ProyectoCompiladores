@@ -36,29 +36,29 @@ public class NodoDeclaracionVars extends NodoSentencia{
 	public void check() throws SemanticException{		
 		//si tiene expresion para inicializar el valor
 		if (this.tipo.estaDefinido()){
-		if(valor!=null){
-			//chequeo expresion y obtengo su tipo
-			Tipo exp=valor.check();
-			//si los tipos son incompatibles hay error
-			if(!exp.esCompatible(tipo))
-				throw new SemanticException(valor.getToken().getNroLinea(),valor.getToken().getNroColumna(),"Tipos incompatibles");
-		}
-		if(!sentenciaunica){
-			//si no es sentencia unica agrego las variables
-			for(EParametro var: varlocales){
-				//intento agregar la variable local a las variables locales del miembro actual
-				if (!Utl.ts.getMiembroAct().pushVarLocal(var)){
-					//si hay conflictos de nombre lanzo error
-					throw new SemanticException(var.getToken().getNroLinea(),var.getToken().getNroColumna(),
-							"Variable duplicada.\nLa variable '"+var.getNombre()+"' ya está en uso.");
-				}
-				else{
-					//si no hay errores la agrego a las variables locales del bloque actual				
-					Utl.ts.getBloqueAct().addVarLocal(var);
+			if(valor!=null){
+				//chequeo expresion y obtengo su tipo
+				Tipo exp=valor.check();
+				//si los tipos son incompatibles hay error
+				if(!exp.esCompatible(tipo))
+					throw new SemanticException(valor.getToken().getNroLinea(),valor.getToken().getNroColumna(),"Tipos incompatibles");
+			}
+			if(!sentenciaunica){
+				//si no es sentencia unica agrego las variables
+				for(EParametro var: varlocales){
+					//intento agregar la variable local a las variables locales del miembro actual
+					if (!Utl.ts.getMiembroAct().pushVarLocal(var)){
+						//si hay conflictos de nombre lanzo error
+						throw new SemanticException(var.getToken().getNroLinea(),var.getToken().getNroColumna(),
+								"Variable duplicada.\nLa variable '"+var.getNombre()+"' ya está en uso.");
+					}
+					else{
+						//si no hay errores la agrego a las variables locales del bloque actual				
+						Utl.ts.getBloqueAct().addVarLocal(var);
+					}
 				}
 			}
-		}
-		//si es sentencia unica, me basta con chequear el valor 
+			//si es sentencia unica, me basta con chequear el valor 
 		}
 		else{
 			throw new SemanticException(tipo.getToken().getNroLinea(),tipo.getToken().getNroColumna(),
