@@ -4,6 +4,7 @@ public class EAtributo extends EParametro{
 	private EClase clase;
 	private NodoExpresion valor;
 	private boolean checked;
+	private int offset;
 
 	public EAtributo(EClase clase,Token tn,Tipo tipo,Visibilidad v,NodoExpresion valor){		
 		super(tn,tipo);
@@ -11,6 +12,7 @@ public class EAtributo extends EParametro{
 		this.visibilidad=v;
 		this.valor=valor;
 		this.checked=false;
+		this.setOffset(-1);
 	}
 	
 	public EClase getClase(){
@@ -67,6 +69,14 @@ public class EAtributo extends EParametro{
 		s+=this.tipo.toString()+" ";
 		s+=this.getNombre();
 		return s;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}	
 
 }

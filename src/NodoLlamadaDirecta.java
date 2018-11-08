@@ -4,10 +4,12 @@ import java.util.Iterator;
 public class NodoLlamadaDirecta extends NodoPrimario{
 	
 	private Token id;
+	private EMetodo met;
 	private ArrayList<NodoExpresion> argsactuales;
 	
 	public NodoLlamadaDirecta(Token id) {
 		this.id = id;
+		this.met = null;
 		this.argsactuales = new ArrayList<NodoExpresion>();
 	}
 	
@@ -51,7 +53,8 @@ public class NodoLlamadaDirecta extends NodoPrimario{
 	@Override
 	public Tipo check() throws SemanticException{
 		//controlo que el metodo sea visible de la clase actual
-		EMetodo met=Utl.ts.getClaseAct().getMetodo(id.getLexema());
+		int cantargs = this.argsactuales.size();
+		EMetodo met=Utl.ts.getClaseAct().getMetodoAridad(id.getLexema(),cantargs);
 		if(met!=null){
 			boolean staticmet=met.esEstatico();			
 			if(!valorAtributo){
@@ -60,6 +63,8 @@ public class NodoLlamadaDirecta extends NodoPrimario{
 				if( (staticmet) || (!staticmiembro) ){
 					//si el miembro no es estatico O si el metodo es estatico
 					Tipo retorno=checkArgumentos(met);
+					//guardo metodo
+					this.met=met;
 					if(this.encadenado!=null){
 						return this.encadenado.check(retorno,id);
 					}

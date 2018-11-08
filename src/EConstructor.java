@@ -45,6 +45,12 @@ public class EConstructor extends EMiembro {
 		TipoClase tc=new TipoClase(this.clase.getToken(),this.clase);
 		return tc;
 	}
+	
+	public String nuevaEtiqueta(){
+		String s=this.clase.getNombre();
+		s+="const"+this.getAridad();
+		return s; 
+	}
 
 
 	@Override

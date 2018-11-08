@@ -106,6 +106,7 @@ public class EntradaSalida {
 		}
     	
     }
+    
         
     public char nextChar(){
     	int caracter=-1;

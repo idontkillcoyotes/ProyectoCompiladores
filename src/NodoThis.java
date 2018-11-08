@@ -24,10 +24,18 @@ public class NodoThis extends NodoAcceso{
 		if(!valorAtributo){
 			if(!Utl.ts.getMiembroAct().esEstatico()){
 				Tipo t=new TipoClase(thisclase.getToken(),thisclase);
-				if(this.encadenado!=null)
+				if(this.encadenado!=null){
+					this.encadenado.setEnThis(true);
 					return this.encadenado.check(t, tk);
-				else
-					return t;
+				}
+				else{
+					//si no tiene encadenado y esta del lado izquierdo hay error
+					if(ladoizq)
+						throw new SemanticException(tk.getNroLinea(),tk.getNroColumna(),
+							"Asignación invalida.\nNo es posible asignarle un valor a la variable this."); 
+					else
+						return t;
+				}
 			}
 			else{
 				throw new SemanticException(tk.getNroLinea(),tk.getNroColumna(),

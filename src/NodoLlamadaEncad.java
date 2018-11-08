@@ -4,11 +4,14 @@ import java.util.Iterator;
 public class NodoLlamadaEncad extends Encadenado{
 	
 	private Token id;
+	private EMetodo met;
 	private ArrayList<NodoExpresion> argsactuales;
 	
 	public NodoLlamadaEncad(Token id) {
 		this.id = id;
+		this.met = null;
 		this.argsactuales = new ArrayList<NodoExpresion>();
+		this.enthis=false;
 	}
 	
 	public Token getId() {
@@ -48,10 +51,13 @@ public class NodoLlamadaEncad extends Encadenado{
 		if(t.esTipo(Utl.TT_IDCLASE)){
 			//casteo a tipoclase
 			TipoClase tc=(TipoClase)t;
-			EMetodo met=tc.getClase().getMetodo(id.getLexema());			
+			int cantargs = this.argsactuales.size();
+			EMetodo met=tc.getClase().getMetodoAridad(id.getLexema(),cantargs);			
 			if(met!=null){			
 					//chequeo arguementos
-					Tipo retorno=checkArgumentos(met);					
+					Tipo retorno=checkArgumentos(met);
+					//guardo metodo
+					this.met=met;
 					if(this.encadenado!=null){
 						return this.encadenado.check(retorno,this.id);
 					}

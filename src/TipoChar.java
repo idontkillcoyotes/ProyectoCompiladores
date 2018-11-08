@@ -32,10 +32,10 @@ public class TipoChar extends TipoGenerico{
 	
 	@Override
 	public boolean esCompatible(Tipo t) {
-		if(t.esTipo(Utl.TPC_CHAR))
+		if((t.esTipo(Utl.TPC_NULL))&&(this.arreglo))
 			return true;
 		else
-			return false;
+			return mismoTipo(t);
 	}
 
 }

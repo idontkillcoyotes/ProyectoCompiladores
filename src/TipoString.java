@@ -27,10 +27,10 @@ public class TipoString extends TipoReferencia{
 
 	@Override
 	public boolean esCompatible(Tipo t) {
-		if(t.esTipo(Utl.TPC_STRING))
+		if((t.esTipo(Utl.TPC_NULL))&&(this.arreglo))
 			return true;
 		else
-			return false;
+			return mismoTipo(t);
 	}
 	
 	@Override

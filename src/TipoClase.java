@@ -44,17 +44,22 @@ public class TipoClase extends TipoReferencia{
 		}
 	}
 
-	public boolean esCompatible(Tipo t) {		
-		if(t.esTipo(Utl.TT_IDCLASE)){
-			TipoClase tc=(TipoClase)t;
-			//System.out.println("t izq: "+tc.getClase().getNombre());
-			//System.out.println("this der: "+this.clase.getNombre());
-			if(this.clase.esSubtipo(tc.getClase())){
-				return true;
+	public boolean esCompatible(Tipo t) {
+		if(this.arreglo==t.isArreglo()){
+			if(t.esTipo(Utl.TT_IDCLASE)){
+				TipoClase tc=(TipoClase)t;
+				//System.out.println("t izq: "+tc.getClase().getNombre());
+				//System.out.println("this der: "+this.clase.getNombre());
+				if(this.clase.esSubtipo(tc.getClase())){
+					return true;
+				}
+				else{
+					return false;
+				}				
 			}
 			else{
 				return false;
-			}				
+			}
 		}
 		else{
 			return false;

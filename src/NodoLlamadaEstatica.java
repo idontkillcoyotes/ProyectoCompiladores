@@ -6,6 +6,7 @@ public class NodoLlamadaEstatica extends NodoPrimario{
 	private Token idmet;
 	private Token idclase;
 	private EClase clase;
+	private EMetodo met;
 	private ArrayList<NodoExpresion> argsactuales;
 	
 	
@@ -14,7 +15,12 @@ public class NodoLlamadaEstatica extends NodoPrimario{
 		this.idclase = idclase;
 		this.idmet = idmet;
 		this.clase = null;
+		this.met = null;
 		this.argsactuales = new ArrayList<NodoExpresion>();
+	}
+
+	public EMetodo getMet() {
+		return met;
 	}
 
 
@@ -72,6 +78,8 @@ public class NodoLlamadaEstatica extends NodoPrimario{
 					}
 					Tipo retorno=met.getTipoRetorno();
 					//aca ya chequee que es una llamada correcta
+					//guardo el metodo
+					this.met=met;
 					if(this.encadenado!=null){
 						return this.encadenado.check(retorno,idmet);
 					}

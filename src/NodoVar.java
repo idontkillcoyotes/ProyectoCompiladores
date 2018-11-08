@@ -2,9 +2,11 @@
 public class NodoVar extends NodoAcceso{
 	
 	private Token id;
+	private EParametro var;
 	
 	public NodoVar(Token id) {
 		this.id = id;
+		this.var=null;
 	}
 	
 	public Token getToken() {
@@ -37,6 +39,8 @@ public class NodoVar extends NodoAcceso{
 				}
 			}
 			Tipo tvar=var.getTipo();
+			//guardo la variable
+			this.var=var;
 			if(this.encadenado!=null){
 				return this.encadenado.check(tvar,id);
 			}

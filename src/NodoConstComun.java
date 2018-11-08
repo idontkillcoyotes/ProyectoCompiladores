@@ -28,6 +28,8 @@ public class NodoConstComun extends NodoConst {
 
 	@Override
 	public Tipo check() throws SemanticException {
+		//TODO simplificar este codigo, dos constructores no pueden tener la misma aridad
+		
 		//deberia chequear que existe la clase, y que su constructor 
 		//es llamado correctamente
 		this.clase=Utl.ts.getClase(this.tokenNombre.getLexema());

@@ -3,7 +3,7 @@ public class Minijavac {
 	
 	public static void main(String[] args) {	
 		if (args.length==1){
-			EntradaSalida io= new EntradaSalida(args[0]);
+			EntradaSalida io= new EntradaSalida(args[0],"out.ceivm");
 			AnalizadorLexico alex=new AnalizadorLexico(io);
 			AnalizadorSintactico asin=new AnalizadorSintactico(alex);
 			try {	

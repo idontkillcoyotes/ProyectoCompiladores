@@ -255,7 +255,7 @@ public class EClase extends EntradaTS{
 					//recorro las listas de miembros del padre en orden inverso para poder agregarlos
 					//en el orden correcto a esta clase (al principio)
 					//para mantener un offset que representaria el orden de las vtables
-					//TODO System.out.println("\n\naparentemente esta clase: "+this.getNombre()+" tiene padre: "+cpadre.getNombre());
+					
 					Iterator<EAtributo> atributospadre=cpadre.getAtributos().descendingIterator();
 					while(atributospadre.hasNext()){
 						this.addAtributoHeredado(atributospadre.next());
@@ -288,10 +288,26 @@ public class EClase extends EntradaTS{
 			this.consolidado=true;
 		}
 	}
+	private void calcularOffsets(){
+		int i=1;
+		for(EMetodo m: metodos){
+			if(!m.esEstatico()){
+				m.setOffset(i);
+				i++;
+			}			
+		}
+		i=1;
+		for(EAtributo a: atributos){
+			a.setOffset(i);
+			i++;
+		}
+	}
+	
 	@Override
 	public void check() throws SemanticException {
 		//Seteo clase actual
 		Utl.ts.setClaseAct(this);
+		calcularOffsets(); //TODO ver si es correcto calcular los offset en este punto
 		for(EAtributo a:atributos){
 			a.check();
 		}		
@@ -337,6 +353,15 @@ public class EClase extends EntradaTS{
 			return null;			
 		}
 	}
+	public EAtributo getAtributoPublico(String n) {
+		for(EAtributo a:atributos){
+			if((a.getNombre().equals(n))&&(a.esPublico())){
+				return a;
+			}					
+		}		
+		return null;	
+	}	
+	
 	public EAtributo getAtributo(String n) {
 		for(EAtributo a:atributos){
 			if(a.getNombre().equals(n)){
@@ -354,6 +379,15 @@ public class EClase extends EntradaTS{
 		}		
 		return null;
 	}
+	public EMetodo getMetodoAridad(String n, int a) {
+		for(EMetodo m:metodos){
+			if( (m.getNombre().equals(n)) && (m.getAridad()==a)){
+				return m;
+			}					
+		}		
+		return null;
+	}	
+	
 	public EMetodo getMetodoEstatico(String n) {
 		EMetodo m=getMetodo(n);
 		if ((m!=null)&&(m.esEstatico())){
@@ -379,6 +413,8 @@ public class EClase extends EntradaTS{
 		}
 		return con;
 	}
+
+	
 	public String imprimirBloques() {
 		String s="\n";
 		s+="______________________________________\n";
@@ -389,7 +425,8 @@ public class EClase extends EntradaTS{
 		s+="Metodos:\n"+this.metodos.toString()+"\n";		
 		s+="______________________________________\n";
 		return s;
-	}	
+	}
+
 
 }
 

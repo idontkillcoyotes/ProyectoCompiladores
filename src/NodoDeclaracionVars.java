@@ -41,7 +41,8 @@ public class NodoDeclaracionVars extends NodoSentencia{
 				Tipo exp=valor.check();
 				//si los tipos son incompatibles hay error
 				if(!exp.esCompatible(tipo))
-					throw new SemanticException(valor.getToken().getNroLinea(),valor.getToken().getNroColumna(),"Tipos incompatibles");
+					throw new SemanticException(valor.getToken().getNroLinea(),valor.getToken().getNroColumna(),
+							"Tipos incompatibles.\n"+exp.toString()+" es incompatible con "+tipo.toString());
 			}
 			if(!sentenciaunica){
 				//si no es sentencia unica agrego las variables

@@ -5,6 +5,7 @@ public class NodoArregloEncad extends Encadenado{
 	
 	public NodoArregloEncad() {
 		this.expresion = null;
+		this.enthis=false;
 	}
 	
 	@Override

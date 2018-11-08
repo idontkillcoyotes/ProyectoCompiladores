@@ -7,6 +7,7 @@ public class EMetodo extends EMiembro{
 	
 	private FormaMetodo forma;
 	private Tipo tipoRetorno;
+	private int offset;
 	
 	public EMetodo(EClase clase,Token tn,FormaMetodo f,Tipo tiporet,String texto){
 		this.clase=clase;
@@ -19,6 +20,7 @@ public class EMetodo extends EMiembro{
 		this.bloque=null;
 		this.consolidado=false;
 		this.esConstructor=false;
+		this.setOffset(-1);
 	}	
 
 	public FormaMetodo getForma() {
@@ -51,6 +53,13 @@ public class EMetodo extends EMiembro{
 			//Distinto nombre
 			return false;
 		}
+	}
+	
+	@Override
+	public String nuevaEtiqueta(){
+		String s=this.clase.getNombre();
+		s+=this.tokenNombre.getLexema()+this.getAridad();
+		return s; 
 	}
 	
 	@Override
@@ -144,6 +153,14 @@ public class EMetodo extends EMiembro{
 		s+="********************************\n";
 		s+="______________________________________\n";
 		return s;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
 

@@ -2,13 +2,16 @@
 public class NodoVarEncad extends Encadenado{
 	
 	private Token id;
-	
-	public Token getId() {
-		return id;
-	}
+	private EParametro var;
 
 	public NodoVarEncad(Token id) {
 		this.id = id;
+		this.var=null;
+		this.enthis=false;
+	}
+		
+	public Token getId() {
+		return id;
 	}
 	
 	@Override
@@ -29,7 +32,15 @@ public class NodoVarEncad extends Encadenado{
 			if (tc.estaDefinido()){
 				//si la clase esta definida
 				//chequeo que tenga un atributo publico con nombre id
-				EParametro var=tc.getClase().getAtributoVisible(id.getLexema());				
+				EParametro var;
+				if(!enthis){
+					//si no estoy en un this, pido atributo publico
+					var=tc.getClase().getAtributoPublico(id.getLexema());
+				}
+				else{
+					//si estoy en un this, pido atributo visible
+					var=tc.getClase().getAtributoVisible(id.getLexema());
+				}
 				if (var==null){
 					//si no tiene error
 					throw new SemanticException(id.getNroLinea(),id.getNroColumna(),
@@ -37,6 +48,8 @@ public class NodoVarEncad extends Encadenado{
 									+ "desde este bloque.");
 				}
 				//aca ya tengo el atributo publico, obtengo su tipo
+				//guardo la variable
+				this.var=var;
 				Tipo tvar=var.getTipo();
 				if(this.encadenado!=null){
 					//si hay encadenado retorno lo que retorne el encadenado

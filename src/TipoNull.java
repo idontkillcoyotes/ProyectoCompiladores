@@ -27,7 +27,8 @@ public class TipoNull extends TipoReferencia{
 
 	@Override
 	public boolean esCompatible(Tipo t) {
-		if(t.esTipo(Utl.TT_IDCLASE))
+		//null es compatible con los tipo clase, strings, o arreglos
+		if((t.esTipo(Utl.TT_IDCLASE))||(t.esTipo(Utl.TPC_STRING))||(t.isArreglo()))
 			return true;
 		else
 			return false;

@@ -3,7 +3,7 @@ public class NodoLitString extends NodoLiteral{
 	
 	public NodoLitString(Token t){
 		this.literal=t;
-		this.tktipo=new Token(Utl.TPC_STRING,"char",0,0);
+		this.tktipo=new Token(Utl.TPC_STRING,"String",0,0);
 	}
 
 	@Override

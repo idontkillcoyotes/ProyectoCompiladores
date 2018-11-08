@@ -127,4 +127,6 @@ public abstract class EMiembro extends EntradaTS{
 
 	public abstract boolean esEstatico();
 	
+	public abstract String nuevaEtiqueta();
+	
 }
