@@ -1,0 +1,165 @@
+Información de ensamblado, linkeo y carga (generado por el CeIASMAssemblerLinkerAndLoader)
+
+----------- Límite de carga de las secciones ----------------------------------------------
+
+.CODE:  de locación          0 a locación        118
+.DATA:  de locación        119 a locación        118
+.HEAP:  de locación        119 a locación        118
+.STACK: de locación       8192 a locación       8191
+
+----------- Resolución de etiquetas -------------------------------------------------------
+Dirección   Etiqueta
+
+        15  sys_read
+        24  sys_printiln
+        34  sys_printb
+        43  sys_printc
+        52  sys_printi
+        61  sys_prints
+        70  sys_printbln
+        80  sys_printcln
+        90  sys_printsln
+       100  simple_heap_init
+       102  simple_malloc
+
+------------------------------------------------------------------------------------------
+----------- Contenido de la memoria ensamblada, linkeada y cargada -----------------------
+------------------------------------------------------------------------------------------
+
+----------- Sección .CODE ----------------------------------------------------------------
+Dirección   Cont.Mem.   Código CeIASM                           Referencia
+
+         0           1  push                                    ; Archivo: test.txt línea: 2 columna: 2.
+         1           0  0                                       ; Archivo: test.txt línea: 2 columna: 7.
+         2           1  push                                    ; Archivo: test.txt línea: 3 columna: 2.
+         3           2  2                                       ; Archivo: test.txt línea: 3 columna: 7.
+         4         101  rmem                                    ; Archivo: test.txt línea: 4 columna: 2.
+         5           1  1                                       ; Archivo: test.txt línea: 4 columna: 7.
+         6           1  push                                    ; Archivo: test.txt línea: 5 columna: 2.
+         7          15  sys_read                                ; Archivo: test.txt línea: 5 columna: 7.
+         8         100  call                                    ; Archivo: test.txt línea: 6 columna: 2.
+         9           1  push                                    ; Archivo: test.txt línea: 7 columna: 2.
+        10         100  100                                     ; Archivo: test.txt línea: 7 columna: 7.
+        11           1  push                                    ; Archivo: test.txt línea: 8 columna: 2.
+        12          24  sys_printIln                            ; Archivo: test.txt línea: 8 columna: 7.
+        13         100  call                                    ; Archivo: test.txt línea: 9 columna: 2.
+        14         104  halt                                    ; Archivo: test.txt línea: 10 columna: 2.
+        15         124  sys_read: loadfp                        ; Archivo: test.txt línea: 16 columna: 2.
+        16         122  loadsp                                  ; Archivo: test.txt línea: 17 columna: 2.
+        17         125  storefp                                 ; Archivo: test.txt línea: 18 columna: 2.
+        18          60  read                                    ; Archivo: test.txt línea: 19 columna: 2.
+        19          81  store                                   ; Archivo: test.txt línea: 20 columna: 2.
+        20           3  3                                       ; Archivo: test.txt línea: 20 columna: 8.
+        21         125  storefp                                 ; Archivo: test.txt línea: 21 columna: 2.
+        22         103  ret                                     ; Archivo: test.txt línea: 22 columna: 2.
+        23           0  0                                       ; Archivo: test.txt línea: 22 columna: 6.
+        24         124  sys_printiln: loadfp                    ; Archivo: test.txt línea: 24 columna: 2.
+        25         122  loadsp                                  ; Archivo: test.txt línea: 25 columna: 2.
+        26         125  storefp                                 ; Archivo: test.txt línea: 26 columna: 2.
+        27          80  load                                    ; Archivo: test.txt línea: 27 columna: 2.
+        28           2  2                                       ; Archivo: test.txt línea: 27 columna: 7.
+        29          63  iprint                                  ; Archivo: test.txt línea: 28 columna: 2.
+        30          65  prnln                                   ; Archivo: test.txt línea: 29 columna: 2.
+        31         125  storefp                                 ; Archivo: test.txt línea: 30 columna: 2.
+        32         103  ret                                     ; Archivo: test.txt línea: 31 columna: 2.
+        33           1  1                                       ; Archivo: test.txt línea: 31 columna: 6.
+        34         124  sys_printB: loadfp                      ; Archivo: test.txt línea: 33 columna: 2.
+        35         122  loadsp                                  ; Archivo: test.txt línea: 34 columna: 2.
+        36         125  storefp                                 ; Archivo: test.txt línea: 35 columna: 2.
+        37          80  load                                    ; Archivo: test.txt línea: 36 columna: 2.
+        38           3  3                                       ; Archivo: test.txt línea: 36 columna: 7.
+        39          61  bprint                                  ; Archivo: test.txt línea: 37 columna: 2.
+        40         125  storefp                                 ; Archivo: test.txt línea: 38 columna: 2.
+        41         103  ret                                     ; Archivo: test.txt línea: 39 columna: 2.
+        42           1  1                                       ; Archivo: test.txt línea: 39 columna: 6.
+        43         124  sys_printC: loadfp                      ; Archivo: test.txt línea: 41 columna: 2.
+        44         122  loadsp                                  ; Archivo: test.txt línea: 42 columna: 2.
+        45         125  storefp                                 ; Archivo: test.txt línea: 43 columna: 2.
+        46          80  load                                    ; Archivo: test.txt línea: 44 columna: 2.
+        47           3  3                                       ; Archivo: test.txt línea: 44 columna: 7.
+        48          62  cprint                                  ; Archivo: test.txt línea: 45 columna: 2.
+        49         125  storefp                                 ; Archivo: test.txt línea: 46 columna: 2.
+        50         103  ret                                     ; Archivo: test.txt línea: 47 columna: 2.
+        51           1  1                                       ; Archivo: test.txt línea: 47 columna: 6.
+        52         124  sys_printI: loadfp                      ; Archivo: test.txt línea: 49 columna: 2.
+        53         122  loadsp                                  ; Archivo: test.txt línea: 50 columna: 2.
+        54         125  storefp                                 ; Archivo: test.txt línea: 51 columna: 2.
+        55          80  load                                    ; Archivo: test.txt línea: 52 columna: 2.
+        56           3  3                                       ; Archivo: test.txt línea: 52 columna: 7.
+        57          63  iprint                                  ; Archivo: test.txt línea: 53 columna: 2.
+        58         125  storefp                                 ; Archivo: test.txt línea: 54 columna: 2.
+        59         103  ret                                     ; Archivo: test.txt línea: 55 columna: 2.
+        60           1  1                                       ; Archivo: test.txt línea: 55 columna: 6.
+        61         124  sys_printS: loadfp                      ; Archivo: test.txt línea: 57 columna: 2.
+        62         122  loadsp                                  ; Archivo: test.txt línea: 58 columna: 2.
+        63         125  storefp                                 ; Archivo: test.txt línea: 59 columna: 2.
+        64          80  load                                    ; Archivo: test.txt línea: 60 columna: 2.
+        65           3  3                                       ; Archivo: test.txt línea: 60 columna: 7.
+        66          64  sprint                                  ; Archivo: test.txt línea: 61 columna: 2.
+        67         125  storefp                                 ; Archivo: test.txt línea: 62 columna: 2.
+        68         103  ret                                     ; Archivo: test.txt línea: 63 columna: 2.
+        69           1  1                                       ; Archivo: test.txt línea: 63 columna: 6.
+        70         124  sys_printBln: loadfp                    ; Archivo: test.txt línea: 65 columna: 2.
+        71         122  loadsp                                  ; Archivo: test.txt línea: 66 columna: 2.
+        72         125  storefp                                 ; Archivo: test.txt línea: 67 columna: 2.
+        73          80  load                                    ; Archivo: test.txt línea: 68 columna: 2.
+        74           3  3                                       ; Archivo: test.txt línea: 68 columna: 7.
+        75          61  bprint                                  ; Archivo: test.txt línea: 69 columna: 2.
+        76          65  prnln                                   ; Archivo: test.txt línea: 70 columna: 2.
+        77         125  storefp                                 ; Archivo: test.txt línea: 71 columna: 2.
+        78         103  ret                                     ; Archivo: test.txt línea: 72 columna: 2.
+        79           1  1                                       ; Archivo: test.txt línea: 72 columna: 6.
+        80         124  sys_printCln: loadfp                    ; Archivo: test.txt línea: 74 columna: 2.
+        81         122  loadsp                                  ; Archivo: test.txt línea: 75 columna: 2.
+        82         125  storefp                                 ; Archivo: test.txt línea: 76 columna: 2.
+        83          80  load                                    ; Archivo: test.txt línea: 77 columna: 2.
+        84           3  3                                       ; Archivo: test.txt línea: 77 columna: 7.
+        85          62  cprint                                  ; Archivo: test.txt línea: 78 columna: 2.
+        86          65  prnln                                   ; Archivo: test.txt línea: 79 columna: 2.
+        87         125  storefp                                 ; Archivo: test.txt línea: 80 columna: 2.
+        88         103  ret                                     ; Archivo: test.txt línea: 81 columna: 2.
+        89           1  1                                       ; Archivo: test.txt línea: 81 columna: 6.
+        90         124  sys_printSln: loadfp                    ; Archivo: test.txt línea: 83 columna: 2.
+        91         122  loadsp                                  ; Archivo: test.txt línea: 84 columna: 2.
+        92         125  storefp                                 ; Archivo: test.txt línea: 85 columna: 2.
+        93          80  load                                    ; Archivo: test.txt línea: 86 columna: 2.
+        94           3  3                                       ; Archivo: test.txt línea: 86 columna: 7.
+        95          64  sprint                                  ; Archivo: test.txt línea: 87 columna: 2.
+        96          65  prnln                                   ; Archivo: test.txt línea: 88 columna: 2.
+        97         125  storefp                                 ; Archivo: test.txt línea: 89 columna: 2.
+        98         103  ret                                     ; Archivo: test.txt línea: 90 columna: 2.
+        99           1  1                                       ; Archivo: test.txt línea: 90 columna: 6.
+       100         103  simple_heap_init: RET                   ; Archivo: test.txt línea: 93 columna: 2.
+       101           0  0                                       ; Archivo: test.txt línea: 93 columna: 6.
+       102         124  simple_malloc: LOADFP                   ; Archivo: test.txt línea: 96 columna: 2.
+       103         122  LOADSP                                  ; Archivo: test.txt línea: 97 columna: 2.
+       104         125  STOREFP                                 ; Archivo: test.txt línea: 98 columna: 2.
+       105         128  LOADHL                                  ; Archivo: test.txt línea: 99 columna: 2.
+       106          30  DUP                                     ; Archivo: test.txt línea: 100 columna: 2.
+       107           1  PUSH                                    ; Archivo: test.txt línea: 101 columna: 2.
+       108           1  1                                       ; Archivo: test.txt línea: 101 columna: 7.
+       109           2  ADD                                     ; Archivo: test.txt línea: 102 columna: 2.
+       110          81  STORE                                   ; Archivo: test.txt línea: 103 columna: 2.
+       111           4  4                                       ; Archivo: test.txt línea: 103 columna: 8.
+       112          80  LOAD                                    ; Archivo: test.txt línea: 104 columna: 3.
+       113           3  3                                       ; Archivo: test.txt línea: 104 columna: 8.
+       114           2  ADD                                     ; Archivo: test.txt línea: 105 columna: 2.
+       115         129  STOREHL                                 ; Archivo: test.txt línea: 106 columna: 2.
+       116         125  STOREFP                                 ; Archivo: test.txt línea: 107 columna: 2.
+       117         103  RET                                     ; Archivo: test.txt línea: 108 columna: 2.
+       118           1  1                                       ; Archivo: test.txt línea: 108 columna: 6.
+
+----------- Sección .DATA ----------------------------------------------------------------
+Dirección   Cont.Mem.   Código CeIASM                           Referencia
+
+
+----------- Sección .HEAP ----------------------------------------------------------------
+Dirección   Cont.Mem.   Código CeIASM                           Referencia
+
+
+----------- Sección .STACK (decreciente) --------------------------------------------------
+Dirección   Cont.Mem.   Código CeIASM                           Referencia
+
+
+El volcado de la información de ensamblado, linkeo y carga se completó exitosamente...
+
