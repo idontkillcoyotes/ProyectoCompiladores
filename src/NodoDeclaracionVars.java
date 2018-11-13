@@ -59,6 +59,16 @@ public class NodoDeclaracionVars extends NodoSentencia{
 					}
 				}
 			}
+			//seteo al contador con la cantidad de vars locales del miembro 
+			int i=Utl.ts.getMiembroAct().getCantVarLoc()+1;
+			for (EParametro e: varlocales){
+				//empiezo a setear offset con (1 - (la cantidad de vars locales del miembro + 1) )
+				e.setOffset(1-i);
+				i++;
+			}
+			//sumo la cantidad de variables locales de este nodo al miembro 
+			Utl.ts.getMiembroAct().addVarLoc(this.varlocales.size());
+			
 			//si es sentencia unica, me basta con chequear el valor 
 		}
 		else{
@@ -71,7 +81,7 @@ public class NodoDeclaracionVars extends NodoSentencia{
 	public String toString(){
 		String s="";
 		for(EParametro var: this.varlocales){
-			s+=var.getTipo().getTipo()+" "+var.getNombre();
+			s+=var.getTipo().getTipo()+" "+var.getOffset()+" "+var.getNombre();
 			s+=",";
 		}
 		if(this.valor!=null){
@@ -83,6 +93,22 @@ public class NodoDeclaracionVars extends NodoSentencia{
 	@Override
 	public boolean tieneRetorno() {
 		return false;
+	}
+	@Override
+	public void generar() {
+		//si hay un valor debo inicializar las variables
+		if (this.valor!=null){
+			//genero valor
+			this.valor.generar();
+			//para cada variable debo asignar el valor que quedo en el tope de la pila
+			for(int i=1;i<this.varlocales.size();i++){
+				//genero n-1 dups con n=cant de vars
+				Utl.gen("dup\t\t\t;duplico valor para no perderlo (nododecvars)");
+			}
+			for(EParametro e:this.varlocales){
+				Utl.gen("store "+(e.getOffset())+"\t\t\t;guardo valor en var local (nododecvars)");		
+			}
+		}
 	}
 	
 

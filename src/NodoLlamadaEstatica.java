@@ -118,4 +118,19 @@ public class NodoLlamadaEstatica extends NodoPrimario{
 		return s;
 	}
 
+	@Override
+	public void generar() {
+		if (this.met.tieneRetorno()){
+			Utl.gen("rmem 1\t\t\t;guardo espacio para retorno (nodollamest)");
+		}
+		Utl.gen("push 999999\t\t\t;apilo el this ficticio (nodollamest)");
+		for(NodoExpresion arg:this.argsactuales){
+			arg.generar(); //genero cod de argumentos
+			Utl.gen("swap\t\t\t;swapeo this con argumento (nodollamest)");
+		}		
+		Utl.gen("push "+this.met.getLabel()+"\t\t\t;apilo direccion (nodollamest)");
+		Utl.gen("call\t\t\t;hago llamada (nodollamest)");
+		if (encadenado!=null) encadenado.generar();
+	}
+
 }

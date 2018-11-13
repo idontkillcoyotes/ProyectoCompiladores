@@ -41,6 +41,12 @@ public class ManejadorTS {
 		tt=new Token(Utl.TPC_INT,"int",0);
 		this.crearMetodo(tn,FormaMetodo.fStatic,new TipoInt(tt));
 		this.agregarMetodo();
+		
+		//static int readI()
+		tn=new Token(Utl.TT_IDMETVAR,"readI",0);
+		tt=new Token(Utl.TPC_INT,"int",0);
+		this.crearMetodo(tn,FormaMetodo.fStatic,new TipoInt(tt));
+		this.agregarMetodo();
 
 		//static void printB(boolean b)
 		tn=new Token(Utl.TT_IDMETVAR,"printB",0);
@@ -207,7 +213,7 @@ public class ManejadorTS {
 	public EClase claseAct(){
 		return this.claseActual;
 	}	
-	public EMiembro ambienteAct(){
+	public EMiembro miembroAct(){
 		return this.ambienteActual;
 	}
 	

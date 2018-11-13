@@ -27,6 +27,20 @@ public class NodoSentenciaSimple extends NodoSentencia{
 	
 	@Override
 	public String toString(){
-		return this.expresion.toString()+"\n"; 
+		return this.expresion.toString()+"\n";
+	}
+
+	@Override
+	public void generar() {
+		//TODO ver si puedo mejorar esto y no usar el check de la expresion
+		this.expresion.generar();		
+		Tipo t;
+		try {
+			t=expresion.check();						
+			if (!t.esTipo(Utl.TPC_VOID)) 
+				Utl.gen("pop\t\t\t;hago pop del resultado (nodosentsimple)");
+			
+		} catch (SemanticException e) {}
+		
 	}
 }

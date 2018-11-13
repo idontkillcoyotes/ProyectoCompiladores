@@ -10,7 +10,43 @@ public abstract class EMiembro extends EntradaTS{
 	protected NodoBloque bloque;
 	protected String texto;
 	protected boolean esConstructor;
+	protected int contifs;
+	protected int contwhiles;
+	protected int contvarlocales;
+	protected boolean generado;
 	
+	
+	
+	public int getCantVarLoc() {
+		return contvarlocales;
+	}
+
+	public void addVarLoc(int n) {
+		this.contvarlocales += n;
+	}
+
+	public int getCantIfs() {
+		return contifs;
+	}
+
+	public boolean isGenerado() {
+		return generado;
+	}
+
+	public void addIf() {
+		this.contifs++;
+	}
+
+	public int getCantWhiles() {
+		return contwhiles;
+	}
+
+	public void addWhile() {
+		this.contwhiles++;
+	}
+	
+	public abstract void generar();
+
 	@Override
 	public String getNombre() {
 		return tokenNombre.getLexema();
@@ -101,8 +137,17 @@ public abstract class EMiembro extends EntradaTS{
 		if(!consolidado){
 			for(EParametro p: parametros){
 				p.consolidar();
-			}
+			}			
 			this.consolidado=true;
+		}
+	}
+	
+	public void calcularOffsets(){
+		int i=0;
+		int n=this.parametros.size();
+		for(EParametro e: parametros){
+			e.setOffset(3+n-i);
+			i++;
 		}
 	}
 	
@@ -124,9 +169,13 @@ public abstract class EMiembro extends EntradaTS{
 		}		
 		return null;
 	}
+	
+	public int getCantParams(){
+		return this.parametros.size();
+	}
 
 	public abstract boolean esEstatico();
 	
-	public abstract String nuevaEtiqueta();
+	public abstract String getLabel();
 	
 }

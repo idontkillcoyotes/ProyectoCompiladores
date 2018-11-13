@@ -14,6 +14,10 @@ public class NodoVarEncad extends Encadenado{
 		return id;
 	}
 	
+	public EParametro getVar() {
+		return var;
+	}
+	
 	@Override
 	public Token getToken(Token t) {
 		if(this.encadenado!=null)
@@ -27,7 +31,6 @@ public class NodoVarEncad extends Encadenado{
 		//TODO ver que pasa cuando el metodo es estático
 		if (t.esTipo(Utl.TT_IDCLASE)){
 			//si es tipo clase casteo
-			//TODO dejar de usar el casteo?
 			TipoClase tc=(TipoClase)t;
 			if (tc.estaDefinido()){
 				//si la clase esta definida
@@ -81,4 +84,17 @@ public class NodoVarEncad extends Encadenado{
 		return s;
 	}
 
+	@Override
+	public void generar() {
+		if((this.ladoIzquierdo)&&(this.encadenado==null)){
+			Utl.gen("swap\t\t\t;(nodovarencad)");
+			Utl.gen("storeref "+var.getOffset()+"\t\t\t;guardo en cir con offset (nodovarencad)");
+		}
+		else{
+			Utl.gen("loadref "+var.getOffset()+"\t\t\t;cargo desde el cir con offset (nodovarencad)");
+		}
+		if(this.encadenado!=null) this.encadenado.generar();
+	}
+
 }
+ 

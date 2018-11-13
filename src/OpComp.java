@@ -34,4 +34,17 @@ public class OpComp extends Operador{
 		//no es usado
 		return null;
 	}
+	
+	@Override
+	public void generarBin() {
+		if (this.op.esTipo(Utl.TT_OPDOBLEIGUAL))
+			Utl.gen("eq\t\t\t;operador igual");
+		else
+			Utl.gen("ne\t\t\t;operador desigual");
+	}
+
+	@Override
+	public void generarUn() {
+		//no es usado
+	}
 }

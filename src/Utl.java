@@ -54,6 +54,8 @@ public final class Utl {
 	public static final int TPC_FALSE=119;	
 	
 	public static TablaSimbolos ts;
+	
+	private static EntradaSalida es;
 
 	private static final String[] PALABRASCLAVE = {"class","extends","static","dynamic","String","boolean","char","int",
 			"public","private","void","null","if","else","while","return","this","new","true","false"};	
@@ -89,6 +91,17 @@ public final class Utl {
 		}				
 		//si no es palabra clave id=0=IDMETVAR
 		return id;
+	}
+	public static void setES(EntradaSalida io){
+		es=io;
+	}
+	
+	public static void gen(String cad){
+		es.imprimirLinea(cad);
+	}
+	
+	public static EntradaSalida getES(){
+		return es;
 	}
 		
 }

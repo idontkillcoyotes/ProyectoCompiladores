@@ -10,5 +10,10 @@ public class NodoLitNull extends NodoLiteral{
 	public Tipo check() {
 		return new TipoNull(tktipo);
 	}
+	
+	@Override
+	public void generar() {
+		Utl.gen("push 0\t\t\t;pusheo null");		
+	}
 
 }

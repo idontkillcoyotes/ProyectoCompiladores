@@ -61,4 +61,10 @@ public class NodoThis extends NodoAcceso{
 		return tk;
 	}
 
+	@Override
+	public void generar() {
+		Utl.gen("load 3\t\t\t;cargo this (nodothis)");
+		if (this.encadenado!=null) this.encadenado.generar();		
+	}
+
 }

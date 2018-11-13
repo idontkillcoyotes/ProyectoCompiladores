@@ -58,4 +58,14 @@ public class NodoAsignacion extends NodoSentencia{
 		return false;
 	}
 
+	@Override
+	public void generar() {
+		//primero genero lado derecho
+		this.ladoder.generar();
+		//luego genero lado izq
+		this.ladoizq.generar();
+		//TODO no debo generar nada mas?
+		
+	}
+
 }

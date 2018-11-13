@@ -18,6 +18,10 @@ public class NodoLlamadaEncad extends Encadenado{
 		return id;
 	}
 
+	public EMetodo getMetodo() {
+		return met;
+	}
+
 	public ArrayList<NodoExpresion> getArgsactuales() {
 		return argsactuales;
 	}
@@ -105,6 +109,20 @@ public class NodoLlamadaEncad extends Encadenado{
 			return this.encadenado.getToken(id);		
 		else
 			return id;	
+	}
+
+	@Override
+	public void generar() {
+		if(met.tieneRetorno()) Utl.gen("rmem 1\t\t\t;reservo espacio para retorno (nodollamencad)");		
+		for (NodoExpresion par: this.argsactuales){
+			par.generar();
+			Utl.gen("swap\t\t\t;(nodollamencad)");			
+		}
+		Utl.gen("dup\t\t\t;duplico this (nodollamencad)");
+		Utl.gen("loadref 0\t\t\t;cargo vt (nodollamencad)");
+		Utl.gen("loadref "+met.getOffset()+"\t\t\t;cargo dir de metodo con el offset (nodollamencad)");
+		Utl.gen("call\t\t\t;llamo (nodollamencad)");
+		if(this.encadenado!=null) this.encadenado.generar();
 	}
 
 }

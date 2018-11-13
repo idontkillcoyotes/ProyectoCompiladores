@@ -23,5 +23,8 @@ public class NodoPuntoComa extends NodoSentencia {
 	public String toString(){
 		return "";
 	}
+	@Override
+	public void generar() {	
+	}
 
 }

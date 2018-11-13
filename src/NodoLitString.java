@@ -15,5 +15,14 @@ public class NodoLitString extends NodoLiteral{
 	public String toString(){
 		return ("\""+this.literal.getLexema()+"\"");
 	}
+	@Override
+	public void generar() {
+		String etq="str_"+literal.getNroLinea()+literal.getNroColumna();
+		Utl.gen(".data");
+		Utl.gen(etq+": dw \""+literal.getLexema()+"\", 0 ;defino literal string");
+		Utl.gen(".code");
+		Utl.gen("push "+etq+"\t\t\t;pusheo dir literal string");		
+	}
 
 }
+

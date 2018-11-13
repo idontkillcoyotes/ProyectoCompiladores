@@ -44,4 +44,6 @@ public abstract class Encadenado {
 		if (this.encadenado!=null) this.encadenado.setValorAtributo(b);
 	}
 
+	public abstract void generar();
+
 }

@@ -14,4 +14,8 @@ public abstract class Operador {
 	public abstract Tipo checkBin(Tipo t1, Tipo t2) throws SemanticException;
 	
 	public abstract Tipo checkUn(Tipo t) throws SemanticException;
+	
+	public abstract void generarBin() ;
+	
+	public abstract void generarUn() ;
 }

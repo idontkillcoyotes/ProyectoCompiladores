@@ -38,7 +38,6 @@ public class AnalizadorLexico {
 		while (!entradaSalida.finArchivo()){
 			switch (estado){
 			case 0:{
-				//TODO caso 0
 				//Estado inicial y reconocedor de tokens de un solo caracter
 				if ((caracterActual==0)||(caracterActual==-1)){
 					//fin de archivo
@@ -203,7 +202,6 @@ public class AnalizadorLexico {
 				
 			}
 			case 1:{
-				//TODO caso idmetvar
 				//Estado que reconoce los token tipo idMETVAR o palabra clave
 				nextChar();
 				if ((caracterActual=='_')||(Character.isLetterOrDigit(caracterActual))){
@@ -217,7 +215,6 @@ public class AnalizadorLexico {
 				break;
 			}
 			case 2:{
-				//TODO caso idclase
 				//Estado que reconoce tokes de tipo idClase o palabra clave String
 				nextChar();
 				if ((caracterActual=='_')||(Character.isLetterOrDigit(caracterActual))){
@@ -237,7 +234,6 @@ public class AnalizadorLexico {
 				break;				
 			}
 			case 3:{
-				//TODO caso enteros
 				//Estado que reconoce tokens de tipo enteros
 				nextChar();
 				if (Character.isDigit(caracterActual)){
@@ -258,7 +254,6 @@ public class AnalizadorLexico {
 				break;
 			}
 			case 4:{
-				//TODO caso strings
 				//Estado que reconoce tokens de tipo String
 				nextChar();
 				if (caracterActual=='\\'){
@@ -312,7 +307,6 @@ public class AnalizadorLexico {
 				break;
 			}
 			case 5:{
-				//TODO caso chars
 				//Estado que reconoce tokens de tipo char
 				nextChar();
 				if (caracterActual=='\\'){
@@ -382,7 +376,6 @@ public class AnalizadorLexico {
 				}
 			}
 			case 6:{
-				//TODO caso division
 				//Estado que reconoce un token division o posibles comentarios
 				nextChar();
 				if (caracterActual=='/'){
@@ -448,7 +441,6 @@ public class AnalizadorLexico {
 				break;
 			}
 			case 7:{
-				//TODO caso =
 				//Estado que reconoce tokes de tipo igual o doble igual
 				nextChar();
 				if(caracterActual=='='){
@@ -462,7 +454,6 @@ public class AnalizadorLexico {
 				}
 			}
 			case 8:{
-				//TODO caso < 
 				//Estado que reconoce tokens de tipo menor o menor igual
 				nextChar();
 				if(caracterActual=='='){
@@ -477,7 +468,6 @@ public class AnalizadorLexico {
 				}
 			}
 			case 9:{
-				//TODO caso >
 				//Estado que reconoce tokens de tipo mayor o mayor igual
 				nextChar();
 				if(caracterActual=='='){
@@ -491,7 +481,6 @@ public class AnalizadorLexico {
 				}
 			}
 			case 10:{
-				//TODO caso &&
 				//Estado que reconoce el token doble AND
 				nextChar();
 				if(caracterActual=='&'){
@@ -506,7 +495,6 @@ public class AnalizadorLexico {
 				}				
 			}
 			case 11:{
-				//TODO caso ||
 				//Estado que reconoce el token doble OR
 				nextChar();
 				if(caracterActual=='|'){
@@ -521,7 +509,6 @@ public class AnalizadorLexico {
 				}
 			}
 			case 12:{
-				//TODO caso !
 				//Estado que reconoce tokens de tipo negacion o desigual
 				nextChar();
 				if(caracterActual=='='){

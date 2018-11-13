@@ -10,6 +10,7 @@ public class EClase extends EntradaTS{
 	private LinkedList<EMetodo> metodos;
 	private LinkedList<EConstructor> constructores;
 	private EMetodo main;
+	private int cantmetdin;
 	
 	public EClase(Token tn,Token padre){
 		this.tokenNombre=tn;
@@ -19,7 +20,8 @@ public class EClase extends EntradaTS{
 		this.metodos=new LinkedList<EMetodo>();
 		this.constructores=new LinkedList<EConstructor>();
 		this.main=null;
-		consolidado=false;		
+		this.consolidado=false;
+		this.cantmetdin=0;
 	}
 	public void setConsolidado(){
 		this.consolidado=true;
@@ -289,16 +291,22 @@ public class EClase extends EntradaTS{
 		}
 	}
 	private void calcularOffsets(){
-		int i=1;
-		for(EMetodo m: metodos){
-			if(!m.esEstatico()){
-				m.setOffset(i);
+		int i=0;
+		for(EMetodo e: metodos){
+			e.calcularOffsets();
+			if(!e.esEstatico()){
+				e.setOffset(i);
+				
 				i++;
 			}			
 		}
+		for(EConstructor e: constructores){
+			e.calcularOffsets();
+		}
+		this.cantmetdin=i;
 		i=1;
-		for(EAtributo a: atributos){
-			a.setOffset(i);
+		for(EAtributo e: atributos){
+			e.setOffset(i);
 			i++;
 		}
 	}
@@ -426,6 +434,63 @@ public class EClase extends EntradaTS{
 		s+="______________________________________\n";
 		return s;
 	}
+	
+	public int getTamañoCIR() {		
+		return (this.atributos.size()+1);
+	}
+	public String getLabelVT() {
+		String s="VT_";
+		s+=this.tokenNombre.getLexema();
+		return s;
+	}
+	
+	public void generar() {
+		if(this.tokenNombre.getLexema().equals("System")){
+			//genero codigo de clase system
+			Utl.gen("System_read_0:\nloadfp\nloadsp\nstorefp\nread\nstore 4\nstorefp\nret 1\n");
+			Utl.gen("System_readI_0:\nloadfp\nloadsp\nstorefp\nread\npush 48\nsub\nstore 4\nstorefp\nret 1\n");
+			Utl.gen("System_println_0:\nloadfp\nloadsp\nstorefp\nprnln\nstorefp\nret 1\n");
+			Utl.gen("System_printI_1:\nloadfp\nloadsp\nstorefp\nload 4\niprint\nstorefp\nret 2\n");
+			Utl.gen("System_printB_1:\nloadfp\nloadsp\nstorefp\nload 4\nbprint\nstorefp\nret 2\n");			
+			Utl.gen("System_printC_1:\nloadfp\nloadsp\nstorefp\nload 4\ncprint\nstorefp\nret 2\n");			
+			Utl.gen("System_printS_1:\nloadfp\nloadsp\nstorefp\nload 4\nsprint\nstorefp\nret 2\n");
+			Utl.gen("System_printIln_1:\nloadfp\nloadsp\nstorefp\nload 4\niprint\nprnln\nstorefp\nret 2\n");
+			Utl.gen("System_printBln_1:\nloadfp\nloadsp\nstorefp\nload 4\nbprint\nprnln\nstorefp\nret 2\n");
+			Utl.gen("System_printCln_1:\nloadfp\nloadsp\nstorefp\nload 4\ncprint\nprnln\nstorefp\nret 2\n");
+			Utl.gen("System_printSln_1:\nloadfp\nloadsp\nstorefp\nload 4\nsprint\nprnln\nstorefp\nret 2\n");			
+			Utl.gen("\n");
+		}
+		else{
+			if(!this.tokenNombre.getLexema().equals("Object")){
+				//genero codigo VT
+				Utl.gen("\n\n");
+				if(this.cantmetdin>0){
+					//si la clase tiene al menos un metodo dinamico:
+					Utl.gen(".data");
+					String s="";				
+					for(EMetodo e:metodos){
+						if(!e.esEstatico()){
+							//System.out.println("met: "+e.nuevaEtiqueta()+" offset: "+e.getOffset());
+							s+="DW "+e.getLabel()+"\n";
+						}
+					}
+					Utl.gen(this.getLabelVT()+": "+s);
+					Utl.gen("\n");
+				}
+				Utl.gen(".code");
+				Utl.gen("\n");
+				//genero codigo de metodos y constructores
+				for(EConstructor e:constructores){
+					e.generar();
+				}
+				for(EMetodo e:metodos){
+					e.generar();
+				}
+				Utl.gen("\n");
+			}
+		}
+	}
+
 
 
 }

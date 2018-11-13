@@ -9,7 +9,6 @@ public class OpMat extends Operador{
 
 	@Override
 	public Tipo checkBin(Tipo t1, Tipo t2) throws SemanticException {
-		//TODO deberia chequear el operador?
 		if((t1.esTipo(Utl.TPC_INT) && (t1.mismoTipoBase(t2)))){
 			return new TipoInt(tktipo);
 		}
@@ -21,7 +20,6 @@ public class OpMat extends Operador{
 
 	@Override
 	public Tipo checkUn(Tipo t) throws SemanticException {
-		//TODO deberia chequear el operador?
 		if(t.esTipo(Utl.TPC_INT)){
 			return new TipoInt(tktipo);
 		}
@@ -30,4 +28,35 @@ public class OpMat extends Operador{
 					+ "El operador "+op.getLexema()+" opera solo con un tipo entero.");
 		}
 	}
+	@Override
+	public void generarBin() {
+		switch (this.op.getTipo()){
+		case Utl.TT_OPSUMA:
+			Utl.gen("add\t\t\t;operador suma");
+			break;
+		case Utl.TT_OPRESTA:
+			Utl.gen("sub\t\t\t;operador resta");
+			break;
+		case Utl.TT_OPMULT:
+			Utl.gen("mul\t\t\t;operador multiplicacion");
+			break;
+		case Utl.TT_OPDIV:
+			Utl.gen("div\t\t\t;operador division");
+			break;
+		}
+	}
+
+	@Override
+	public void generarUn() {
+		switch (this.op.getTipo()){
+		case Utl.TT_OPNEGBOOL:
+			Utl.gen("not ;operador negacion");
+			break;
+		case Utl.TT_OPRESTA:
+			Utl.gen("neg ;operador negacion");
+			break;
+		}
+		//si es un operador de suma unario no hay que hacer nada
+	}
+	
 }

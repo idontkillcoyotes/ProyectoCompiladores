@@ -3,11 +3,13 @@ public class EParametro extends EntradaTS{
 	
 	protected Token tokenNombre;
 	protected Tipo tipo;
+	protected int offset;
 	
 	public EParametro(Token tn,Tipo tipo){
 		this.tokenNombre=tn;
 		this.tipo=tipo;
-		consolidado=false;
+		this.consolidado=false;
+		this.offset=-1;
 	}
 
 	public Tipo getTipo(){
@@ -37,10 +39,19 @@ public class EParametro extends EntradaTS{
 	
 	@Override
 	public String toString(){
-		String s="";
+		String s="";		
 		s+=this.tipo.toString()+" ";
+		s+=this.offset+" ";
 		s+=this.getNombre();
 		return s;
+	}	
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 	
 	@Override
@@ -55,9 +66,7 @@ public class EParametro extends EntradaTS{
 	}
 
 	@Override
-	public void check() throws SemanticException {
-		// TODO Auto-generated method stub
-		
+	public void check() throws SemanticException {		
 	}
 
 

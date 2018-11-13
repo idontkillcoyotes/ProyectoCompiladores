@@ -538,8 +538,11 @@ public class AnalizadorSintactico {
 		else if (tokenAct.esTipo(Utl.TPC_IF)){
 			//if ( expresion ) sentencia sentenciaElse 
 			
-			//Creo un nuevo nodo if
-			NodoIf n=new NodoIf(tokenAct);
+			//sumo 1 al contador de ifs en el miembro actual
+			mts.miembroAct().addIf();
+			
+			//Creo un nuevo nodo if con miembro actual y num de if
+			NodoIf n=new NodoIf(tokenAct,mts.miembroAct(),mts.miembroAct().getCantIfs());			
 			matchSimple();
 			match(Utl.TT_PUNPARENT_A);
 			//Asigno la condicion
@@ -554,8 +557,10 @@ public class AnalizadorSintactico {
 		}
 		else if (tokenAct.esTipo(Utl.TPC_WHILE)){
 			//while ( expresion ) sentencia 
-			//Creo nodo while
-			NodoWhile n=new NodoWhile(tokenAct);
+			//sumo 1 al contador de whiles
+			mts.miembroAct().addWhile();			
+			//Creo nodo while con miembro actual y num de while
+			NodoWhile n=new NodoWhile(tokenAct,mts.miembroAct(),mts.miembroAct().getCantWhiles());			
 			matchSimple();			
 			match(Utl.TT_PUNPARENT_A);
 			//Asigno condicion
@@ -620,7 +625,6 @@ public class AnalizadorSintactico {
 				Utl.TPC_STRING,Utl.TT_PUNLLAVE_A,Utl.TT_PUNPARENT_A,Utl.TT_IDMETVAR,Utl.TPC_THIS})){
 			//siguientes: else } ; if while return boolean char int idClase String { ( idMetVar this
 			//vacio
-			//TODO ver si conviene que retorno un nodo puntocoma en vez de null
 			return null;
 		}
 		else{
@@ -636,7 +640,6 @@ public class AnalizadorSintactico {
 		}
 		else if(tokenAct.esTipo(Utl.TT_PUNPUNTOCOMA)){
 			//vacio
-			//TODO ver si conviene que retorne una expresion vacia en vez de null
 			return null;
 		}
 		else{
@@ -651,7 +654,7 @@ public class AnalizadorSintactico {
 		NodoAsignacion n=new NodoAsignacion();
 		
 		if (tokenAct.esTipo(Utl.TT_IDMETVAR)){
-			NodoVar v=accesoVar(true);
+			NodoVar v=accesoVar();
 			n.setLadoizq(v);
 			v.setLadoizq(true);
 			Token t=tokenAct;
@@ -661,7 +664,7 @@ public class AnalizadorSintactico {
 			return n;
 		}
 		else if(tokenAct.esTipo(Utl.TPC_THIS)){
-			NodoThis t=accesoThis(true);
+			NodoThis t=accesoThis();
 			n.setLadoizq(t);
 			t.setLadoizq(true);
 			Token ig=tokenAct;
@@ -780,7 +783,6 @@ public class AnalizadorSintactico {
 			Operador op=opComp();
 			NodoExpBinaria n=new NodoExpBinaria(op,izq);
 			n.setLadoder(expAd());
-			//TODO ver si esto es correcto
 			return n;
 		}
 		else if(tokenAct.esTipo(new int[]{Utl.TT_PUNPUNTOCOMA,Utl.TT_PUNCOMA,Utl.TT_OPDOBLEIGUAL,Utl.TT_OPDESIGUAL,
@@ -1034,7 +1036,7 @@ public class AnalizadorSintactico {
 			return expresionParentizada();
 		}
 		else if (tokenAct.esTipo(Utl.TPC_THIS)){
-			return accesoThis(true);
+			return accesoThis();
 		}
 		else if (tokenAct.esTipo(Utl.TT_IDCLASE)){
 			return llamadaMetodoEstatico();
@@ -1110,7 +1112,6 @@ public class AnalizadorSintactico {
 				Utl.TT_OPDESIGUAL,Utl.TT_OPANDDOBLE,Utl.TT_OPORDOBLE,Utl.TT_PUNPARENT_C,Utl.TT_PUNCORCH_C})){
 			//siguientes: ; , = + - * / < <= > >= == != && || ) ] 
 			//vacio
-			//TODO ver si conviene retornar null o un tipo especial de encadenado
 			return null;
 		}
 		else{
@@ -1141,8 +1142,7 @@ public class AnalizadorSintactico {
 					+ "Pero se encontro un token: "+Utl.getTipoID(tokenAct.getTipo()));	
 		}
 	}
-	private NodoThis accesoThis(boolean ladoizq) throws SintacticException {
-		//TODO borrar el parametro
+	private NodoThis accesoThis() throws SintacticException {
 		//AccesoThis -> this Encadenado
 		Token t=tokenAct;
 		match(Utl.TPC_THIS);
@@ -1153,8 +1153,7 @@ public class AnalizadorSintactico {
 		n.setEncadenado(encadenado());
 		return n;
 	}
-	private NodoVar accesoVar(boolean ladoizq)  throws SintacticException{
-		//TODO borrar el parametro
+	private NodoVar accesoVar()  throws SintacticException{
 		//AccesoVar -> idMetVar Encadenado
 		Token t=tokenAct;
 		match(Utl.TT_IDMETVAR);
@@ -1169,7 +1168,6 @@ public class AnalizadorSintactico {
 		//LlamadaMetodo -> idMetVar ArgsActuales Encadenado
 		Token tm=tokenAct;
 		match(Utl.TT_IDMETVAR);
-		//TODO ver como conseguir la clase estatica
 		//creo nodo llamada estatica con tokens del metodo y clase
 		NodoLlamadaEstatica n=new NodoLlamadaEstatica(tc, tm);
 		//paso la lista de argumentos para que se vayan agregando

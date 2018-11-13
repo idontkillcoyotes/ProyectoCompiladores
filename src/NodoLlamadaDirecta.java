@@ -17,6 +17,10 @@ public class NodoLlamadaDirecta extends NodoPrimario{
 		return id;
 	}
 	
+	public EMetodo getMetodo() {
+		return met;
+	}
+
 	@Override
 	public void setValorAtributo(boolean b) {
 		this.valorAtributo=b;
@@ -119,6 +123,21 @@ public class NodoLlamadaDirecta extends NodoPrimario{
 			s+=encadenado.toString();
 		}
 		return s;
+	}
+
+	@Override
+	public void generar() {
+		if(met.tieneRetorno()) Utl.gen("rmem 1\t\t\t;reservo espacio para retorno (nodollamdir)");
+		Utl.gen("load 3\t\t\t;cargo this (nodollamdir)");
+		for (NodoExpresion par: this.argsactuales){
+			par.generar();
+			Utl.gen("swap\t\t\t;(nodollamdir)");			
+		}
+		Utl.gen("dup\t\t\t;duplico this (nodollamdir)");
+		Utl.gen("loadref 0\t\t\t;cargo vt (nodollamdir)");
+		Utl.gen("loadref "+met.getOffset()+"\t\t\t;cargo dir de metodo con el offset (nodollamdir)");
+		Utl.gen("call\t\t\t;llamo (nodollamdir)");
+		if(this.encadenado!=null) this.encadenado.generar();
 	}
 
 }

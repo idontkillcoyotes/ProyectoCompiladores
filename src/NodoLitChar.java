@@ -15,5 +15,12 @@ public class NodoLitChar extends NodoLiteral{
 	public String toString(){
 		return ("'"+this.literal.getLexema()+"'");
 	}
+
+	@Override
+	public void generar() {
+		char c=this.literal.getLexema().charAt(0);
+		int k=(int)c;
+		Utl.gen("push "+k+"\t\t\t;pusheo literal caracter");		
+	}
 	
 }

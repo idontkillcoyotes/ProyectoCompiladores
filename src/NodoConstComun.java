@@ -150,5 +150,31 @@ public class NodoConstComun extends NodoConst {
 		}
 		return s;
 	}
+
+	@Override
+	public void generar() {
+		//primero creo CIR
+		Utl.gen("rmem 1\t\t\t;reservo espacio para retorno de malloc (nodoconst)");
+		int tamañocir=this.clase.getTamañoCIR();
+		Utl.gen("push "+tamañocir+"\t\t\t;apilo tamaño de cir (nodoconst)");
+		Utl.gen("push malloc\t\t\t;cargo dir (nodoconst)");
+		Utl.gen("call\t\t\t;hago llamada (nodoconst)");
+		//en este punto se reservo memoria y tengo la direccion del cir en el tope de la pila
+		Utl.gen("dup\t\t\t;duplico direccion de cir (nodoconst)");
+		String labelvt=this.clase.getLabelVT();
+		Utl.gen("push "+labelvt+"\t\t\t;cargo direccion de vt (nodoconst)");
+		Utl.gen("storeref 0\t\t\t;guardo en la dir 0 del CIR, la dir de la VT (nodoconst)");
+		//en este punto ya tengo el cir creado con la vt en la primera direccion
+		Utl.gen("dup\t\t\t;duplico dir cir? (nodoconst)");
+		
+		//proceso parametros para llamar al constructor
+		for(NodoExpresion e:this.argsactuales){
+			e.generar();
+			Utl.gen("swap\t\t\t;(nodoconst)");	
+		}
+		String labelctor=this.con.getLabel();
+		Utl.gen("push "+labelctor+"\t\t\t;cargo dir de const (nodoconst)");
+		Utl.gen("call\t\t\t;llamo const (nodoconst)");
+	}
 	
 }

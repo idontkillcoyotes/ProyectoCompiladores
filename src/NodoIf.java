@@ -2,16 +2,24 @@
 public class NodoIf extends NodoSentencia {
 	
 	private Token token;
+	private EMiembro miembro;
+	private int numid;
 	private NodoExpresion condicion;
 	private NodoSentencia sentenciathen;
 	private NodoSentencia sentenciaelse;
 	
-	public NodoIf(Token t) {
-		this.token=t;		
+	public NodoIf(Token t,EMiembro m,int n) {
+		this.token=t;
+		this.miembro=m;
+		this.numid=n;
+		this.condicion=null;
+		this.sentenciaelse=null;
+		this.sentenciathen=null;
 	}
 	public Token getToken() {
 		return token;
 	}
+	
 	
 	public void setCondicion(NodoExpresion condicion) {
 		this.condicion = condicion;
@@ -103,6 +111,46 @@ public class NodoIf extends NodoSentencia {
 		}
 		return s;	
 	}
-
+	private String labelElse(){
+		String s="else_"+this.numid;
+		s+=this.miembro.getLabel();
+		return s;
+	}
+	private String labelFin(){
+		String s="endif_"+this.numid;
+		s+=this.miembro.getLabel();
+		return s;
+	}
+	
+	public EMiembro getMiembro() {
+		return miembro;
+	}
+	@Override
+	public void generar() {
+		//genero condicion
+		this.condicion.generar();
+		if(this.sentenciaelse!=null){			
+			//si la condicion es falsa salto al else
+			Utl.gen("bf "+labelElse()+"\t\t\t;si condicion false salto a else (nodoif)");
+			//sino sigo con el codigo de el then
+			this.sentenciathen.generar();
+			//cuando termino salto al fin
+			Utl.gen("jump "+labelFin()+"\t\t\t;termino el then, salto al fin (nodoif)");			
+			//declaro etiqueta else
+			Utl.gen(labelElse()+":");
+			//genero codigo else
+			this.sentenciaelse.generar();
+			//declaro etiqueta fin
+			Utl.gen(labelFin()+": ");
+		}
+		else{
+			//si la condicion es falsa salto al fin
+			Utl.gen("bf "+labelFin()+"\t\t\t;si condicion false salto fin(nodoif)");
+			//sino sigo con el codigo del then
+			this.sentenciathen.generar();
+			//declaro etiqueta fin
+			Utl.gen(labelFin()+": ");
+		}
+	}
 
 }

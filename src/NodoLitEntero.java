@@ -10,4 +10,9 @@ public class NodoLitEntero extends NodoLiteral{
 	public Tipo check() {
 		return new TipoInt(tktipo);
 	}
+	
+	@Override
+	public void generar() {
+		Utl.gen("push "+literal.getLexema()+"\t\t\t;pusheo literal entero");		
+	}
 }

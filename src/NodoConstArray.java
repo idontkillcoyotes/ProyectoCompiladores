@@ -91,4 +91,12 @@ public class NodoConstArray extends NodoConst{
 		return s;
 	}
 
+	@Override
+	public void generar() {
+		Utl.gen("rmem 1\t\t\t;reservo mem para puntero a arreglo (nodoconstarr)");
+		this.tamaño.generar(); //genero el tamaño del arreglo
+		Utl.gen("push malloc\t\t\t;cargo direccion (nodoconstarr)");
+		Utl.gen("call\t\t\t;llamo a subrutina (nodoconstarr)");		
+	}
+
 }

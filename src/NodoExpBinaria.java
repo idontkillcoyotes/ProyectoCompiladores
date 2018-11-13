@@ -53,4 +53,11 @@ public class NodoExpBinaria extends NodoExpresion{
 		this.ladoizq.setValorAtributo(b);
 	}
 
+	@Override
+	public void generar() {
+		this.ladoizq.generar();
+		this.ladoder.generar();		
+		this.operador.generarBin();		
+	}
+
 }

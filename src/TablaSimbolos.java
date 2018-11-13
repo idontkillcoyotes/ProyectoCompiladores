@@ -71,7 +71,31 @@ public class TablaSimbolos {
 			c.check();	
 		}
 		
+		//Y por ultimo genero codigo
+		generarCodPred();
+		
+		for(EClase c: clases){
+			c.generar();
+		}
+		
+		//cierro archivo de salida
+		Utl.getES().cerrarArchivoSalida();
+		
 	}
+	private void generarCodPred() {
+		//genero codigo principal
+		Utl.gen(".code \npush heap_init \ncall \npush main ;cargo main \ncall ;llamo a main \nhalt ;termino\n");
+		//genero codigo heap_init
+		Utl.gen("heap_init:\n ret 0\n");
+		//genero codigo malloc		
+		Utl.gen("malloc:");
+		Utl.gen("loadfp ;Inicialización unidad \nloadsp \nstorefp ;Finaliza inicialización del RA");
+		Utl.gen("LOADHL ;hl\nDUP ;hl\nPUSH 1 ;1\nADD ;hl+1\nSTORE 4 ;Guarda el resultado (un puntero a la primer celda de la región de memoria)");
+		Utl.gen("LOAD 3 ;Carga la cantidad de celdas a alojar (parámetro que debe ser positivo)");
+		Utl.gen("ADD\nSTOREHL ;Mueve el heap limit (hl). Expande el heap\nSTOREFP\nRET 1	;Retorna eliminando el parámetro");
+		Utl.gen("\n\n");
+	}
+
 	public EClase getClase(String n){
 		EClase ret=null;
 		for(EClase c: clases){

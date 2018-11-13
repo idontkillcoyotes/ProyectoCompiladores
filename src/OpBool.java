@@ -9,7 +9,6 @@ public class OpBool extends Operador{
 
 	@Override
 	public Tipo checkBin(Tipo t1, Tipo t2) throws SemanticException {
-		//TODO deberia chequear el operador?
 		if((t1.esTipo(Utl.TPC_BOOLEAN) && (t1.mismoTipoBase(t2)))){
 			return new TipoBool(tktipo);
 		}
@@ -21,12 +20,24 @@ public class OpBool extends Operador{
 
 	@Override
 	public Tipo checkUn(Tipo t) throws SemanticException {
-		//TODO deberia chequear el operador?
 		if(t.esTipo(Utl.TPC_BOOLEAN)){
 			return new TipoBool(tktipo);
 		}
 		else{
 			throw new SemanticException(op.getNroLinea(),op.getNroColumna(),"Tipos invalidos.");
 		}
+	}
+
+	@Override
+	public void generarBin() {
+		if (this.op.esTipo(Utl.TT_OPANDDOBLE))
+			Utl.gen("and\t\t\t;operador and");
+		else
+			Utl.gen("or\t\t\t;operador or");
+	}
+
+	@Override
+	public void generarUn() {
+		Utl.gen("not\t\t\t;operador not");
 	}
 }

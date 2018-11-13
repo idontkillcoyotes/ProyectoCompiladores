@@ -2,14 +2,21 @@
 public class NodoReturn extends NodoSentencia{
 	
 	private Token token;
+	private EMiembro miembro;
 	private NodoExpresion expresion;
 	
 	public NodoReturn(Token t) {
 		this.token=t;
+		this.expresion=null;
+		this.miembro=null;
 	}
 	
 	public Token getToken() {
 		return token;
+	}
+	
+	public EMiembro getMiembro(){
+		return miembro;
 	}
 	
 	public NodoExpresion getExpresion() {
@@ -22,6 +29,8 @@ public class NodoReturn extends NodoSentencia{
 
 	@Override
 	public void check() throws SemanticException {
+		this.miembro=Utl.ts.getMiembroAct();
+		//TODO reemplazar miembro por el miembro actual del ts
 		if (!Utl.ts.getMiembroAct().esConstructor){
 			Tipo retorno=Utl.ts.getMiembroAct().getTipoRetorno();
 			if(this.expresion!=null){
@@ -56,6 +65,20 @@ public class NodoReturn extends NodoSentencia{
 	public String toString(){
 		String s="return "+expresion.toString()+"\n";
 		return s;
+	}
+
+	@Override
+	public void generar() {
+		int pars=this.miembro.getCantParams();
+		if (this.expresion!=null){
+			//si la expresion no es nula, quiere decir que tengo un metodo que retorna algo
+			this.expresion.generar();			
+			int ret=3+1+pars;
+			Utl.gen("store "+ret+" ;guardo el resultado (nodoreturn)");
+		}
+		Utl.gen("fmem "+this.miembro.getCantVarLoc()+" ;libero espacio de vars locales (nodoreturn)");
+		Utl.gen("storefp ;retorno (nodoreturn)");
+		Utl.gen("ret "+(pars+1)+" ;retorno (nodoreturn)");		
 	}
 
 }

@@ -20,6 +20,8 @@ public abstract class NodoLiteral extends NodoOperando{
 		return this.literal.getLexema();
 	}
 	
+	
+	
 	@Override
 	public void setValorAtributo(boolean b) {
 		this.valorAtributo=b;

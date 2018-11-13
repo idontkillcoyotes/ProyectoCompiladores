@@ -69,4 +69,11 @@ public class NodoBloque extends NodoSentencia{
 		return this.varslocales.add(var);
 	}
 
+	@Override
+	public void generar() {
+		for(NodoSentencia s: sentencias){
+			s.generar();
+		}
+	}
+
 }

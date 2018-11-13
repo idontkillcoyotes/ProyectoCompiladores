@@ -12,6 +12,10 @@ public class EConstructor extends EMiembro {
 		this.bloque=null;
 		this.consolidado=false;
 		this.esConstructor=true;
+		this.contifs=0;
+		this.contwhiles=0;
+		this.contvarlocales=0;
+		this.generado=false;
 	}	
 
 	
@@ -33,6 +37,9 @@ public class EConstructor extends EMiembro {
 		s+="\t| Constructor |\n";
 		//s+="Aridad:\t\t\t"+this.getAridad()+"\n";
 		s+="Parametros:\t\t"+this.parametros.toString()+"\n";
+		s+="Cant var locales:\t"+this.contvarlocales+"\n";
+		//s+="Cant ifs:\t\t"+this.contifs+"\n";
+		//s+="Cant whiles:\t\t"+this.contwhiles+"\n";
 		//s+="Descripcion:\n"+this.texto+"\n";
 		if (bloque!=null) s+="\n********************************\n"+this.bloque.toString();
 		s+="********************************\n";
@@ -46,7 +53,8 @@ public class EConstructor extends EMiembro {
 		return tc;
 	}
 	
-	public String nuevaEtiqueta(){
+	@Override
+	public String getLabel(){
 		String s=this.clase.getNombre();
 		s+="const"+this.getAridad();
 		return s; 
@@ -56,5 +64,26 @@ public class EConstructor extends EMiembro {
 	@Override
 	public boolean esEstatico() {
 		return false;
+	}
+
+
+	@Override
+	public void generar() {
+		String s=this.clase.getNombre()+this.getAridad();
+		if(!generado){			
+			Utl.gen(this.getLabel()+":"); //genero etiqueta			
+			Utl.gen("loadfp\t\t\t;inicio de ra (econst "+s+")");
+			Utl.gen("loadsp\t\t\t; (econst "+s+")");
+			Utl.gen("storefp\t\t\t;fin de ra (econst "+s+")");
+			Utl.gen("rmem "+this.contvarlocales+"\t\t\t;reservo espacio para var locales (econst "+s+")");
+			
+			//TODO aca, antes de generar codigo deberia inicializar los atributos
+			
+			if (this.bloque!=null) this.bloque.generar();
+			Utl.gen("fmem "+this.contvarlocales+"\t\t\t;libero espacio para var locales (econst "+s+")");
+			Utl.gen("storefp\t\t\t;retorno (econst "+s+")");
+			Utl.gen("ret "+(this.parametros.size()+1)+"\t\t\t;retorno con cant parametros + 1 (econst "+s+")\n");
+			this.generado=true;
+		}
 	}
 }

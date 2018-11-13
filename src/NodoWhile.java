@@ -2,17 +2,26 @@
 public class NodoWhile extends NodoSentencia{
 	
 	private Token token;
+	private int numid;
+	private EMiembro miembro;	
 	private NodoExpresion condicion;
 	private NodoSentencia sentencia;
 	
-	public NodoWhile(Token t) {
+	public NodoWhile(Token t,EMiembro m,int n) {
 		this.token=t;
+		this.miembro=m;
+		this.numid=n;
+		this.condicion=null;
+		this.sentencia=null;
 	}
 	
 	public Token getToken() {
 		return token;
 	}
-	
+
+	public EMiembro getMiembro() {
+		return miembro;
+	}
 
 	public void setCondicion(NodoExpresion condicion) {
 		this.condicion = condicion;
@@ -37,6 +46,18 @@ public class NodoWhile extends NodoSentencia{
 	public NodoSentencia getSentencia() {
 		return sentencia;
 	}
+	
+	private String labelInit(){
+		String s="while_"+this.numid;
+		s+=this.miembro.getLabel();
+		return s;
+	}
+	private String labelFin(){
+		String s="endwhile_"+this.numid;
+		s+=this.miembro.getLabel();
+		return s;
+	}
+	
 
 	@Override
 	public void check() throws SemanticException {
@@ -64,5 +85,15 @@ public class NodoWhile extends NodoSentencia{
 		s+=this.condicion.toString()+")\n";
 		s+="\t"+this.sentencia.toString();
 		return s;
+	}
+
+	@Override
+	public void generar() {
+		Utl.gen(labelInit()+":\t\t\t;genero label inicio while (nodowhile)");
+		this.condicion.generar();
+		Utl.gen("bf "+labelFin()+"\t\t\t;si condicion false salto a fin (nodowhile)");
+		this.sentencia.generar();
+		Utl.gen("jump "+labelInit()+"\t\t\t;salto al principio (nodowhile)");
+		Utl.gen(labelFin()+":\t\t\t;genero label fin while (nodowhile)");
 	}
 }

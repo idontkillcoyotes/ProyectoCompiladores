@@ -44,4 +44,10 @@ public class NodoExpUnaria extends NodoExpresion{
 	public Token getToken() {
 		return this.operador.getOperador();
 	}
+
+	@Override
+	public void generar() {
+		this.expresion.generar();
+		this.operador.generarUn();
+	}
 }

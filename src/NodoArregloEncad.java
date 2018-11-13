@@ -41,7 +41,6 @@ public class NodoArregloEncad extends Encadenado{
 					return this.encadenado.check(t,id);					
 				}
 				else{
-					//TODO ver si esta mal que cambie el tipo pasado como parametro. MUY MALLLL!!!
 					Tipo tret=t.clonarTipoBase();					
 					return tret;
 				}
@@ -63,6 +62,24 @@ public class NodoArregloEncad extends Encadenado{
 			s+=encadenado.toString();
 		}
 		return s;
+	}
+
+	@Override
+	public void generar() {
+		//genero codigo de expresion
+		this.expresion.generar();
+		Utl.gen("add\t\t\t;sumo el offset del arreglo (de la expresion) para acceder (nodoarregloencad)");
+		if ((this.ladoIzquierdo)&&(this.encadenado!=null)){
+			//si estoy en lado izquierdo y no hay encadenado ent asigno
+			Utl.gen("swap\t\t\t;(nodoarregloencad)");
+			Utl.gen("storeref 4\t\t\t;guardo en el offset (nodoarregloencad)"); //TODO cual seria el offset?			
+		}
+		else{
+			//sino cargo ref
+			Utl.gen("loadref 0\t\t\t;(nodoarregloencad)");
+		}
+		if (this.encadenado!=null) this.encadenado.generar();
+		
 	}
 
 }
