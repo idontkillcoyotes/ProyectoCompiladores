@@ -118,10 +118,16 @@ public class NodoLlamadaEncad extends Encadenado{
 			par.generar();
 			Utl.gen("swap\t\t\t;(nodollamencad)");			
 		}
-		Utl.gen("dup\t\t\t;duplico this (nodollamencad)");
-		Utl.gen("loadref 0\t\t\t;cargo vt (nodollamencad)");
-		Utl.gen("loadref "+met.getOffset()+"\t\t\t;cargo dir de metodo con el offset (nodollamencad)");
-		Utl.gen("call\t\t\t;llamo (nodollamencad)");
+		if(met.esEstatico()){
+			Utl.gen("push "+met.getLabel()+"\t\t\t;cargo dir metodo estatido (nodollamencad)");
+			Utl.gen("call\t\t\t;llamo (nodollamencad)");
+		}
+		else{
+			Utl.gen("dup\t\t\t;duplico this (nodollamencad)");
+			Utl.gen("loadref 0\t\t\t;cargo vt (nodollamencad)");
+			Utl.gen("loadref "+met.getOffset()+"\t\t\t;cargo dir de metodo con el offset (nodollamencad)");
+			Utl.gen("call\t\t\t;llamo (nodollamencad)");
+		}
 		if(this.encadenado!=null) this.encadenado.generar();
 	}
 

@@ -1,0 +1,249 @@
+Información de ensamblado, linkeo y carga (generado por el CeIASMAssemblerLinkerAndLoader)
+
+----------- Límite de carga de las secciones ----------------------------------------------
+
+.CODE:  de locación          0 a locación        196
+.DATA:  de locación        197 a locación        196
+.HEAP:  de locación        197 a locación        196
+.STACK: de locación       8192 a locación       8191
+
+----------- Resolución de etiquetas -------------------------------------------------------
+Dirección   Etiqueta
+
+         7  heap_init
+         9  malloc
+        26  mainconst0
+        36  main
+        62  main_m1_0
+        80  endif_1main_m1_0
+        93  system_read_0
+       102  system_readi_0
+       114  system_println_0
+       121  system_printi_1
+       130  system_printb_1
+       139  system_printc_1
+       148  system_prints_1
+       157  system_printiln_1
+       167  system_printbln_1
+       177  system_printcln_1
+       187  system_printsln_1
+
+------------------------------------------------------------------------------------------
+----------- Contenido de la memoria ensamblada, linkeada y cargada -----------------------
+------------------------------------------------------------------------------------------
+
+----------- Sección .CODE ----------------------------------------------------------------
+Dirección   Cont.Mem.   Código CeIASM                           Referencia
+
+         0           1  push                                    ; Archivo: out.txt línea: 2 columna: 1.
+         1           7  heap_init                               ; Archivo: out.txt línea: 2 columna: 6.
+         2         100  call                                    ; Archivo: out.txt línea: 3 columna: 1.
+         3           1  push                                    ; Archivo: out.txt línea: 4 columna: 1.
+         4          36  main                                    ; Archivo: out.txt línea: 4 columna: 6.
+         5         100  call                                    ; Archivo: out.txt línea: 5 columna: 1.
+         6         104  halt                                    ; Archivo: out.txt línea: 6 columna: 1.
+         7         103  heap_init: ret                          ; Archivo: out.txt línea: 9 columna: 2.
+         8           0  0                                       ; Archivo: out.txt línea: 9 columna: 6.
+         9         124  malloc: loadfp                          ; Archivo: out.txt línea: 12 columna: 1.
+        10         122  loadsp                                  ; Archivo: out.txt línea: 13 columna: 1.
+        11         125  storefp                                 ; Archivo: out.txt línea: 14 columna: 1.
+        12         128  LOADHL                                  ; Archivo: out.txt línea: 15 columna: 1.
+        13          30  DUP                                     ; Archivo: out.txt línea: 16 columna: 1.
+        14           1  PUSH                                    ; Archivo: out.txt línea: 17 columna: 1.
+        15           1  1                                       ; Archivo: out.txt línea: 17 columna: 6.
+        16           2  ADD                                     ; Archivo: out.txt línea: 18 columna: 1.
+        17          81  STORE                                   ; Archivo: out.txt línea: 19 columna: 1.
+        18           4  4                                       ; Archivo: out.txt línea: 19 columna: 7.
+        19          80  LOAD                                    ; Archivo: out.txt línea: 20 columna: 1.
+        20           3  3                                       ; Archivo: out.txt línea: 20 columna: 6.
+        21           2  ADD                                     ; Archivo: out.txt línea: 21 columna: 1.
+        22         129  STOREHL                                 ; Archivo: out.txt línea: 22 columna: 1.
+        23         125  STOREFP                                 ; Archivo: out.txt línea: 23 columna: 1.
+        24         103  RET                                     ; Archivo: out.txt línea: 24 columna: 1.
+        25           1  1                                       ; Archivo: out.txt línea: 24 columna: 5.
+        26         124  Mainconst0: loadfp                      ; Archivo: out.txt línea: 35 columna: 1.
+        27         122  loadsp                                  ; Archivo: out.txt línea: 36 columna: 1.
+        28         125  storefp                                 ; Archivo: out.txt línea: 37 columna: 1.
+        29         101  rmem                                    ; Archivo: out.txt línea: 38 columna: 1.
+        30           0  0                                       ; Archivo: out.txt línea: 38 columna: 6.
+        31         102  fmem                                    ; Archivo: out.txt línea: 39 columna: 1.
+        32           0  0                                       ; Archivo: out.txt línea: 39 columna: 6.
+        33         125  storefp                                 ; Archivo: out.txt línea: 40 columna: 1.
+        34         103  ret                                     ; Archivo: out.txt línea: 41 columna: 1.
+        35           1  1                                       ; Archivo: out.txt línea: 41 columna: 5.
+        36         124  main: loadfp                            ; Archivo: out.txt línea: 44 columna: 1.
+        37         122  loadsp                                  ; Archivo: out.txt línea: 45 columna: 1.
+        38         125  storefp                                 ; Archivo: out.txt línea: 46 columna: 1.
+        39         101  rmem                                    ; Archivo: out.txt línea: 47 columna: 1.
+        40           0  0                                       ; Archivo: out.txt línea: 47 columna: 6.
+        41           1  push                                    ; Archivo: out.txt línea: 48 columna: 1.
+        42      999999  999999                                  ; Archivo: out.txt línea: 48 columna: 6.
+        43         101  rmem                                    ; Archivo: out.txt línea: 49 columna: 1.
+        44           1  1                                       ; Archivo: out.txt línea: 49 columna: 6.
+        45          80  load                                    ; Archivo: out.txt línea: 50 columna: 1.
+        46           3  3                                       ; Archivo: out.txt línea: 50 columna: 6.
+        47          30  DUP                                     ; Archivo: out.txt línea: 51 columna: 1.
+        48          82  loadref                                 ; Archivo: out.txt línea: 52 columna: 1.
+        49           0  0                                       ; Archivo: out.txt línea: 52 columna: 9.
+        50          82  loadref                                 ; Archivo: out.txt línea: 53 columna: 1.
+        51          -1  -1                                      ; Archivo: out.txt línea: 53 columna: 9.
+        52         100  call                                    ; Archivo: out.txt línea: 54 columna: 1.
+        53          32  swap                                    ; Archivo: out.txt línea: 55 columna: 1.
+        54           1  push                                    ; Archivo: out.txt línea: 56 columna: 1.
+        55         121  System_printI_1                         ; Archivo: out.txt línea: 56 columna: 6.
+        56         100  call                                    ; Archivo: out.txt línea: 57 columna: 1.
+        57         102  fmem                                    ; Archivo: out.txt línea: 58 columna: 1.
+        58           0  0                                       ; Archivo: out.txt línea: 58 columna: 6.
+        59         125  storefp                                 ; Archivo: out.txt línea: 59 columna: 1.
+        60         103  ret                                     ; Archivo: out.txt línea: 60 columna: 1.
+        61           1  1                                       ; Archivo: out.txt línea: 60 columna: 5.
+        62         124  Main_m1_0: loadfp                       ; Archivo: out.txt línea: 63 columna: 1.
+        63         122  loadsp                                  ; Archivo: out.txt línea: 64 columna: 1.
+        64         125  storefp                                 ; Archivo: out.txt línea: 65 columna: 1.
+        65         101  rmem                                    ; Archivo: out.txt línea: 66 columna: 1.
+        66           1  1                                       ; Archivo: out.txt línea: 66 columna: 6.
+        67           1  push                                    ; Archivo: out.txt línea: 67 columna: 1.
+        68           1  1                                       ; Archivo: out.txt línea: 67 columna: 6.
+        69          41  bf                                      ; Archivo: out.txt línea: 68 columna: 1.
+        70          80  endif_1Main_m1_0                        ; Archivo: out.txt línea: 68 columna: 4.
+        71           1  push                                    ; Archivo: out.txt línea: 69 columna: 1.
+        72           1  1                                       ; Archivo: out.txt línea: 69 columna: 6.
+        73          81  store                                   ; Archivo: out.txt línea: 70 columna: 1.
+        74           4  4                                       ; Archivo: out.txt línea: 70 columna: 7.
+        75         102  fmem                                    ; Archivo: out.txt línea: 71 columna: 1.
+        76           1  1                                       ; Archivo: out.txt línea: 71 columna: 6.
+        77         125  storefp                                 ; Archivo: out.txt línea: 72 columna: 1.
+        78         103  ret                                     ; Archivo: out.txt línea: 73 columna: 1.
+        79           1  1                                       ; Archivo: out.txt línea: 73 columna: 5.
+        80           1  endif_1Main_m1_0: push                  ; Archivo: out.txt línea: 75 columna: 1.
+        81           3  3                                       ; Archivo: out.txt línea: 75 columna: 6.
+        82          81  store                                   ; Archivo: out.txt línea: 76 columna: 1.
+        83           0  0                                       ; Archivo: out.txt línea: 76 columna: 7.
+        84           1  push                                    ; Archivo: out.txt línea: 77 columna: 1.
+        85           3  3                                       ; Archivo: out.txt línea: 77 columna: 6.
+        86          81  store                                   ; Archivo: out.txt línea: 78 columna: 1.
+        87           4  4                                       ; Archivo: out.txt línea: 78 columna: 7.
+        88         102  fmem                                    ; Archivo: out.txt línea: 79 columna: 1.
+        89           1  1                                       ; Archivo: out.txt línea: 79 columna: 6.
+        90         125  storefp                                 ; Archivo: out.txt línea: 80 columna: 1.
+        91         103  ret                                     ; Archivo: out.txt línea: 81 columna: 1.
+        92           1  1                                       ; Archivo: out.txt línea: 81 columna: 5.
+        93         124  System_read_0: loadfp                   ; Archivo: out.txt línea: 85 columna: 1.
+        94         122  loadsp                                  ; Archivo: out.txt línea: 86 columna: 1.
+        95         125  storefp                                 ; Archivo: out.txt línea: 87 columna: 1.
+        96          60  read                                    ; Archivo: out.txt línea: 88 columna: 1.
+        97          81  store                                   ; Archivo: out.txt línea: 89 columna: 1.
+        98           4  4                                       ; Archivo: out.txt línea: 89 columna: 7.
+        99         125  storefp                                 ; Archivo: out.txt línea: 90 columna: 1.
+       100         103  ret                                     ; Archivo: out.txt línea: 91 columna: 1.
+       101           1  1                                       ; Archivo: out.txt línea: 91 columna: 5.
+       102         124  System_readI_0: loadfp                  ; Archivo: out.txt línea: 94 columna: 1.
+       103         122  loadsp                                  ; Archivo: out.txt línea: 95 columna: 1.
+       104         125  storefp                                 ; Archivo: out.txt línea: 96 columna: 1.
+       105          60  read                                    ; Archivo: out.txt línea: 97 columna: 1.
+       106           1  push                                    ; Archivo: out.txt línea: 98 columna: 1.
+       107          48  48                                      ; Archivo: out.txt línea: 98 columna: 6.
+       108           3  sub                                     ; Archivo: out.txt línea: 99 columna: 1.
+       109          81  store                                   ; Archivo: out.txt línea: 100 columna: 1.
+       110           4  4                                       ; Archivo: out.txt línea: 100 columna: 7.
+       111         125  storefp                                 ; Archivo: out.txt línea: 101 columna: 1.
+       112         103  ret                                     ; Archivo: out.txt línea: 102 columna: 1.
+       113           1  1                                       ; Archivo: out.txt línea: 102 columna: 5.
+       114         124  System_println_0: loadfp                ; Archivo: out.txt línea: 105 columna: 1.
+       115         122  loadsp                                  ; Archivo: out.txt línea: 106 columna: 1.
+       116         125  storefp                                 ; Archivo: out.txt línea: 107 columna: 1.
+       117          65  prnln                                   ; Archivo: out.txt línea: 108 columna: 1.
+       118         125  storefp                                 ; Archivo: out.txt línea: 109 columna: 1.
+       119         103  ret                                     ; Archivo: out.txt línea: 110 columna: 1.
+       120           1  1                                       ; Archivo: out.txt línea: 110 columna: 5.
+       121         124  System_printI_1: loadfp                 ; Archivo: out.txt línea: 113 columna: 1.
+       122         122  loadsp                                  ; Archivo: out.txt línea: 114 columna: 1.
+       123         125  storefp                                 ; Archivo: out.txt línea: 115 columna: 1.
+       124          80  load                                    ; Archivo: out.txt línea: 116 columna: 1.
+       125           4  4                                       ; Archivo: out.txt línea: 116 columna: 6.
+       126          63  iprint                                  ; Archivo: out.txt línea: 117 columna: 1.
+       127         125  storefp                                 ; Archivo: out.txt línea: 118 columna: 1.
+       128         103  ret                                     ; Archivo: out.txt línea: 119 columna: 1.
+       129           2  2                                       ; Archivo: out.txt línea: 119 columna: 5.
+       130         124  System_printB_1: loadfp                 ; Archivo: out.txt línea: 122 columna: 1.
+       131         122  loadsp                                  ; Archivo: out.txt línea: 123 columna: 1.
+       132         125  storefp                                 ; Archivo: out.txt línea: 124 columna: 1.
+       133          80  load                                    ; Archivo: out.txt línea: 125 columna: 1.
+       134           4  4                                       ; Archivo: out.txt línea: 125 columna: 6.
+       135          61  bprint                                  ; Archivo: out.txt línea: 126 columna: 1.
+       136         125  storefp                                 ; Archivo: out.txt línea: 127 columna: 1.
+       137         103  ret                                     ; Archivo: out.txt línea: 128 columna: 1.
+       138           2  2                                       ; Archivo: out.txt línea: 128 columna: 5.
+       139         124  System_printC_1: loadfp                 ; Archivo: out.txt línea: 131 columna: 1.
+       140         122  loadsp                                  ; Archivo: out.txt línea: 132 columna: 1.
+       141         125  storefp                                 ; Archivo: out.txt línea: 133 columna: 1.
+       142          80  load                                    ; Archivo: out.txt línea: 134 columna: 1.
+       143           4  4                                       ; Archivo: out.txt línea: 134 columna: 6.
+       144          62  cprint                                  ; Archivo: out.txt línea: 135 columna: 1.
+       145         125  storefp                                 ; Archivo: out.txt línea: 136 columna: 1.
+       146         103  ret                                     ; Archivo: out.txt línea: 137 columna: 1.
+       147           2  2                                       ; Archivo: out.txt línea: 137 columna: 5.
+       148         124  System_printS_1: loadfp                 ; Archivo: out.txt línea: 140 columna: 1.
+       149         122  loadsp                                  ; Archivo: out.txt línea: 141 columna: 1.
+       150         125  storefp                                 ; Archivo: out.txt línea: 142 columna: 1.
+       151          80  load                                    ; Archivo: out.txt línea: 143 columna: 1.
+       152           4  4                                       ; Archivo: out.txt línea: 143 columna: 6.
+       153          64  sprint                                  ; Archivo: out.txt línea: 144 columna: 1.
+       154         125  storefp                                 ; Archivo: out.txt línea: 145 columna: 1.
+       155         103  ret                                     ; Archivo: out.txt línea: 146 columna: 1.
+       156           2  2                                       ; Archivo: out.txt línea: 146 columna: 5.
+       157         124  System_printIln_1: loadfp               ; Archivo: out.txt línea: 149 columna: 1.
+       158         122  loadsp                                  ; Archivo: out.txt línea: 150 columna: 1.
+       159         125  storefp                                 ; Archivo: out.txt línea: 151 columna: 1.
+       160          80  load                                    ; Archivo: out.txt línea: 152 columna: 1.
+       161           4  4                                       ; Archivo: out.txt línea: 152 columna: 6.
+       162          63  iprint                                  ; Archivo: out.txt línea: 153 columna: 1.
+       163          65  prnln                                   ; Archivo: out.txt línea: 154 columna: 1.
+       164         125  storefp                                 ; Archivo: out.txt línea: 155 columna: 1.
+       165         103  ret                                     ; Archivo: out.txt línea: 156 columna: 1.
+       166           2  2                                       ; Archivo: out.txt línea: 156 columna: 5.
+       167         124  System_printBln_1: loadfp               ; Archivo: out.txt línea: 159 columna: 1.
+       168         122  loadsp                                  ; Archivo: out.txt línea: 160 columna: 1.
+       169         125  storefp                                 ; Archivo: out.txt línea: 161 columna: 1.
+       170          80  load                                    ; Archivo: out.txt línea: 162 columna: 1.
+       171           4  4                                       ; Archivo: out.txt línea: 162 columna: 6.
+       172          61  bprint                                  ; Archivo: out.txt línea: 163 columna: 1.
+       173          65  prnln                                   ; Archivo: out.txt línea: 164 columna: 1.
+       174         125  storefp                                 ; Archivo: out.txt línea: 165 columna: 1.
+       175         103  ret                                     ; Archivo: out.txt línea: 166 columna: 1.
+       176           2  2                                       ; Archivo: out.txt línea: 166 columna: 5.
+       177         124  System_printCln_1: loadfp               ; Archivo: out.txt línea: 169 columna: 1.
+       178         122  loadsp                                  ; Archivo: out.txt línea: 170 columna: 1.
+       179         125  storefp                                 ; Archivo: out.txt línea: 171 columna: 1.
+       180          80  load                                    ; Archivo: out.txt línea: 172 columna: 1.
+       181           4  4                                       ; Archivo: out.txt línea: 172 columna: 6.
+       182          62  cprint                                  ; Archivo: out.txt línea: 173 columna: 1.
+       183          65  prnln                                   ; Archivo: out.txt línea: 174 columna: 1.
+       184         125  storefp                                 ; Archivo: out.txt línea: 175 columna: 1.
+       185         103  ret                                     ; Archivo: out.txt línea: 176 columna: 1.
+       186           2  2                                       ; Archivo: out.txt línea: 176 columna: 5.
+       187         124  System_printSln_1: loadfp               ; Archivo: out.txt línea: 179 columna: 1.
+       188         122  loadsp                                  ; Archivo: out.txt línea: 180 columna: 1.
+       189         125  storefp                                 ; Archivo: out.txt línea: 181 columna: 1.
+       190          80  load                                    ; Archivo: out.txt línea: 182 columna: 1.
+       191           4  4                                       ; Archivo: out.txt línea: 182 columna: 6.
+       192          64  sprint                                  ; Archivo: out.txt línea: 183 columna: 1.
+       193          65  prnln                                   ; Archivo: out.txt línea: 184 columna: 1.
+       194         125  storefp                                 ; Archivo: out.txt línea: 185 columna: 1.
+       195         103  ret                                     ; Archivo: out.txt línea: 186 columna: 1.
+       196           2  2                                       ; Archivo: out.txt línea: 186 columna: 5.
+
+----------- Sección .DATA ----------------------------------------------------------------
+Dirección   Cont.Mem.   Código CeIASM                           Referencia
+
+
+----------- Sección .HEAP ----------------------------------------------------------------
+Dirección   Cont.Mem.   Código CeIASM                           Referencia
+
+
+----------- Sección .STACK (decreciente) --------------------------------------------------
+Dirección   Cont.Mem.   Código CeIASM                           Referencia
+
+
+El volcado de la información de ensamblado, linkeo y carga se completó exitosamente...
+
