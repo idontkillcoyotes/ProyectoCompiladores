@@ -96,7 +96,7 @@ public class NodoDeclaracionVars extends NodoSentencia{
 	}
 	@Override
 	public void generar() {
-		//si hay un valor debo inicializar las variables
+		//si hay un valor debo inicializar las variables		
 		if (this.valor!=null){
 			//genero valor
 			this.valor.generar();
@@ -109,6 +109,7 @@ public class NodoDeclaracionVars extends NodoSentencia{
 				Utl.gen("store "+(e.getOffset())+"\t\t\t;guardo valor en var local (nododecvars)");		
 			}
 		}
+		Utl.gen("nop\t\t\t;(nododecvars)");
 	}
 	
 

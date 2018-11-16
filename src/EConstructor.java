@@ -77,7 +77,20 @@ public class EConstructor extends EMiembro {
 			Utl.gen("storefp\t\t\t;fin de ra (econst "+s+")");
 			Utl.gen("rmem "+this.contvarlocales+"\t\t\t;reservo espacio para var locales (econst "+s+")");
 			
+			Utl.gen(";comienzo a inicializar atributos (econst "+s+")");
+			for(EAtributo e: this.clase.getAtributos()){
+				if(e.getValor()!=null){
+					//si tiene un valor:
+					e.getValor().generar();
+					//luego de generar valor queda en el tope de la pila
+					Utl.gen("load 3\t\t\t;cargo this (econst "+s+")");
+					Utl.gen("swap\t\t\t;(econst "+s+")");
+					Utl.gen("storeref "+e.getOffset()+"\t\t\t;guardo en cir con offset (econst "+s+")");
+				}
+			}
+			Utl.gen(";finalizo inicializacion de atributos (econst "+s+")");
 			//TODO aca, antes de generar codigo deberia inicializar los atributos
+			
 			
 			if (this.bloque!=null) this.bloque.generar();
 			Utl.gen("fmem "+this.contvarlocales+"\t\t\t;libero espacio para var locales (econst "+s+")");

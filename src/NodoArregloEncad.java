@@ -72,11 +72,11 @@ public class NodoArregloEncad extends Encadenado{
 		if ((this.ladoIzquierdo)&&(this.encadenado==null)){
 			//si estoy en lado izquierdo y no hay encadenado ent asigno
 			Utl.gen("swap\t\t\t;(nodoarregloencad)");
-			Utl.gen("storeref -5\t\t\t;guardo en el offset (nodoarregloencad)"); //TODO cual seria el offset?			
+			Utl.gen("storeref 0\t\t\t;guardo en el offset (nodoarregloencad)");	
 		}
 		else{
 			//sino cargo ref
-			Utl.gen("loadref -5\t\t\t;(nodoarregloencad)");
+			Utl.gen("loadref 0\t\t\t;(nodoarregloencad)");
 		}
 		if (this.encadenado!=null) this.encadenado.generar();
 		

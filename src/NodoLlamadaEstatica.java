@@ -123,7 +123,7 @@ public class NodoLlamadaEstatica extends NodoPrimario{
 		if (this.met.tieneRetorno()){
 			Utl.gen("rmem 1\t\t\t;guardo espacio para retorno (nodollamest)");
 		}
-		Utl.gen("push 999999\t\t\t;apilo el this ficticio (nodollamest)");
+		Utl.gen("push -1\t\t\t;apilo el this ficticio (nodollamest)");
 		for(NodoExpresion arg:this.argsactuales){
 			arg.generar(); //genero cod de argumentos
 			Utl.gen("swap\t\t\t;swapeo this con argumento (nodollamest)");

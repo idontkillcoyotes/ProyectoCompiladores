@@ -128,15 +128,25 @@ public class NodoLlamadaDirecta extends NodoPrimario{
 	@Override
 	public void generar() {
 		if(met.tieneRetorno()) Utl.gen("rmem 1\t\t\t;reservo espacio para retorno (nodollamdir)");
-		Utl.gen("load 3\t\t\t;cargo this (nodollamdir)");
+		if(met.esEstatico())
+			{Utl.gen("push -1\t\t\t;cargo this fictisio (nodollamdir)");}
+		else
+			{Utl.gen("load 3\t\t\t;cargo this (nodollamdir)");}
 		for (NodoExpresion par: this.argsactuales){
 			par.generar();
 			Utl.gen("swap\t\t\t;(nodollamdir)");			
 		}
-		Utl.gen("dup\t\t\t;duplico this (nodollamdir)");
-		Utl.gen("loadref 0\t\t\t;cargo vt (nodollamdir)");
-		Utl.gen("loadref "+met.getOffset()+"\t\t\t;cargo dir de metodo con el offset (nodollamdir)");
-		Utl.gen("call\t\t\t;llamo (nodollamdir)");
+		if(met.esEstatico()){
+			
+			Utl.gen("push "+met.getLabel()+"\t\t\t;cargo dir metodo estatido (nodollamdir)");
+			Utl.gen("call\t\t\t;llamo (nodollamdir)");
+		}
+		else{
+			Utl.gen("dup\t\t\t;duplico this (nodollamdir)");
+			Utl.gen("loadref 0\t\t\t;cargo vt (nodollamdir)");
+			Utl.gen("loadref "+met.getOffset()+"\t\t\t;cargo dir de metodo con el offset (nodollamdir)");
+			Utl.gen("call\t\t\t;llamo (nodollamdir)");
+		}
 		if(this.encadenado!=null) this.encadenado.generar();
 	}
 

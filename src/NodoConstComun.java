@@ -159,11 +159,14 @@ public class NodoConstComun extends NodoConst {
 		Utl.gen("push "+tamañocir+"\t\t\t;apilo tamaño de cir (nodoconst)");
 		Utl.gen("push malloc\t\t\t;cargo dir (nodoconst)");
 		Utl.gen("call\t\t\t;hago llamada (nodoconst)");
-		//en este punto se reservo memoria y tengo la direccion del cir en el tope de la pila
-		Utl.gen("dup\t\t\t;duplico direccion de cir (nodoconst)");
+		//en este punto se reservo memoria y tengo la direccion del cir en el tope de la pila		
 		String labelvt=this.clase.getLabelVT();
-		Utl.gen("push "+labelvt+"\t\t\t;cargo direccion de vt (nodoconst)");
-		Utl.gen("storeref 0\t\t\t;guardo en la dir 0 del CIR, la dir de la VT (nodoconst)");
+		//aca deberia controlar que la vt existe, (que la clase tiene al menos un metodo dinamico)
+		if(clase.tieneVT()){
+			Utl.gen("dup\t\t\t;duplico direccion de cir (nodoconst)");
+			Utl.gen("push "+labelvt+"\t\t\t;cargo direccion de vt (nodoconst)");
+			Utl.gen("storeref 0\t\t\t;guardo en la dir 0 del CIR, la dir de la VT (nodoconst)");
+		}
 		//en este punto ya tengo el cir creado con la vt en la primera direccion
 		Utl.gen("dup\t\t\t;duplico dir cir? (nodoconst)");
 		
@@ -175,6 +178,9 @@ public class NodoConstComun extends NodoConst {
 		String labelctor=this.con.getLabel();
 		Utl.gen("push "+labelctor+"\t\t\t;cargo dir de const (nodoconst)");
 		Utl.gen("call\t\t\t;llamo const (nodoconst)");
+		
+		//genero encadenado si hay
+		if(this.encadenado!=null) this.encadenado.generar();
 	}
 	
 }

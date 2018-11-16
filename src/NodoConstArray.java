@@ -97,6 +97,9 @@ public class NodoConstArray extends NodoConst{
 		this.tamaño.generar(); //genero el tamaño del arreglo
 		Utl.gen("push malloc\t\t\t;cargo direccion (nodoconstarr)");
 		Utl.gen("call\t\t\t;llamo a subrutina (nodoconstarr)");		
+		
+		//genero encadenado si hay
+		if(this.encadenado!=null) this.encadenado.generar();
 	}
 
 }

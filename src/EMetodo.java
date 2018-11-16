@@ -201,6 +201,9 @@ public class EMetodo extends EMiembro{
 				Utl.gen("storefp\t\t\t;retorno (emetodo "+s+")");
 				Utl.gen("ret "+(this.parametros.size()+1)+"\t\t\t;retorno (emetodo "+s+")\n");
 			}
+			else{
+				Utl.gen("\n");
+			}
 			this.generado=true;
 		}
 	}

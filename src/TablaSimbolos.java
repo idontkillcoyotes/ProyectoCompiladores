@@ -84,9 +84,7 @@ public class TablaSimbolos {
 	}
 	private void generarCodPred() {
 		//genero codigo principal
-		Utl.gen(".code \npush heap_init \ncall \npush main ;cargo main \ncall ;llamo a main \nhalt ;termino\n");
-		//genero codigo heap_init
-		Utl.gen("heap_init:\n ret 0\n");
+		Utl.gen(".code \npush main ;cargo main\ncall ;llamo a main\nhalt ;termino\n");
 		//genero codigo malloc		
 		Utl.gen("malloc:");
 		Utl.gen("loadfp ;Inicialización unidad \nloadsp \nstorefp ;Finaliza inicialización del RA");

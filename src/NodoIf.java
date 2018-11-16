@@ -133,23 +133,26 @@ public class NodoIf extends NodoSentencia {
 			//si la condicion es falsa salto al else
 			Utl.gen("bf "+labelElse()+"\t\t\t;si condicion false salto a else (nodoif)");
 			//sino sigo con el codigo de el then
+			//Utl.gen(";codificacion de: "+sentenciathen.toString());
 			this.sentenciathen.generar();
 			//cuando termino salto al fin
 			Utl.gen("jump "+labelFin()+"\t\t\t;termino el then, salto al fin (nodoif)");			
 			//declaro etiqueta else
 			Utl.gen(labelElse()+":");
 			//genero codigo else
+			Utl.gen(";codificacion de: "+sentenciaelse.toString());
 			this.sentenciaelse.generar();
 			//declaro etiqueta fin
-			Utl.gen(labelFin()+": ");
+			Utl.gen(labelFin()+": nop");
 		}
 		else{
 			//si la condicion es falsa salto al fin
 			Utl.gen("bf "+labelFin()+"\t\t\t;si condicion false salto fin(nodoif)");
 			//sino sigo con el codigo del then
+			//Utl.gen(";codificacion de: "+sentenciathen.toString());
 			this.sentenciathen.generar();
 			//declaro etiqueta fin
-			Utl.gen(labelFin()+": ");
+			Utl.gen(labelFin()+": nop");
 		}
 	}
 

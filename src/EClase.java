@@ -295,8 +295,7 @@ public class EClase extends EntradaTS{
 		for(EMetodo e: metodos){
 			e.calcularOffsets();
 			if(!e.esEstatico()){
-				e.setOffset(i);
-				
+				e.setOffset(i);				
 				i++;
 			}			
 		}
@@ -489,6 +488,9 @@ public class EClase extends EntradaTS{
 				Utl.gen("\n");
 			}
 		}
+	}
+	public boolean tieneVT() {
+		return (cantmetdin>0);
 	}
 
 

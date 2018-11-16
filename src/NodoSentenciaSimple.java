@@ -2,10 +2,12 @@
 public class NodoSentenciaSimple extends NodoSentencia{
 	
 	private NodoExpresion expresion;
+	private Tipo texp;
 
 
 	public NodoSentenciaSimple() {
 		this.expresion = null;
+		this.texp = null;
 	}
 	
 	public void setExpresion(NodoExpresion expresion) {
@@ -22,7 +24,7 @@ public class NodoSentenciaSimple extends NodoSentencia{
 
 	@Override
 	public void check() throws SemanticException{
-		expresion.check();
+		this.texp=expresion.check();
 	}
 	
 	@Override
@@ -32,15 +34,9 @@ public class NodoSentenciaSimple extends NodoSentencia{
 
 	@Override
 	public void generar() {
-		//TODO ver si puedo mejorar esto y no usar el check de la expresion
 		this.expresion.generar();		
-		Tipo t;
-		try {
-			t=expresion.check();						
-			if (!t.esTipo(Utl.TPC_VOID)) 
-				Utl.gen("pop\t\t\t;hago pop del resultado (nodosentsimple)");
-			
-		} catch (SemanticException e) {}
-		
+		if (!texp.esTipo(Utl.TPC_VOID))
+				//si no es void debo hacer pop
+				Utl.gen("pop\t\t\t;hago pop del resultado (nodosentsimple)");		
 	}
 }
