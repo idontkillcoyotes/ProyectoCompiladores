@@ -89,11 +89,12 @@ public class NodoWhile extends NodoSentencia{
 
 	@Override
 	public void generar() {
-		Utl.gen(labelInit()+":\t\t\t;genero label inicio while (nodowhile)");
+		//Al final los NOP eran necesarios porque puede haber problemas con las etiquetas
+		Utl.gen(labelInit()+": nop\t\t\t;genero label inicio while (nodowhile)");
 		this.condicion.generar();
 		Utl.gen("bf "+labelFin()+"\t\t\t;si condicion false salto a fin (nodowhile)");
 		this.sentencia.generar();
 		Utl.gen("jump "+labelInit()+"\t\t\t;salto al principio (nodowhile)");
-		Utl.gen(labelFin()+":\t\t\t;genero label fin while (nodowhile)");
+		Utl.gen(labelFin()+": nop\t\t\t;genero label fin while (nodowhile)");
 	}
 }

@@ -88,10 +88,10 @@ public class NodoVarEncad extends Encadenado{
 	public void generar() {
 		if((this.ladoIzquierdo)&&(this.encadenado==null)){
 			Utl.gen("swap\t\t\t;(nodovarencad)");
-			Utl.gen("storeref "+var.getOffset()+"\t\t\t;guardo en cir con offset (nodovarencad)");
+			Utl.gen("storeref "+var.getOffset()+"\t\t\t;guardo var: '"+var.getNombre()+"' en cir con offset (nodovarencad)");
 		}
 		else{
-			Utl.gen("loadref "+var.getOffset()+"\t\t\t;cargo desde el cir con offset (nodovarencad)");
+			Utl.gen("loadref "+var.getOffset()+"\t\t\t;cargo var: '"+var.getNombre()+"' desde el cir con offset (nodovarencad)");
 		}
 		if(this.encadenado!=null) this.encadenado.generar();
 	}

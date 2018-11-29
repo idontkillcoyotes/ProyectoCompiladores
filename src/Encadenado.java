@@ -33,6 +33,7 @@ public abstract class Encadenado {
 
 	public void setLadoizq(boolean b) {
 		this.ladoIzquierdo = b;
+		if (this.encadenado!=null) encadenado.setLadoizq(b);
 	}
 
 	public boolean isValorAtributo() {

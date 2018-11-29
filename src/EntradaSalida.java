@@ -53,10 +53,10 @@ public class EntradaSalida {
     		nroLinea=1;
     	}catch(FileNotFoundException e) {
     		System.out.println(e.getMessage());
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	}catch (IOException e) {
 			System.out.println(e.getMessage());
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
     }
     
@@ -65,7 +65,7 @@ public class EntradaSalida {
 			bufferedReader.close();			
 		} catch (IOException e) {
 			System.out.println("Error al intentar cerrar el archivo '"+archivoEntrada+ "'");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
     	finArchivoEntrada=true;
     }
@@ -74,7 +74,7 @@ public class EntradaSalida {
 			bufferedWriter.close();			
 		} catch (IOException e) {
 			System.out.println("Error al intentar cerrar el archivo '"+archivoSalida+ "'");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
     	finArchivoEntrada=true;
     }
@@ -102,7 +102,7 @@ public class EntradaSalida {
 			this.bufferedWriter.append("\n");
 		} catch (IOException e) {
 			System.out.println("Error al intentar escribir en el archivo: '"+archivoSalida+"'");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
     	
     }

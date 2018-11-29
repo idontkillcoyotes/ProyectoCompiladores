@@ -126,10 +126,10 @@ public class NodoLlamadaDirecta extends NodoPrimario{
 	}
 
 	@Override
-	public void generar() {
+	public void generar() {	
 		if(met.tieneRetorno()) Utl.gen("rmem 1\t\t\t;reservo espacio para retorno (nodollamdir)");
 		if(met.esEstatico())
-			{Utl.gen("push -1\t\t\t;cargo this fictisio (nodollamdir)");}
+			{Utl.gen("push 9999\t\t\t;cargo this fictisio (nodollamdir)");}
 		else
 			{Utl.gen("load 3\t\t\t;cargo this (nodollamdir)");}
 		for (NodoExpresion par: this.argsactuales){

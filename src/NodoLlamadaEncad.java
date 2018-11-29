@@ -113,7 +113,10 @@ public class NodoLlamadaEncad extends Encadenado{
 
 	@Override
 	public void generar() {
-		if(met.tieneRetorno()) Utl.gen("rmem 1\t\t\t;reservo espacio para retorno (nodollamencad)");		
+		if(met.tieneRetorno()) {
+			Utl.gen("rmem 1\t\t\t;reservo espacio para retorno (nodollamencad)");
+			Utl.gen("swap\t\t\t;genero swap porque el this quedo arriba (nodollamencad)");
+		}
 		for (NodoExpresion par: this.argsactuales){
 			par.generar();
 			Utl.gen("swap\t\t\t;(nodollamencad)");			

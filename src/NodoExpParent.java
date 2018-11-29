@@ -54,6 +54,8 @@ public class NodoExpParent extends NodoPrimario{
 	@Override
 	public void generar() {
 		this.expresion.generar();
+		//NO OLVIDARSE DEL ENCADENADO
+		if(this.encadenado!=null) this.encadenado.generar();
 	}
 
 }

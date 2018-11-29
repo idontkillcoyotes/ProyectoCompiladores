@@ -81,20 +81,20 @@ public class NodoVar extends NodoAcceso{
 				//si var es un atributo
 				Utl.gen("load 3\t\t\t;cargo this (nodovar)");
 				Utl.gen("swap\t\t\t;(nodovar)");
-				Utl.gen("storeref "+var.getOffset()+"\t\t\t;guardo en cir con offset (nodovar)");
+				Utl.gen("storeref "+var.getOffset()+"\t\t\t;guardo var: '"+var.getNombre()+"' en cir con offset (nodovar)");
 			}
 			else{
 				//si var es un parametro o var local
-				Utl.gen("store "+var.getOffset()+"\t\t\t;guardo var local o param (nodovar)");
+				Utl.gen("store "+var.getOffset()+"\t\t\t;guardo var: '"+var.getNombre()+"' local o param (nodovar)");
 			}
 		}
 		else{
 			if(this.esatributo){
 				Utl.gen("load 3\t\t\t;cargo this (nodovar)");
-				Utl.gen("loadref "+var.getOffset()+"\t\t\t;cargo var desde el cir (nodovar)"); 
+				Utl.gen("loadref "+var.getOffset()+"\t\t\t;cargo var: '"+var.getNombre()+"' desde el cir (nodovar)"); 
 			}
 			else{
-				Utl.gen("load "+var.getOffset()+"\t\t\t;cargo var local o param (nodovar)");
+				Utl.gen("load "+var.getOffset()+"\t\t\t;cargo var: '"+var.getNombre()+"' local o param (nodovar)");
 			}
 			
 		}
