@@ -24,7 +24,7 @@ public class Minijavac {
 			Utl.setES(io);
 			try {	
 				asin.start();				
-				Utl.ts.imprimir();
+				//Utl.ts.imprimir();
 				System.out.println("Compilación exitosa.");
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
