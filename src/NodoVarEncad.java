@@ -28,7 +28,6 @@ public class NodoVarEncad extends Encadenado{
 
 	@Override
 	public Tipo check(Tipo t,Token tid) throws SemanticException {
-		//TODO ver que pasa cuando el metodo es estático
 		if (t.esTipo(Utl.TT_IDCLASE)){
 			//si es tipo clase casteo
 			TipoClase tc=(TipoClase)t;
@@ -86,7 +85,7 @@ public class NodoVarEncad extends Encadenado{
 
 	@Override
 	public void generar() {
-		if((this.ladoIzquierdo)&&(this.encadenado==null)){
+		if((this.ladoizq)&&(this.encadenado==null)){
 			Utl.gen("swap\t\t\t;(nodovarencad)");
 			Utl.gen("storeref "+var.getOffset()+"\t\t\t;guardo var: '"+var.getNombre()+"' en cir con offset (nodovarencad)");
 		}

@@ -10,7 +10,7 @@ public class Minijavac {
 			try {	
 				asin.start();				
 				//Utl.ts.imprimir();
-				System.out.println("Compilación exitosa.");
+				System.out.println("Compilación exitosa.\nArchivo de salida \"out.txt\" creado con éxito.");
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				//e.printStackTrace();
@@ -25,7 +25,7 @@ public class Minijavac {
 			try {	
 				asin.start();				
 				//Utl.ts.imprimir();
-				System.out.println("Compilación exitosa.");
+				System.out.println("Compilación exitosa.\nArchivo de salida \""+args[1]+"\" creado con éxito.");
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 				//e.printStackTrace();

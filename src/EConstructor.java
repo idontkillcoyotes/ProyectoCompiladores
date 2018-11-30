@@ -89,9 +89,6 @@ public class EConstructor extends EMiembro {
 				}
 			}
 			Utl.gen(";finalizo inicializacion de atributos (econst "+s+")");
-			//TODO aca, antes de generar codigo deberia inicializar los atributos
-			
-			
 			if (this.bloque!=null) this.bloque.generar();
 			Utl.gen("fmem "+this.contvarlocales+"\t\t\t;libero espacio para var locales (econst "+s+")");
 			Utl.gen("storefp\t\t\t;retorno (econst "+s+")");

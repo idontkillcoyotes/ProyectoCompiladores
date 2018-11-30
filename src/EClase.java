@@ -314,7 +314,7 @@ public class EClase extends EntradaTS{
 	public void check() throws SemanticException {
 		//Seteo clase actual
 		Utl.ts.setClaseAct(this);
-		calcularOffsets(); //TODO ver si es correcto calcular los offset en este punto
+		calcularOffsets();
 		for(EAtributo a:atributos){
 			a.check();
 		}		

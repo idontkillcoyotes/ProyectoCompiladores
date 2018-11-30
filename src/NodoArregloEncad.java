@@ -69,7 +69,7 @@ public class NodoArregloEncad extends Encadenado{
 		//genero codigo de expresion		
 		this.expresion.generar();
 		Utl.gen("add\t\t\t;sumo el offset del arreglo (de la expresion) para acceder (nodoarregloencad)");
-		if ((this.ladoIzquierdo)&&(this.encadenado==null)){
+		if ((this.ladoizq)&&(this.encadenado==null)){
 			//si estoy en lado izquierdo y no hay encadenado ent asigno
 			Utl.gen("swap\t\t\t; estoy en lado izq y sin encadenado(nodoarregloencad)");
 			Utl.gen("storeref 0\t\t\t; estoy en lado izq y sin encadenado guardo en el offset (nodoarregloencad)");	

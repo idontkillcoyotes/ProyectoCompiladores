@@ -1148,7 +1148,6 @@ public class AnalizadorSintactico {
 		match(Utl.TPC_THIS);
 		//creo el nodo this con la clase actual
 		NodoThis n=new NodoThis(mts.claseAct(),t);
-		//n.setLadoizq(ladoizq);
 		//asigno el encadenado
 		n.setEncadenado(encadenado());
 		return n;
@@ -1159,7 +1158,6 @@ public class AnalizadorSintactico {
 		match(Utl.TT_IDMETVAR);
 		//creo el nodo variable con el token id
 		NodoVar n=new NodoVar(t);
-		//n.setLadoizq(ladoizq);
 		//asigno el encadenado
 		n.setEncadenado(encadenado());
 		return n;
@@ -1178,7 +1176,6 @@ public class AnalizadorSintactico {
 	}
 	private NodoLlamadaEstatica llamadaMetodoEstatico()  throws SintacticException{
 		//LlamadaMetodoEstatico -> idClase . LlamadaMetodo
-		//TODO podria agregar ifs para reportar mejor un error sintáctico
 		//guardo el token de idclase
 		Token tc=tokenAct;	
 		match(Utl.TT_IDCLASE);

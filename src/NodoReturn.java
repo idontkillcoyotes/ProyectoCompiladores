@@ -30,9 +30,8 @@ public class NodoReturn extends NodoSentencia{
 	@Override
 	public void check() throws SemanticException {
 		this.miembro=Utl.ts.getMiembroAct();
-		//TODO reemplazar miembro por el miembro actual del ts
-		if (!Utl.ts.getMiembroAct().esConstructor){
-			Tipo retorno=Utl.ts.getMiembroAct().getTipoRetorno();
+		if (!miembro.esConstructor){
+			Tipo retorno=miembro.getTipoRetorno();
 			if(this.expresion!=null){
 				//expresion no nula
 				Tipo exp=this.expresion.check();

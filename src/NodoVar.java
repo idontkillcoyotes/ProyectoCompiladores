@@ -58,7 +58,6 @@ public class NodoVar extends NodoAcceso{
 			}
 		}
 		else{
-			//TODO podria ver si el atributo usado fue declarado antes para saber si es legal o no
 			throw new SemanticException(id.getNroLinea(),id.getNroColumna(),"Acceso invalido.\n"
 					+ "No es posible acceder a un atributo o variable local en la inicializacion"
 					+ " de un atributo de clase.");

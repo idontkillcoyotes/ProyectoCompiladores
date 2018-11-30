@@ -67,7 +67,7 @@ public class NodoLlamadaEncad extends Encadenado{
 					}
 					else{
 						//si no hay encadenado y estoy del lado izquierdo hay error
-						if(!ladoIzquierdo){
+						if(!ladoizq){
 							return retorno;
 						}
 						else{

@@ -63,9 +63,7 @@ public class NodoAsignacion extends NodoSentencia{
 		//primero genero lado derecho
 		this.ladoder.generar();
 		//luego genero lado izq
-		this.ladoizq.generar();
-		//TODO no debo generar nada mas?
-		
+		this.ladoizq.generar();		
 	}
 
 }

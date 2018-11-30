@@ -3,7 +3,7 @@ public abstract class Encadenado {
 	
 	protected Encadenado encadenado;
 	protected boolean valorAtributo;
-	protected boolean ladoIzquierdo;
+	protected boolean ladoizq;
 	protected boolean enthis;
 	
 	public abstract Tipo check(Tipo t,Token id) throws SemanticException;
@@ -28,11 +28,11 @@ public abstract class Encadenado {
 	}
 
 	public boolean hasLadoizq() {
-		return ladoIzquierdo;
+		return ladoizq;
 	}
 
 	public void setLadoizq(boolean b) {
-		this.ladoIzquierdo = b;
+		this.ladoizq = b;
 		if (this.encadenado!=null) encadenado.setLadoizq(b);
 	}
 
