@@ -1,0 +1,3 @@
+enum Visibilidad {
+	vPublic,vPrivate
+}

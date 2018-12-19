@@ -1,0 +1,7 @@
+//Archivo vacio
+
+/*
+*
+* Comentario multilinea
+*
+*/

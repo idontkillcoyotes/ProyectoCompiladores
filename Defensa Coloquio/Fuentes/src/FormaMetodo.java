@@ -1,0 +1,3 @@
+enum FormaMetodo {
+	fDynamic,fStatic
+}
